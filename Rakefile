@@ -7,7 +7,7 @@ task :compile do
   require "coffee-script"
   require "uglifier"
 
-  script = CoffeeScript.compile collect_coffees
+  script = CoffeeScript.compile collect_coffees("coffee")
 
   prepend_author_notice(script)
 
@@ -17,11 +17,11 @@ task :compile do
 
 end
 
-def collect_coffees
+def collect_coffees src
   files = ["atTable", "atImplicit", "atPagination", "metaCollector", "setupFactory"]
   script = ""
   files.each do |file|
-    script << File.read("coffee/#{file}.coffee") << "\n"
+    script << File.read("#{src}/#{file}.coffee") << "\n"
   end
   script
 end
@@ -35,4 +35,14 @@ def prepend_author_notice script
 
   script.prepend comments
   script
+end
+
+task :dev do
+  require "listen"
+  puts "listening!"
+
+  Listen.to!("coffee", :force_polling => true) do |modified, added, removed|
+    puts "recompiling source!"
+    `rake compile`
+  end
 end
