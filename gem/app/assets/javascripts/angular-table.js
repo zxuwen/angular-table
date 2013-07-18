@@ -1,5 +1,5 @@
 // author:   Samuel Mueller 
-// version:  0.0.4 
+// version:  0.0.5 
 // license:  MIT 
 // homepage: http://github.com/ssmm/angular-table 
 (function() {
@@ -41,15 +41,14 @@
         restrict: "AC",
         scope: true,
         compile: function(element, attributes, transclude) {
-          var bodyDefinition, customHeaderMarkup, setup, tbody, tds, thead, tr;
+          var bodyDefinition, customHeaderMarkup, setup, tbody, thead, tr;
 
           validateInput(attributes);
           thead = element.find("thead");
           tbody = element.find("tbody");
-          tds = element.find("td");
+          bodyDefinition = metaCollector.collectBodyDefinition(tbody);
           if (thead[0]) {
             customHeaderMarkup = metaCollector.collectCustomHeaderMarkup(thead);
-            bodyDefinition = metaCollector.collectBodyDefinition(tbody);
             tr = thead.find("tr");
             tr.remove();
             thead.append(constructHeader(customHeaderMarkup, bodyDefinition.tds));

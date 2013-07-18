@@ -36,11 +36,10 @@ angular.module("angular-table").directive "atTable", ["metaCollector", "setupFac
       thead = element.find "thead"
       tbody = element.find "tbody"
 
-      tds = element.find "td"
+      bodyDefinition = metaCollector.collectBodyDefinition(tbody)
+
       if thead[0]
         customHeaderMarkup = metaCollector.collectCustomHeaderMarkup(thead)
-        bodyDefinition = metaCollector.collectBodyDefinition(tbody)
-
         tr = thead.find "tr"
         tr.remove()
         thead.append constructHeader(customHeaderMarkup, bodyDefinition.tds)
