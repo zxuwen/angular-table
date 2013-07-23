@@ -1,5 +1,5 @@
 // author:   Samuel Mueller 
-// version:  0.0.5 
+// version:  0.0.6 
 // license:  MIT 
 // homepage: http://github.com/ssmm/angular-table 
 (function() {
@@ -7,7 +7,7 @@
 
   angular.module("angular-table").directive("atTable", [
     "metaCollector", "setupFactory", function(metaCollector, setupFactory) {
-      var constructHeader, validateInput;
+      var constructHeader, normalizeInput, validateInput;
 
       constructHeader = function(customHeaderMarkup, bodyDefinitions) {
         var icon, td, th, title, tr, _i, _len;
@@ -37,12 +37,19 @@
           throw "Either a list or pagination must be specified.";
         }
       };
+      normalizeInput = function(attributes) {
+        if (attributes.atPagination) {
+          attributes.pagination = attributes.atPagination;
+          return attributes.atPagination = null;
+        }
+      };
       return {
         restrict: "AC",
         scope: true,
         compile: function(element, attributes, transclude) {
           var bodyDefinition, customHeaderMarkup, setup, tbody, thead, tr;
 
+          normalizeInput(attributes);
           validateInput(attributes);
           thead = element.find("thead");
           tbody = element.find("tbody");
@@ -286,13 +293,14 @@
         this.link = function() {};
       };
       PaginationSetup = function(attributes) {
-        var repeatString, sortContext;
+        var paginationName, repeatString, sortContext;
 
         sortContext = attributes.sortContext || "global";
+        paginationName = attributes.pagination;
         if (sortContext === "global") {
-          repeatString = "item in " + attributes.pagination + ".list " + orderByExpression + " " + limitToExpression;
+          repeatString = "item in " + paginationName + ".list " + orderByExpression + " " + limitToExpression;
         } else if (sortContext === "page") {
-          repeatString = "item in " + attributes.pagination + ".list " + limitToExpression + " " + orderByExpression + " ";
+          repeatString = "item in " + paginationName + ".list " + limitToExpression + " " + orderByExpression + " ";
         } else {
           throw "Invalid sort-context: " + sortContext + ".";
         }
@@ -308,14 +316,11 @@
               tdString += "<td>&nbsp;</td>";
             }
             fillerTr = angular.element("<tr>" + tdString + "</tr>");
-            fillerTr.attr("ng-repeat", "item in " + attributes.pagination + ".getFillerArray() ");
+            fillerTr.attr("ng-repeat", "item in " + paginationName + ".getFillerArray() ");
             return tbody.append(fillerTr);
           }
         };
         this.link = function($scope, $element, $attributes) {
-          var paginationName;
-
-          paginationName = attributes.pagination;
           $scope.fromPage = function() {
             if ($scope[paginationName]) {
               return $scope[paginationName].fromPage();

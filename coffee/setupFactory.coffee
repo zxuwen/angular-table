@@ -20,11 +20,12 @@ angular.module("angular-table").factory "setupFactory", [() ->
   PaginationSetup = (attributes) ->
 
     sortContext = attributes.sortContext || "global"
+    paginationName = attributes.pagination
 
     if sortContext == "global"
-      repeatString = "item in #{attributes.pagination}.list #{orderByExpression} #{limitToExpression}"
+      repeatString = "item in #{paginationName}.list #{orderByExpression} #{limitToExpression}"
     else if sortContext == "page"
-      repeatString = "item in #{attributes.pagination}.list #{limitToExpression} #{orderByExpression} "
+      repeatString = "item in #{paginationName}.list #{limitToExpression} #{orderByExpression} "
     else
       throw "Invalid sort-context: #{sortContext}."
 
@@ -38,12 +39,11 @@ angular.module("angular-table").factory "setupFactory", [() ->
           tdString += "<td>&nbsp;</td>"
 
         fillerTr = angular.element("<tr>#{tdString}</tr>")
-        fillerTr.attr("ng-repeat", "item in #{attributes.pagination}.getFillerArray() ")
+        fillerTr.attr("ng-repeat", "item in #{paginationName}.getFillerArray() ")
 
         tbody.append(fillerTr)
 
     @link = ($scope, $element, $attributes) ->
-      paginationName = attributes.pagination
       $scope.fromPage = () ->
         if $scope[paginationName] then $scope[paginationName].fromPage()
 
