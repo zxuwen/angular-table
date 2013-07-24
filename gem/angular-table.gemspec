@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = AngularTable::VERSION
   spec.authors       = ["Samuel Mueller"]
   spec.email         = ["mueller.samu@gmail.com"]
-  spec.description   = "Angular directive for easy HTML table declaration. Makes them sortable and adds pagination."
+  spec.description   = "Html tables with sorting and pagination."
   spec.summary       = spec.description
   spec.homepage      = "https://github.com/ssmm/angular-table"
   spec.license       = "MIT"
