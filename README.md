@@ -1,6 +1,6 @@
 # angular-table
 
-Angular directive for rendering tables. Add sorting and pagination with ease.
+Html tables with sorting and pagination.
 
 [Written in CoffeeScript.](https://github.com/ssmm/angular-table/blob/master/coffee)
 
