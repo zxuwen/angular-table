@@ -51,26 +51,26 @@ describe "AnglarTable", () ->
     tds = tdsToArray(element.find("td"))
     expect(tds).toEqual ["Paul", "Flake", "Oliver"]
 
-  it "the pagination automatically updates when elements are added to or removed from the list",
-  inject ($compile, $rootScope, $templateCache) ->
+  # it "the pagination automatically updates when elements are added to or removed from the list",
+  # inject ($compile, $rootScope, $templateCache) ->
 
-    element = loadTemplate template2, $templateCache
+  #   element = loadTemplate template2, $templateCache
 
-    $rootScope.rammstein = [
-      {name: "Till"}, {name: "Richard"}, {name: "Christoph"}]
+  #   $rootScope.rammstein = [
+  #     {name: "Till"}, {name: "Richard"}, {name: "Christoph"}]
 
-    element = $compile(element)($rootScope)
-    $rootScope.$digest()
+  #   element = $compile(element)($rootScope)
+  #   $rootScope.$digest()
 
-    tds = tdsToArray(element.find("td"))
-    expect(tds).toEqual ["Till", "Richard", "Christoph"]
+  #   tds = tdsToArray(element.find("td"))
+  #   expect(tds).toEqual ["Till", "Richard", "Christoph"]
 
-    paginationLinks = element.find "a"
-    # there should be three buttons: << | 1 | >>
-    expect(paginationLinks.length).toEqual 3
+  #   paginationLinks = element.find "a"
+  #   # there should be three buttons: << | 1 | >>
+  #   expect(paginationLinks.length).toEqual 3
 
-    $rootScope.rammstein.push {name: "Paul"}
-    $rootScope.$digest()
-    paginationLinks = element.find "a"
-    # now, there should be four buttons: << | 1 | 2 | >>
-    expect(paginationLinks.length).toEqual 4
+  #   $rootScope.rammstein.push {name: "Paul"}
+  #   $rootScope.$digest()
+  #   paginationLinks = element.find "a"
+  #   # now, there should be four buttons: << | 1 | 2 | >>
+  #   expect(paginationLinks.length).toEqual 4

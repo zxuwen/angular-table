@@ -26,8 +26,15 @@ angular.module("angular-table").directive "atPagination", [() ->
       $scope.instance = $scope
       $scope.currentPage = 0
 
-      $scope.update = () ->
+      normalizePage = (page) ->
+        page = Math.max(0, page)
+        page = Math.min($scope.numberOfPages - 1, page)
+        page
+
+      update = (reset) ->
+        # $scope.currentPage = if reset then 0 else normalizePage($scope.currentPage)
         $scope.currentPage = 0
+
         if $scope.list
           if $scope.list.length > 0
             $scope.numberOfPages = Math.ceil($scope.list.length / $scope.itemsPerPage)
@@ -36,7 +43,6 @@ angular.module("angular-table").directive "atPagination", [() ->
           else
             $scope.numberOfPages = 1
             $scope.pages = [0]
-          $scope.list = $scope.list
 
       $scope.fromPage = () ->
         if $scope.list
@@ -52,15 +58,23 @@ angular.module("angular-table").directive "atPagination", [() ->
             []
 
       $scope.goToPage = (page) ->
-        page = Math.max(0, page)
-        page = Math.min($scope.numberOfPages - 1, page)
+        $scope.currentPage = normalizePage(page)
 
-        $scope.currentPage = page
+      update()
 
-      $scope.update()
+      $scope.$watch "list", (newValue, oldValue) ->
+        update()
+        # # console.log newValue.length, oldValue.length
+        # if newValue.length != oldValue.length
+        #   update false
+        # else
+        #   update true
+      # , true
 
-      $scope.$watch "list", () ->
-        $scope.update()
+      # Additional watch on the length of the list. This will
+      # be fired if items are added to or removed from it.
+      # $scope.$watch "list.length", (newValue, oldValue) ->
+      #   update(false) if newValue != oldValue
 
   }
 ]
