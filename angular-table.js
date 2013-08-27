@@ -8,8 +8,10 @@
   angular.module("angular-table").directive("atTable", [
     "metaCollector", "setupFactory", function(metaCollector, setupFactory) {
       var constructHeader, normalizeInput, validateInput;
+
       constructHeader = function(customHeaderMarkup, bodyDefinitions) {
         var icon, td, th, title, tr, _i, _len;
+
         tr = angular.element("<tr></tr>");
         for (_i = 0, _len = bodyDefinitions.length; _i < _len; _i++) {
           td = bodyDefinitions[_i];
@@ -46,6 +48,7 @@
         scope: true,
         compile: function(element, attributes, transclude) {
           var bodyDefinition, customHeaderMarkup, setup, tbody, thead, tr;
+
           normalizeInput(attributes);
           validateInput(attributes);
           thead = element.find("thead");
@@ -89,6 +92,7 @@
         restrict: "AC",
         compile: function(element, attributes, transclude) {
           var attribute;
+
           attribute = element.attr("attribute");
           if (!attribute) {
             throw "at-implicit specified without attribute: " + (element.html());
@@ -115,12 +119,14 @@
           $scope.currentPage = 0;
           $scope.update = function() {
             var x;
+
             $scope.currentPage = 0;
             if ($scope.list) {
               if ($scope.list.length > 0) {
                 $scope.numberOfPages = Math.ceil($scope.list.length / $scope.itemsPerPage);
                 $scope.pages = (function() {
                   var _i, _ref, _results;
+
                   _results = [];
                   for (x = _i = 0, _ref = $scope.numberOfPages - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; x = 0 <= _ref ? ++_i : --_i) {
                     _results.push(x);
@@ -141,6 +147,7 @@
           };
           $scope.getFillerArray = function() {
             var fillerLength, itemCountOnLastPage, x, _i, _ref, _ref1, _results;
+
             if ($scope.currentPage === $scope.numberOfPages - 1) {
               itemCountOnLastPage = $scope.list.length % $scope.itemsPerPage;
               if (itemCountOnLastPage !== 0 || $scope.list.length === 0) {
@@ -175,6 +182,7 @@
   angular.module("angular-table").service("metaCollector", [
     function() {
       var capitaliseFirstLetter, extractWidth, getInitialSortDirection, isSortable;
+
       capitaliseFirstLetter = function(string) {
         if (string) {
           return string.charAt(0).toUpperCase() + string.slice(1);
@@ -184,6 +192,7 @@
       };
       extractWidth = function(classes) {
         var width;
+
         width = /([0-9]+px)/i.exec(classes);
         if (width) {
           return width[0];
@@ -193,6 +202,7 @@
       };
       isSortable = function(classes) {
         var sortable;
+
         sortable = /(sortable)/i.exec(classes);
         if (sortable) {
           return true;
@@ -202,6 +212,7 @@
       };
       getInitialSortDirection = function(td) {
         var initialSorting;
+
         initialSorting = td.attr("initial-sorting");
         if (initialSorting) {
           if (initialSorting === "asc" || initialSorting === "desc") {
@@ -214,6 +225,7 @@
       return {
         collectCustomHeaderMarkup: function(thead) {
           var customHeaderMarkup, th, tr, _i, _len, _ref;
+
           customHeaderMarkup = {};
           tr = thead.find("tr");
           _ref = tr.find("th");
@@ -226,6 +238,7 @@
         },
         collectBodyDefinition: function(tbody) {
           var attribute, bodyDefinition, initialSortDirection, sortable, td, title, width, _i, _len, _ref;
+
           bodyDefinition = {};
           bodyDefinition.tds = [];
           bodyDefinition.initialSorting = void 0;
@@ -262,10 +275,12 @@
   angular.module("angular-table").factory("setupFactory", [
     function() {
       var PaginationSetup, StandardSetup, limitToExpression, orderByExpression, setupTr;
+
       orderByExpression = "| orderBy:predicate:descending";
       limitToExpression = "| limitTo:fromPage() | limitTo:toPage()";
       setupTr = function(element, repeatString) {
         var tbody, tr;
+
         tbody = element.find("tbody");
         tr = tbody.find("tr");
         tr.attr("ng-repeat", repeatString);
@@ -273,6 +288,7 @@
       };
       StandardSetup = function(attributes) {
         var repeatString;
+
         repeatString = "item in " + attributes.list + " " + orderByExpression;
         this.compile = function(element, attributes, transclude) {
           return setupTr(element, repeatString);
@@ -281,6 +297,7 @@
       };
       PaginationSetup = function(attributes) {
         var paginationName, repeatString, sortContext;
+
         sortContext = attributes.sortContext || "global";
         paginationName = attributes.pagination;
         if (sortContext === "global") {
@@ -292,6 +309,7 @@
         }
         this.compile = function(element, attributes, transclude) {
           var fillerTr, tbody, td, tdString, tds, _i, _len;
+
           tbody = setupTr(element, repeatString);
           if (typeof attributes.fillLastPage !== "undefined") {
             tds = element.find("td");
