@@ -172,9 +172,6 @@
             return $scope.currentPage = normalizePage(page);
           };
           update();
-          $scope.$watch("list", function(newValue, oldValue) {
-            return update();
-          });
           $scope.$watch("itemsPerPage", function() {
             return $scope.update();
           });
