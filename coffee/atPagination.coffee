@@ -71,17 +71,14 @@ angular.module("angular-table").directive "atPagination", [() ->
         #   update true
       # , true
 
-      # Additional watch on the length of the list. This will
-      # be fired if items are added to or removed from it.
       # $scope.$watch "list.length", (newValue, oldValue) ->
       #   update(false) if newValue != oldValue
 
-      $scope.$watch "itemsPerPage", () ->
+      $scoepe.$watch "itemsPerPage", () ->
         $scope.update()
 
       $scope.$watch "list", () ->
         $scope.update()
-
 
   }
 ]
