@@ -74,7 +74,7 @@ angular.module("angular-table").directive "atPagination", [() ->
       # $scope.$watch "list.length", (newValue, oldValue) ->
       #   update(false) if newValue != oldValue
 
-      $scoepe.$watch "itemsPerPage", () ->
+      $scope.$watch "itemsPerPage", () ->
         $scope.update()
 
       $scope.$watch "list", () ->

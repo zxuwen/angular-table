@@ -172,7 +172,7 @@
             return $scope.currentPage = normalizePage(page);
           };
           update();
-          $scoepe.$watch("itemsPerPage", function() {
+          $scope.$watch("itemsPerPage", function() {
             return $scope.update();
           });
           return $scope.$watch("list", function() {
