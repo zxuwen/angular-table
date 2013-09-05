@@ -115,16 +115,23 @@
           list: "="
         },
         link: function($scope, $element, $attributes) {
+          var normalizePage, update;
+
           $scope.instance = $scope;
           $scope.currentPage = 0;
-          $scope.update = function() {
+          normalizePage = function(page) {
+            page = Math.max(0, page);
+            page = Math.min($scope.numberOfPages - 1, page);
+            return page;
+          };
+          update = function(reset) {
             var x;
 
             $scope.currentPage = 0;
             if ($scope.list) {
               if ($scope.list.length > 0) {
                 $scope.numberOfPages = Math.ceil($scope.list.length / $scope.itemsPerPage);
-                $scope.pages = (function() {
+                return $scope.pages = (function() {
                   var _i, _ref, _results;
 
                   _results = [];
@@ -135,9 +142,8 @@
                 })();
               } else {
                 $scope.numberOfPages = 1;
-                $scope.pages = [0];
+                return $scope.pages = [0];
               }
-              return $scope.list = $scope.list;
             }
           };
           $scope.fromPage = function() {
@@ -163,11 +169,15 @@
             }
           };
           $scope.goToPage = function(page) {
-            page = Math.max(0, page);
-            page = Math.min($scope.numberOfPages - 1, page);
-            return $scope.currentPage = page;
+            return $scope.currentPage = normalizePage(page);
           };
-          $scope.update();
+          update();
+          $scope.$watch("list", function(newValue, oldValue) {
+            return update();
+          });
+          $scope.$watch("itemsPerPage", function() {
+            return $scope.update();
+          });
           return $scope.$watch("list", function() {
             return $scope.update();
           });
