@@ -1,5 +1,5 @@
 // author:   Samuel Mueller 
-// version:  0.0.6 
+// version:  0.0.7 
 // license:  MIT 
 // homepage: http://github.com/ssmm/angular-table 
 (function() {
@@ -10,13 +10,22 @@
       var constructHeader, normalizeInput, validateInput;
 
       constructHeader = function(customHeaderMarkup, bodyDefinitions) {
-        var icon, td, th, title, tr, _i, _len;
+        var attribute, icon, td, th, title, tr, _i, _j, _len, _len1, _ref;
 
         tr = angular.element("<tr></tr>");
         for (_i = 0, _len = bodyDefinitions.length; _i < _len; _i++) {
           td = bodyDefinitions[_i];
           th = angular.element("<th style='cursor: pointer;'></th>");
-          title = customHeaderMarkup[td.attribute] || td.title;
+          if (customHeaderMarkup[td.attribute]) {
+            _ref = customHeaderMarkup[td.attribute].attributes;
+            for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+              attribute = _ref[_j];
+              th.attr("" + attribute.name, "" + attribute.value);
+            }
+            title = customHeaderMarkup[td.attribute].content;
+          } else {
+            title = td.title;
+          }
           th.html("" + title);
           if (td.sortable) {
             th.attr("ng-click", "predicate = '" + td.attribute + "'; descending = !descending;");
@@ -173,10 +182,10 @@
           };
           update();
           $scope.$watch("itemsPerPage", function() {
-            return $scope.update();
+            return update();
           });
           return $scope.$watch("list", function() {
-            return $scope.update();
+            return update();
           });
         }
       };
@@ -228,17 +237,19 @@
       };
       return {
         collectCustomHeaderMarkup: function(thead) {
-          var customHeaderMarkup, th, tr, _i, _len, _ref;
+          var customHeaderMarkup, customHeaderMarkups, th, tr, _i, _len, _ref;
 
-          customHeaderMarkup = {};
+          customHeaderMarkups = {};
           tr = thead.find("tr");
           _ref = tr.find("th");
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             th = _ref[_i];
             th = angular.element(th);
-            customHeaderMarkup[th.attr("attribute")] = th.html();
+            customHeaderMarkup = customHeaderMarkups[th.attr("attribute")] = {};
+            customHeaderMarkup.content = th.html();
+            customHeaderMarkup.attributes = th[0].attributes;
           }
-          return customHeaderMarkup;
+          return customHeaderMarkups;
         },
         collectBodyDefinition: function(tbody) {
           var attribute, bodyDefinition, initialSortDirection, sortable, td, title, width, _i, _len, _ref;
