@@ -7,8 +7,16 @@ angular.module("angular-table").directive "atTable", ["metaCollector", "setupFac
 
     for td in bodyDefinitions
       th = angular.element("<th style='cursor: pointer;'></th>")
-      title = customHeaderMarkup[td.attribute] || td.title
+      if customHeaderMarkup[td.attribute]
+        for attribute in customHeaderMarkup[td.attribute].attributes
+          th.attr("#{attribute.name}", "#{attribute.value}")
+        title = customHeaderMarkup[td.attribute].content
+      else
+        title = td.title
+
       th.html("#{title}")
+
+
 
       if td.sortable
         th.attr("ng-click", "predicate = '#{td.attribute}'; descending = !descending;")
