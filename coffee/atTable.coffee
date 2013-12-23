@@ -33,11 +33,6 @@ angular.module("angular-table").directive "atTable", ["metaCollector", "setupFac
     if not attributes.pagination and not attributes.list
       throw "Either a list or pagination must be specified."
 
-  # Earlier versions of angular table used 'pagination' instead of 'at-pagination'
-  # to wire a table to a pagination instance. However, this declaration can become
-  # ambiguous (ui-bootstrap for example has a directive called 'pagination'). So
-  # right now, you can either use 'pagination' or 'at-pagination'. The support
-  # for 'pagination' should be dropped some time.
   normalizeInput = (attributes) ->
     if attributes.atPagination
       attributes.pagination = attributes.atPagination
