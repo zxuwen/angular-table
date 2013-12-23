@@ -45,7 +45,7 @@ angular.module("angular-table").service "metaCollector", [() ->
         td = angular.element(td)
 
         attribute = td.attr("attribute")
-        title = td.attr("title") || capitaliseFirstLetter(td.attr("attribute"))
+        title = td.attr("at-title") || capitaliseFirstLetter(td.attr("attribute"))
         sortable = td[0].attributes.sortable || isSortable(td.attr("class"))
         width = extractWidth(td.attr("class"))
 
