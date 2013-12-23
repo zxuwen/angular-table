@@ -1,16 +1,14 @@
 describe "angular-table", () ->
   describe "pagination", () ->
-    beforeEach(() ->
-      tc = new TemplateCompiler("pagination.html")
-      @element = prepare_element(tc, (scope) ->
+
+    it "adds pagination to a table", () ->
+      @element = prepare_element(new TemplateCompiler("pagination/pagination.html"), (scope) ->
         scope.rammstein = [
           {name: "Till"}, {name: "Richard"}, {name: "Christoph"},
           {name: "Paul"}, {name: "Flake"}, {name: "Oliver"}
         ]
       )
-    )
 
-    it "adds pagination to a table", inject ($compile, $rootScope, $templateCache) ->
       tds = extract_html_to_array(@element.find("td"))
       expect(tds).toEqual ["Till", "Richard", "Christoph", "Paul"]
 
@@ -19,3 +17,19 @@ describe "angular-table", () ->
 
       tds = extract_html_to_array(@element.find("td"))
       expect(tds).toEqual ["Flake", "Oliver", "&nbsp;", "&nbsp;"]
+
+    describe "sort context", () ->
+
+      callback = (scope) ->
+        scope.letters = [{char: "c"}, {char: "b"}, {char: "d"}, {char: "f"},
+                         {char: "a"}, {char: "e"}, {char: "h"}, {char: "g"}]
+
+      it "allows to set the sort context to global", () ->
+        @element = prepare_element(new TemplateCompiler("pagination/sort_context_global.html"), callback)
+        tds = extract_html_to_array(@element.find("td"))
+        expect(tds).toEqual ["a", "b", "c", "d"]
+
+      it "allows to set the sort context to page", () ->
+        @element = prepare_element(new TemplateCompiler("pagination/sort_context_page.html"), callback)
+        tds = extract_html_to_array(@element.find("td"))
+        expect(tds).toEqual ["b", "c", "d", "f"]

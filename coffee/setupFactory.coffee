@@ -18,8 +18,8 @@ angular.module("angular-table").factory "setupFactory", [() ->
     return
 
   PaginationSetup = (attributes) ->
-
     sortContext = attributes.sortContext || "global"
+
     paginationName = attributes.pagination
 
     if sortContext == "global"
