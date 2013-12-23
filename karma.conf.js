@@ -17,14 +17,17 @@ files = [
   // important to load this first, because it contains the module definition
   "coffee/atTable.coffee",
   "coffee/*.coffee",
+  "test/test_helper.coffee",
   "test/*.coffee",
-  "test/templates/*.html"
+  "test/templates/*.html",
+  "test/templates/*/*.html"
 ];
 
 preprocessors = {
   "coffee/*.coffee": "coffee",
   "test/*.coffee": "coffee",
-  "test/templates/*.html": "html2js"
+  "test/templates/*.html": "html2js",
+  "test/templates/*/*.html": "html2js"
 };
 
 // list of files to exclude

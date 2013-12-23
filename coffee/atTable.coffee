@@ -16,8 +16,6 @@ angular.module("angular-table").directive "atTable", ["metaCollector", "setupFac
 
       th.html("#{title}")
 
-
-
       if td.sortable
         th.attr("ng-click", "predicate = '#{td.attribute}'; descending = !descending;")
         icon = angular.element("<i style='margin-left: 10px;'></i>")
