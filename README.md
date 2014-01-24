@@ -2,9 +2,9 @@
 
 Html tables with sorting and pagination.
 
-[Written in CoffeeScript.](https://github.com/ssmm/angular-table/blob/master/coffee)
+[Written in CoffeeScript.](https://github.com/samu/angular-table/blob/master/coffee)
 
-Check out the [examples](http://ssmm.github.io/angular-table/examples.html) for more information.
+Check out the [examples](http://samu.github.io/angular-table/examples.html) for more information.
 
 ## How
 
