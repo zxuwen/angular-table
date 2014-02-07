@@ -28,9 +28,9 @@ angular.module("angular-table").directive "atTable", ["metaCollector", "setupFac
     tr
 
   validateInput = (attributes) ->
-    if attributes.pagination and attributes.list
+    if attributes.pagination and attributes.atList
       throw "You can not specify a list if you have specified a pagination. The list defined for the pagnination will automatically be used."
-    if not attributes.pagination and not attributes.list
+    if not attributes.pagination and not attributes.atList
       throw "Either a list or pagination must be specified."
 
   normalizeInput = (attributes) ->
@@ -74,4 +74,3 @@ angular.module("angular-table").directive "atTable", ["metaCollector", "setupFac
       }
   }
 ]
-

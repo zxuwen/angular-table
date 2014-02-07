@@ -10,7 +10,7 @@ angular.module("angular-table").factory "setupFactory", [() ->
     tbody
 
   StandardSetup = (attributes) ->
-    repeatString = "item in #{attributes.list} #{orderByExpression}"
+    repeatString = "item in #{attributes.atList} #{orderByExpression}"
     @compile = (element, attributes, transclude) ->
       setupTr element, repeatString
 
@@ -23,9 +23,9 @@ angular.module("angular-table").factory "setupFactory", [() ->
     paginationName = attributes.pagination
 
     if sortContext == "global"
-      repeatString = "item in #{paginationName}.list #{orderByExpression} #{limitToExpression}"
+      repeatString = "item in #{paginationName}.atList #{orderByExpression} #{limitToExpression}"
     else if sortContext == "page"
-      repeatString = "item in #{paginationName}.list #{limitToExpression} #{orderByExpression} "
+      repeatString = "item in #{paginationName}.atList #{limitToExpression} #{orderByExpression} "
     else
       throw "Invalid sort-context: #{sortContext}."
 
@@ -53,7 +53,7 @@ angular.module("angular-table").factory "setupFactory", [() ->
     return
 
   (attributes) ->
-    if attributes.list
+    if attributes.atList
       return new StandardSetup(attributes)
     if attributes.pagination
       return new PaginationSetup(attributes)

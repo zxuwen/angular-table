@@ -19,7 +19,7 @@ angular.module("angular-table").directive "atPagination", [() ->
     scope: {
       itemsPerPage: "@"
       instance: "="
-      list: "="
+      atList: "="
     }
     link: ($scope, $element, $attributes) ->
 
@@ -35,9 +35,9 @@ angular.module("angular-table").directive "atPagination", [() ->
         # $scope.currentPage = if reset then 0 else normalizePage($scope.currentPage)
         $scope.currentPage = 0
 
-        if $scope.list
-          if $scope.list.length > 0
-            $scope.numberOfPages = Math.ceil($scope.list.length / $scope.itemsPerPage)
+        if $scope.atList
+          if $scope.atList.length > 0
+            $scope.numberOfPages = Math.ceil($scope.atList.length / $scope.itemsPerPage)
             $scope.pages = for x in [0..($scope.numberOfPages - 1)]
               x
           else
@@ -45,15 +45,15 @@ angular.module("angular-table").directive "atPagination", [() ->
             $scope.pages = [0]
 
       $scope.fromPage = () ->
-        if $scope.list
-          $scope.itemsPerPage * $scope.currentPage - $scope.list.length
+        if $scope.atList
+          $scope.itemsPerPage * $scope.currentPage - $scope.atList.length
 
       $scope.getFillerArray = () ->
         if $scope.currentPage == $scope.numberOfPages - 1
-          itemCountOnLastPage = $scope.list.length % $scope.itemsPerPage
-          if itemCountOnLastPage != 0 || $scope.list.length == 0
+          itemCountOnLastPage = $scope.atList.length % $scope.itemsPerPage
+          if itemCountOnLastPage != 0 || $scope.atList.length == 0
             fillerLength = $scope.itemsPerPage - itemCountOnLastPage - 1
-            x for x in [($scope.list.length)..($scope.list.length + fillerLength)]
+            x for x in [($scope.atList.length)..($scope.atList.length + fillerLength)]
           else
             []
 
@@ -77,7 +77,7 @@ angular.module("angular-table").directive "atPagination", [() ->
       $scope.$watch "itemsPerPage", () ->
         update()
 
-      $scope.$watch "list", () ->
+      $scope.$watch "atList", () ->
         update()
 
   }
