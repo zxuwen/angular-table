@@ -2,18 +2,18 @@
 
 <input placeholder="Search..." type="text" ng-model="query" ng-change="queryChanged(query)">
 
-<table at-table class="table table-striped table-bordered" at-pagination="filteringPagination" fill-last-page>
+<table at-table class="table table-striped table-bordered" at-pagination="filteringPagination" at-fill-last-page>
   <thead></thead>
   <tbody>
     <tr>
-      <td at-implicit class="50px" attribute="id"></td>
-      <td at-implicit class="110px" attribute="description"></td>
-      <td title="length" attribute="lengthOfDescription">
+      <td at-implicit class="50px" at-attribute="id"></td>
+      <td at-implicit class="110px" at-attribute="description"></td>
+      <td at-title="length" at-attribute="lengthOfDescription">
         The length of the word '{{item.description}}' is {{item.description.length}}
       </td>
     </tr>
   </tbody>
 </table>
 
-<at-pagination items-per-page="7" instance="filteringPagination" list="filteredList"></at-pagination>
+<at-pagination at-items-per-page="7" at-instance="filteringPagination" at-list="filteredList"></at-pagination>
 {% endraw %}
