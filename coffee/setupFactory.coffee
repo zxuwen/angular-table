@@ -18,7 +18,7 @@ angular.module("angular-table").factory "setupFactory", [() ->
     return
 
   PaginationSetup = (attributes) ->
-    sortContext = attributes.sortContext || "global"
+    sortContext = attributes.atSortContext || "global"
 
     paginationName = attributes.pagination
 
@@ -48,7 +48,7 @@ angular.module("angular-table").factory "setupFactory", [() ->
         if $scope[paginationName] then $scope[paginationName].fromPage()
 
       $scope.toPage = () ->
-        if $scope[paginationName] then $scope[paginationName].itemsPerPage
+        if $scope[paginationName] then $scope[paginationName].atItemsPerPage
 
     return
 

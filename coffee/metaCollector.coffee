@@ -12,7 +12,7 @@ angular.module("angular-table").service "metaCollector", [() ->
     if sortable then true else false
 
   getInitialSortDirection = (td) ->
-    initialSorting = td.attr("initial-sorting")
+    initialSorting = td.attr("at-initial-sorting")
     if initialSorting
       return initialSorting if initialSorting == "asc" || initialSorting == "desc"
       throw "Invalid value for initial-sorting: #{initialSorting}. Allowed values are 'asc' or 'desc'."

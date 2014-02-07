@@ -17,13 +17,13 @@ angular.module("angular-table").directive "atPagination", [() ->
         </ul>
       </div>"
     scope: {
-      itemsPerPage: "@"
-      instance: "="
+      atItemsPerPage: "@"
+      atInstance: "="
       atList: "="
     }
     link: ($scope, $element, $attributes) ->
 
-      $scope.instance = $scope
+      $scope.atInstance = $scope
       $scope.currentPage = 0
 
       normalizePage = (page) ->
@@ -37,7 +37,7 @@ angular.module("angular-table").directive "atPagination", [() ->
 
         if $scope.atList
           if $scope.atList.length > 0
-            $scope.numberOfPages = Math.ceil($scope.atList.length / $scope.itemsPerPage)
+            $scope.numberOfPages = Math.ceil($scope.atList.length / $scope.atItemsPerPage)
             $scope.pages = for x in [0..($scope.numberOfPages - 1)]
               x
           else
@@ -46,13 +46,13 @@ angular.module("angular-table").directive "atPagination", [() ->
 
       $scope.fromPage = () ->
         if $scope.atList
-          $scope.itemsPerPage * $scope.currentPage - $scope.atList.length
+          $scope.atItemsPerPage * $scope.currentPage - $scope.atList.length
 
       $scope.getFillerArray = () ->
         if $scope.currentPage == $scope.numberOfPages - 1
-          itemCountOnLastPage = $scope.atList.length % $scope.itemsPerPage
+          itemCountOnLastPage = $scope.atList.length % $scope.atItemsPerPage
           if itemCountOnLastPage != 0 || $scope.atList.length == 0
-            fillerLength = $scope.itemsPerPage - itemCountOnLastPage - 1
+            fillerLength = $scope.atItemsPerPage - itemCountOnLastPage - 1
             x for x in [($scope.atList.length)..($scope.atList.length + fillerLength)]
           else
             []
@@ -74,7 +74,7 @@ angular.module("angular-table").directive "atPagination", [() ->
       # $scope.$watch "list.length", (newValue, oldValue) ->
       #   update(false) if newValue != oldValue
 
-      $scope.$watch "itemsPerPage", () ->
+      $scope.$watch "atItemsPerPage", () ->
         update()
 
       $scope.$watch "atList", () ->
