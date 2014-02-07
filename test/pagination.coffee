@@ -1,6 +1,5 @@
 describe "angular-table", () ->
   describe "pagination", () ->
-
     it "adds pagination to a table", () ->
       @element = prepare_element(new TemplateCompiler("pagination/pagination.html"), (scope) ->
         scope.rammstein = [
@@ -19,7 +18,6 @@ describe "angular-table", () ->
       expect(tds).toEqual ["Flake", "Oliver", "&nbsp;", "&nbsp;"]
 
     describe "sort context", () ->
-
       callback = (scope) ->
         scope.letters = [{char: "c"}, {char: "b"}, {char: "d"}, {char: "f"},
                          {char: "a"}, {char: "e"}, {char: "h"}, {char: "g"}]

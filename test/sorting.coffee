@@ -2,7 +2,7 @@ describe "angular-table", () ->
   describe "sorting", () ->
 
     beforeEach(() ->
-      tc = new TemplateCompiler("sorting.html")
+      tc = new TemplateCompiler("sorting/sorting.html")
       @element = prepare_element(tc, (scope) ->
         scope.cities = [{name: "Helsinki"}, {name: "Zurich"}, {name: "Amsterdam"}]
       )
