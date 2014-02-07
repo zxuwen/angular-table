@@ -30,7 +30,7 @@ angular.module("angular-table").service "metaCollector", [() ->
       tr = thead.find "tr"
       for th in tr.find "th"
         th = angular.element(th)
-        customHeaderMarkup = customHeaderMarkups[th.attr("attribute")] = {}
+        customHeaderMarkup = customHeaderMarkups[th.attr("at-attribute")] = {}
         customHeaderMarkup.content = th.html()
         customHeaderMarkup.attributes = th[0].attributes
 
@@ -44,8 +44,8 @@ angular.module("angular-table").service "metaCollector", [() ->
       for td in tbody.find("td")
         td = angular.element(td)
 
-        attribute = td.attr("attribute")
-        title = td.attr("at-title") || capitaliseFirstLetter(td.attr("attribute"))
+        attribute = td.attr("at-attribute")
+        title = td.attr("at-title") || capitaliseFirstLetter(td.attr("at-attribute"))
         sortable = td[0].attributes.sortable || isSortable(td.attr("class"))
         width = extractWidth(td.attr("class"))
 
