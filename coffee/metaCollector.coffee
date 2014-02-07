@@ -46,7 +46,7 @@ angular.module("angular-table").service "metaCollector", [() ->
 
         attribute = td.attr("at-attribute")
         title = td.attr("at-title") || capitaliseFirstLetter(td.attr("at-attribute"))
-        sortable = td[0].attributes.sortable || isSortable(td.attr("class"))
+        sortable = td.attr("at-sortable") != undefined || isSortable(td.attr("class"))
         width = extractWidth(td.attr("class"))
 
         bodyDefinition.tds.push {attribute: attribute, title: title, sortable: sortable, width: width}
