@@ -32,7 +32,7 @@ angular.module("angular-table").factory "setupFactory", [() ->
     @compile = (element, attributes, transclude) ->
       tbody = setupTr element, repeatString
 
-      if typeof attributes.fillLastPage != "undefined"
+      if typeof attributes.atFillLastPage != "undefined"
         tds = element.find("td")
         tdString = ""
         for td in tds
