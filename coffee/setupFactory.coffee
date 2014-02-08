@@ -20,7 +20,7 @@ angular.module("angular-table").factory "setupFactory", [() ->
   PaginationSetup = (attributes) ->
     sortContext = attributes.atSortContext || "global"
 
-    paginationName = attributes.pagination
+    paginationName = attributes.atPagination
 
     if sortContext == "global"
       repeatString = "item in #{paginationName}.atList #{orderByExpression} #{limitToExpression}"
@@ -56,7 +56,7 @@ angular.module("angular-table").factory "setupFactory", [() ->
   (attributes) ->
     if attributes.atList
       return new StandardSetup(attributes)
-    if attributes.pagination
+    if attributes.atPagination
       return new PaginationSetup(attributes)
     return
 
