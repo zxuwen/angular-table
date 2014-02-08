@@ -2,11 +2,14 @@ angular.module "angular-table", []
 
 angular.module("angular-table").directive "atTable", ["metaCollector", "setupFactory", (metaCollector, setupFactory) ->
 
+  # TODO clean up
   constructHeader = (customHeaderMarkup, bodyDefinitions) ->
-    tr = angular.element("<tr></tr>")
+    tr = angular.element("<table><tr></tr></table>")
+    tr = tr.find("tr")
 
     for td in bodyDefinitions
-      th = angular.element("<th style='cursor: pointer;'></th>")
+      th = angular.element("<table><th style='cursor: pointer;'></th></table>")
+      th = th.find("th")
       if customHeaderMarkup[td.attribute]
         for attribute in customHeaderMarkup[td.attribute].attributes
           th.attr("#{attribute.name}", "#{attribute.value}")
@@ -27,6 +30,7 @@ angular.module("angular-table").directive "atTable", ["metaCollector", "setupFac
 
     tr
 
+
   validateInput = (attributes) ->
     if attributes.pagination and attributes.atList
       throw "You can not specify a list if you have specified a pagination. The list defined for the pagnination will automatically be used."
@@ -45,16 +49,17 @@ angular.module("angular-table").directive "atTable", ["metaCollector", "setupFac
       normalizeInput attributes
       validateInput attributes
 
-      thead = element.find "thead"
-      tbody = element.find "tbody"
 
-      bodyDefinition = metaCollector.collectBodyDefinition(tbody)
+      bodyDefinition = metaCollector.collectBodyDefinition(element)
 
+      # TODO: better solution
+      thead = element.find("thead")
       if thead[0]
-        customHeaderMarkup = metaCollector.collectCustomHeaderMarkup(thead)
-        tr = thead.find "tr"
+        customHeaderMarkup = metaCollector.collectCustomHeaderMarkup(element)
+        tr = angular.element(thead).find("tr")
         tr.remove()
-        thead.append constructHeader(customHeaderMarkup, bodyDefinition.tds)
+        header = constructHeader(customHeaderMarkup, bodyDefinition.tds)
+        angular.element(thead[0]).append(header)
 
       setup = setupFactory attributes
       setup.compile(element, attributes, transclude)

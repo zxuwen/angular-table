@@ -27,8 +27,8 @@ angular.module("angular-table").service "metaCollector", [() ->
     collectCustomHeaderMarkup: (thead) ->
       customHeaderMarkups = {}
 
-      tr = thead.find "tr"
-      for th in tr.find "th"
+      tr = thead.find("tr")
+      for th in tr.find("th")
         th = angular.element(th)
         customHeaderMarkup = customHeaderMarkups[th.attr("at-attribute")] = {}
         customHeaderMarkup.content = th.html()

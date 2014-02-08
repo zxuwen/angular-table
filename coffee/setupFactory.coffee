@@ -38,7 +38,9 @@ angular.module("angular-table").factory "setupFactory", [() ->
         for td in tds
           tdString += "<td>&nbsp;</td>"
 
-        fillerTr = angular.element("<tr>#{tdString}</tr>")
+        # TODO
+        fillerTr = angular.element("<table><tr>#{tdString}</tr></table>")
+        fillerTr = fillerTr.find("tr")
         fillerTr.attr("ng-repeat", "item in #{paginationName}.getFillerArray() ")
 
         tbody.append(fillerTr)

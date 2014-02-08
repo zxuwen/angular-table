@@ -8,12 +8,12 @@ describe "angular-table", () ->
 
     it "creates column headers implicitly", () ->
       @element = prepare_element(new TemplateCompiler("header/header.html"), (scope) ->)
-      header = extract_html_to_array(@element.find("thead > tr > th"))
+      header = extract_html_to_array(getChildrenFor(@element, "thead > tr > th"))
       expect(header[0]).toEqual "Name"
 
     it "allows to set custom column headers", () ->
       @element = prepare_element(new TemplateCompiler("header/header.html"), (scope) ->)
-      header = extract_html_to_array(@element.find("thead > tr > th"))
+      header = extract_html_to_array(getChildrenFor(@element, "thead > tr > th"))
       expect(header[1]).toEqual "The population"
       expect(header[2]).toEqual "Country"
       expect(header[3]).toEqual "<b>Size</b>"

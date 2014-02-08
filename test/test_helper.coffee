@@ -1,3 +1,6 @@
+getChildrenFor = (element, selector) ->
+  element[0].querySelectorAll(selector)
+
 extract_html_to_array = (tds) ->
   _.map(tds, (td) -> angular.element(td).html())
 
