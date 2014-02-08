@@ -2,14 +2,13 @@ angular.module "angular-table", []
 
 angular.module("angular-table").directive "atTable", ["metaCollector", "setupFactory", (metaCollector, setupFactory) ->
 
-  # TODO clean up
   constructHeader = (customHeaderMarkup, bodyDefinitions) ->
-    tr = angular.element("<table><tr></tr></table>")
-    tr = tr.find("tr")
+    tr = angular.element(document.createElement("tr"))
 
     for td in bodyDefinitions
-      th = angular.element("<table><th style='cursor: pointer;'></th></table>")
-      th = th.find("th")
+      th = angular.element(document.createElement("th"))
+      th.attr("style","cursor: pointer;")
+
       if customHeaderMarkup[td.attribute]
         for attribute in customHeaderMarkup[td.attribute].attributes
           th.attr("#{attribute.name}", "#{attribute.value}")
@@ -52,7 +51,6 @@ angular.module("angular-table").directive "atTable", ["metaCollector", "setupFac
 
       bodyDefinition = metaCollector.collectBodyDefinition(element)
 
-      # TODO: better solution
       thead = element.find("thead")
       if thead[0]
         customHeaderMarkup = metaCollector.collectCustomHeaderMarkup(element)
