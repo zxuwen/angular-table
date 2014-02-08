@@ -18,11 +18,6 @@ angular.module("angular-table").service "metaCollector", [() ->
       throw "Invalid value for initial-sorting: #{initialSorting}. Allowed values are 'asc' or 'desc'."
     return undefined
 
-  # collectAttributes = (attributes) ->
-  #   result = []
-  #   for attribute in attributes
-  #     result.push({name: attribute.name, value: attribute.value})
-
   {
     collectCustomHeaderMarkup: (thead) ->
       customHeaderMarkups = {}
