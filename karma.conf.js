@@ -14,10 +14,9 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      "http://code.jquery.com/jquery-1.10.1.min.js",
-      "http://code.angularjs.org/1.2.11/angular.min.js",
-      "http://code.angularjs.org/1.2.11/angular-mocks.js",
-      "http://underscorejs.org/underscore-min.js",
+      'http://code.angularjs.org/1.2.11/angular.min.js',
+      'http://code.angularjs.org/1.2.11/angular-mocks.js',
+      'http://underscorejs.org/underscore-min.js',
       'coffee/atTable.coffee',
       'coffee/*.coffee',
       'test/test_helper.coffee',
@@ -32,9 +31,9 @@ module.exports = function(config) {
     ],
 
     preprocessors: {
-      "coffee/*.coffee": ["coffee"],
-      "test/*.coffee": ["coffee"],
-      "test/templates/**/*.html": ["ng-html2js"]
+      'coffee/*.coffee': ['coffee'],
+      'test/*.coffee': ['coffee'],
+      'test/templates/**/*.html': ['ng-html2js']
     },
 
     // test results reporter to use
