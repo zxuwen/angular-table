@@ -10,10 +10,12 @@
       var constructHeader, normalizeInput, validateInput;
       constructHeader = function(customHeaderMarkup, bodyDefinitions) {
         var attribute, icon, td, th, title, tr, _i, _j, _len, _len1, _ref;
-        tr = angular.element("<tr></tr>");
+        tr = angular.element("<table><tr></tr></table>");
+        tr = tr.find("tr");
         for (_i = 0, _len = bodyDefinitions.length; _i < _len; _i++) {
           td = bodyDefinitions[_i];
-          th = angular.element("<th style='cursor: pointer;'></th>");
+          th = angular.element("<table><th style='cursor: pointer;'></th></table>");
+          th = th.find("th");
           if (customHeaderMarkup[td.attribute]) {
             _ref = customHeaderMarkup[td.attribute].attributes;
             for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
@@ -54,17 +56,17 @@
         restrict: "AC",
         scope: true,
         compile: function(element, attributes, transclude) {
-          var bodyDefinition, customHeaderMarkup, setup, tbody, thead, tr;
+          var bodyDefinition, customHeaderMarkup, header, setup, thead, tr;
           normalizeInput(attributes);
           validateInput(attributes);
+          bodyDefinition = metaCollector.collectBodyDefinition(element);
           thead = element.find("thead");
-          tbody = element.find("tbody");
-          bodyDefinition = metaCollector.collectBodyDefinition(tbody);
           if (thead[0]) {
-            customHeaderMarkup = metaCollector.collectCustomHeaderMarkup(thead);
-            tr = thead.find("tr");
+            customHeaderMarkup = metaCollector.collectCustomHeaderMarkup(element);
+            tr = angular.element(thead).find("tr");
             tr.remove();
-            thead.append(constructHeader(customHeaderMarkup, bodyDefinition.tds));
+            header = constructHeader(customHeaderMarkup, bodyDefinition.tds);
+            angular.element(thead[0]).append(header);
           }
           setup = setupFactory(attributes);
           setup.compile(element, attributes, transclude);
@@ -314,7 +316,8 @@
               td = tds[_i];
               tdString += "<td>&nbsp;</td>";
             }
-            fillerTr = angular.element("<tr>" + tdString + "</tr>");
+            fillerTr = angular.element("<table><tr>" + tdString + "</tr></table>");
+            fillerTr = fillerTr.find("tr");
             fillerTr.attr("ng-repeat", "item in " + paginationName + ".getFillerArray() ");
             return tbody.append(fillerTr);
           }
