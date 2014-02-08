@@ -31,7 +31,7 @@ def prepend_author_notice script
   comments << "// author:   Samuel Mueller \n"
   comments << "// version:  #{AngularTable::VERSION} \n"
   comments << "// license:  MIT \n"
-  comments << "// homepage: http://github.com/ssmm/angular-table \n"
+  comments << "// homepage: http://github.com/samu/angular-table \n"
 
   script.prepend comments
   script
