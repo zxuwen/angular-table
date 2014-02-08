@@ -1,7 +1,7 @@
 // author:   Samuel Mueller 
 // version:  0.0.8 
 // license:  MIT 
-// homepage: http://github.com/ssmm/angular-table 
+// homepage: http://github.com/samu/angular-table 
 (function() {
   angular.module("angular-table", []);
 
@@ -10,12 +10,11 @@
       var constructHeader, normalizeInput, validateInput;
       constructHeader = function(customHeaderMarkup, bodyDefinitions) {
         var attribute, icon, td, th, title, tr, _i, _j, _len, _len1, _ref;
-        tr = angular.element("<table><tr></tr></table>");
-        tr = tr.find("tr");
+        tr = angular.element(document.createElement("tr"));
         for (_i = 0, _len = bodyDefinitions.length; _i < _len; _i++) {
           td = bodyDefinitions[_i];
-          th = angular.element("<table><th style='cursor: pointer;'></th></table>");
-          th = th.find("th");
+          th = angular.element(document.createElement("th"));
+          th.attr("style", "cursor: pointer;");
           if (customHeaderMarkup[td.attribute]) {
             _ref = customHeaderMarkup[td.attribute].attributes;
             for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
@@ -316,8 +315,8 @@
               td = tds[_i];
               tdString += "<td>&nbsp;</td>";
             }
-            fillerTr = angular.element("<table><tr>" + tdString + "</tr></table>");
-            fillerTr = fillerTr.find("tr");
+            fillerTr = angular.element(document.createElement("tr"));
+            fillerTr.html(tdString);
             fillerTr.attr("ng-repeat", "item in " + paginationName + ".getFillerArray() ");
             return tbody.append(fillerTr);
           }
