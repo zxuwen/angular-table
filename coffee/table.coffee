@@ -1,5 +1,4 @@
 class Table
-
   constructHeader: () ->
     tr = angular.element(document.createElement("tr"))
     for i in @get_column_configurations()
@@ -20,10 +19,17 @@ class Table
     if not @attributes.atPagination and not @attributes.atList
       throw "Either a list or Pagination must be specified."
 
-  compile: (setupFactory) ->
+  create_table_setup: (attributes) ->
+    if attributes.atList
+      return new StandardTableSetup(attributes)
+    if attributes.atPagination
+      return new PaginationTableSetup(attributes)
+    return
+
+  compile: () ->
     @validateInput()
     @setup_header()
-    @setup = setupFactory(@attributes)
+    @setup = @create_table_setup(@attributes)
     @setup.compile(@element, @attributes)
 
   setup_initial_sorting: ($scope) ->
