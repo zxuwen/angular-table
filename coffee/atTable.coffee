@@ -2,32 +2,13 @@ angular.module "angular-table", []
 
 angular.module("angular-table").directive "atTable", ["metaCollector", "setupFactory", (metaCollector, setupFactory) ->
 
-  constructHeader = (customHeaderMarkup, bodyDefinitions) ->
+  constructHeader = (column_configurations) ->
     tr = angular.element(document.createElement("tr"))
 
-    for td in bodyDefinitions
-      th = angular.element(document.createElement("th"))
-      th.attr("style","cursor: pointer;")
+    for i in column_configurations
+      tr.append(i.html())
 
-      if customHeaderMarkup[td.attribute]
-        for attribute in customHeaderMarkup[td.attribute].attributes
-          th.attr("#{attribute.name}", "#{attribute.value}")
-        title = customHeaderMarkup[td.attribute].content
-      else
-        title = td.title
-
-      th.html("#{title}")
-
-      if td.sortable
-        th.attr("ng-click", "predicate = '#{td.attribute}'; descending = !descending;")
-        icon = angular.element("<i style='margin-left: 10px;'></i>")
-        icon.attr("ng-class", "getSortIcon('#{td.attribute}')")
-        th.append(icon)
-
-      th.attr("width", td.width)
-      tr.append(th)
-
-    tr
+    return tr
 
   validateInput = (attributes) ->
     if attributes.atPagination and attributes.atList
@@ -41,15 +22,13 @@ angular.module("angular-table").directive "atTable", ["metaCollector", "setupFac
     compile: (element, attributes, transclude) ->
       validateInput attributes
 
-
-      bodyDefinition = metaCollector.collectBodyDefinition(element)
+      column_configurations = metaCollector.collectColumnConfigurations(element)
 
       thead = element.find("thead")
       if thead[0]
-        customHeaderMarkup = metaCollector.collectCustomHeaderMarkup(element)
+        header = constructHeader(column_configurations)
         tr = angular.element(thead).find("tr")
         tr.remove()
-        header = constructHeader(customHeaderMarkup, bodyDefinition.tds)
         angular.element(thead[0]).append(header)
 
       setup = setupFactory attributes
@@ -57,16 +36,25 @@ angular.module("angular-table").directive "atTable", ["metaCollector", "setupFac
 
       {
         post: ($scope, $element, $attributes) ->
+          initialSortingPredicate = undefined
+          initialSortingDirection = undefined
 
-          if bodyDefinition.initialSorting
-            $scope.predicate = bodyDefinition.initialSorting.predicate
-            $scope.descending = (bodyDefinition.initialSorting.direction == "desc")
+          for bd in column_configurations
+            if bd.initialSorting
+              throw "initial-sorting specified without attribute." if not bd.attribute
+            initialSortingPredicate = bd.attribute
+            initialSortingDirection = bd.initialSorting
+
+          if initialSortingPredicate
+            $scope.predicate = initialSortingPredicate
+            $scope.descending = initialSortingDirection == "desc"
 
           $scope.getSortIcon = (predicate) ->
             return "icon-minus" if predicate != $scope.predicate
             if $scope.descending then "icon-chevron-down" else "icon-chevron-up"
 
           setup.link($scope, $element, $attributes)
+
       }
   }
 ]
