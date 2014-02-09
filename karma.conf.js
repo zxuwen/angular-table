@@ -18,6 +18,8 @@ module.exports = function(config) {
       'http://code.angularjs.org/1.2.11/angular-mocks.js',
       'http://underscorejs.org/underscore-min.js',
       'coffee/atTable.coffee',
+      'coffee/table.coffee',
+      'coffee/table_setup.coffee',
       'coffee/*.coffee',
       'test/test_helper.coffee',
       'test/*.coffee',
