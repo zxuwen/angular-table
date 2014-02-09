@@ -1,28 +1,28 @@
-describe "angular-table", () ->
-  describe "MetaCollector", () ->
+# describe "angular-table", () ->
+#   describe "MetaCollector", () ->
 
-    mc = null
+#     mc = null
 
-    beforeEach () ->
-      module("angular-table")
-      inject (metaCollector) ->
-        mc = metaCollector
+#     beforeEach () ->
+#       module("angular-table")
+#       inject (metaCollector) ->
+#         mc = metaCollector
 
-    it "bla", () ->
+#     it "bla", () ->
 
-      header = angular.element(
-        "<table> <thead> <tr>
-          <th at-attribute='one'>hello world</th>
-        </tr> </thead> </table>"
-      )
+#       header = angular.element(
+#         "<table> <thead> <tr>
+#           <th at-attribute='one'>hello world</th>
+#         </tr> </thead> </table>"
+#       )
 
-      # TODO uncomment
+#       # TODO uncomment
 
 
-      # headerMarkup = mc.collectCustomHeaderMarkup(header)
+#       # headerMarkup = mc.collectCustomHeaderMarkup(header)
 
-      # one = headerMarkup["one"]
+#       # one = headerMarkup["one"]
 
-      # expect(one).toBeDefined()
-      # expect(one["content"]).toEqual "hello world"
-      # expect(one["attributes"]).toBeDefined()
+#       # expect(one).toBeDefined()
+#       # expect(one["content"]).toEqual "hello world"
+#       # expect(one["attributes"]).toBeDefined()
