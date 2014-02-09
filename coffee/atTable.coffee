@@ -1,6 +1,6 @@
 angular.module "angular-table", []
 
-angular.module("angular-table").directive "atTable", ["metaCollector", "setupFactory", (metaCollector, setupFactory) ->
+angular.module("angular-table").directive "atTable", ["setupFactory", (setupFactory) ->
   {
     restrict: "AC"
     scope: true
