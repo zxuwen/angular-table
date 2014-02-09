@@ -3,89 +3,24 @@
 // license:  MIT 
 // homepage: http://github.com/samu/angular-table 
 (function() {
+  var ColumnConfiguration, DeclarativeTable, PaginationTableSetup, StandardTableSetup, Table, TableSetup,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
   angular.module("angular-table", []);
 
   angular.module("angular-table").directive("atTable", [
-    "metaCollector", "setupFactory", function(metaCollector, setupFactory) {
-      var constructHeader, normalizeInput, validateInput;
-      constructHeader = function(customHeaderMarkup, bodyDefinitions) {
-        var attribute, icon, td, th, title, tr, _i, _j, _len, _len1, _ref;
-        tr = angular.element(document.createElement("tr"));
-        for (_i = 0, _len = bodyDefinitions.length; _i < _len; _i++) {
-          td = bodyDefinitions[_i];
-          th = angular.element(document.createElement("th"));
-          th.attr("style", "cursor: pointer;");
-          if (customHeaderMarkup[td.attribute]) {
-            _ref = customHeaderMarkup[td.attribute].attributes;
-            for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
-              attribute = _ref[_j];
-              th.attr("" + attribute.name, "" + attribute.value);
-            }
-            title = customHeaderMarkup[td.attribute].content;
-          } else {
-            title = td.title;
-          }
-          th.html("" + title);
-          if (td.sortable) {
-            th.attr("ng-click", "predicate = '" + td.attribute + "'; descending = !descending;");
-            icon = angular.element("<i style='margin-left: 10px;'></i>");
-            icon.attr("ng-class", "getSortIcon('" + td.attribute + "')");
-            th.append(icon);
-          }
-          th.attr("width", td.width);
-          tr.append(th);
-        }
-        return tr;
-      };
-      validateInput = function(attributes) {
-        if (attributes.pagination && attributes.atList) {
-          throw "You can not specify a list if you have specified a pagination. The list defined for the pagnination will automatically be used.";
-        }
-        if (!attributes.pagination && !attributes.atList) {
-          throw "Either a list or pagination must be specified.";
-        }
-      };
-      normalizeInput = function(attributes) {
-        if (attributes.atPagination) {
-          attributes.pagination = attributes.atPagination;
-          return attributes.atPagination = null;
-        }
-      };
+    function() {
       return {
         restrict: "AC",
         scope: true,
         compile: function(element, attributes, transclude) {
-          var bodyDefinition, customHeaderMarkup, header, setup, thead, tr;
-          normalizeInput(attributes);
-          validateInput(attributes);
-          bodyDefinition = metaCollector.collectBodyDefinition(element);
-          thead = element.find("thead");
-          if (thead[0]) {
-            customHeaderMarkup = metaCollector.collectCustomHeaderMarkup(element);
-            tr = angular.element(thead).find("tr");
-            tr.remove();
-            header = constructHeader(customHeaderMarkup, bodyDefinition.tds);
-            angular.element(thead[0]).append(header);
-          }
-          setup = setupFactory(attributes);
-          setup.compile(element, attributes, transclude);
+          var dt;
+          dt = new DeclarativeTable(element, attributes);
+          dt.compile();
           return {
             post: function($scope, $element, $attributes) {
-              if (bodyDefinition.initialSorting) {
-                $scope.predicate = bodyDefinition.initialSorting.predicate;
-                $scope.descending = bodyDefinition.initialSorting.direction === "desc";
-              }
-              $scope.getSortIcon = function(predicate) {
-                if (predicate !== $scope.predicate) {
-                  return "icon-minus";
-                }
-                if ($scope.descending) {
-                  return "icon-chevron-down";
-                } else {
-                  return "icon-chevron-up";
-                }
-              };
-              return setup.link($scope, $element, $attributes);
+              return dt.post($scope, $element, $attributes);
             }
           };
         }
@@ -185,164 +120,358 @@
     }
   ]);
 
-  angular.module("angular-table").service("metaCollector", [
-    function() {
-      var capitaliseFirstLetter, extractWidth, getInitialSortDirection, isSortable;
-      capitaliseFirstLetter = function(string) {
-        if (string) {
-          return string.charAt(0).toUpperCase() + string.slice(1);
-        } else {
-          return "";
-        }
-      };
-      extractWidth = function(classes) {
-        var width;
-        width = /([0-9]+px)/i.exec(classes);
-        if (width) {
-          return width[0];
-        } else {
-          return "";
-        }
-      };
-      isSortable = function(classes) {
-        var sortable;
-        sortable = /(sortable)/i.exec(classes);
-        if (sortable) {
-          return true;
-        } else {
-          return false;
-        }
-      };
-      getInitialSortDirection = function(td) {
-        var initialSorting;
-        initialSorting = td.attr("at-initial-sorting");
-        if (initialSorting) {
-          if (initialSorting === "asc" || initialSorting === "desc") {
-            return initialSorting;
-          }
-          throw "Invalid value for initial-sorting: " + initialSorting + ". Allowed values are 'asc' or 'desc'.";
-        }
-        return void 0;
-      };
-      return {
-        collectCustomHeaderMarkup: function(thead) {
-          var customHeaderMarkup, customHeaderMarkups, th, tr, _i, _len, _ref;
-          customHeaderMarkups = {};
-          tr = thead.find("tr");
-          _ref = tr.find("th");
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            th = _ref[_i];
-            th = angular.element(th);
-            customHeaderMarkup = customHeaderMarkups[th.attr("at-attribute")] = {};
-            customHeaderMarkup.content = th.html();
-            customHeaderMarkup.attributes = th[0].attributes;
-          }
-          return customHeaderMarkups;
-        },
-        collectBodyDefinition: function(tbody) {
-          var attribute, bodyDefinition, initialSortDirection, sortable, td, title, width, _i, _len, _ref;
-          bodyDefinition = {};
-          bodyDefinition.tds = [];
-          bodyDefinition.initialSorting = void 0;
-          _ref = tbody.find("td");
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            td = _ref[_i];
-            td = angular.element(td);
-            attribute = td.attr("at-attribute");
-            title = td.attr("at-title") || capitaliseFirstLetter(td.attr("at-attribute"));
-            sortable = td.attr("at-sortable") !== void 0 || isSortable(td.attr("class"));
-            width = extractWidth(td.attr("class"));
-            bodyDefinition.tds.push({
-              attribute: attribute,
-              title: title,
-              sortable: sortable,
-              width: width
-            });
-            initialSortDirection = getInitialSortDirection(td);
-            if (initialSortDirection) {
-              if (!attribute) {
-                throw "initial-sorting specified without attribute.";
-              }
-              bodyDefinition.initialSorting = {};
-              bodyDefinition.initialSorting.direction = initialSortDirection;
-              bodyDefinition.initialSorting.predicate = attribute;
-            }
-          }
-          return bodyDefinition;
-        }
-      };
-    }
-  ]);
+  Table = (function() {
+    function Table() {}
 
-  angular.module("angular-table").factory("setupFactory", [
-    function() {
-      var PaginationSetup, StandardSetup, limitToExpression, orderByExpression, setupTr;
-      orderByExpression = "| orderBy:predicate:descending";
-      limitToExpression = "| limitTo:fromPage() | limitTo:toPage()";
-      setupTr = function(element, repeatString) {
-        var tbody, tr;
-        tbody = element.find("tbody");
-        tr = tbody.find("tr");
-        tr.attr("ng-repeat", repeatString);
-        return tbody;
-      };
-      StandardSetup = function(attributes) {
-        var repeatString;
-        repeatString = "item in " + attributes.atList + " " + orderByExpression;
-        this.compile = function(element, attributes, transclude) {
-          return setupTr(element, repeatString);
-        };
-        this.link = function() {};
-      };
-      PaginationSetup = function(attributes) {
-        var paginationName, repeatString, sortContext;
-        sortContext = attributes.atSortContext || "global";
-        paginationName = attributes.pagination;
-        if (sortContext === "global") {
-          repeatString = "item in " + paginationName + ".atList " + orderByExpression + " " + limitToExpression;
-        } else if (sortContext === "page") {
-          repeatString = "item in " + paginationName + ".atList " + limitToExpression + " " + orderByExpression + " ";
-        } else {
-          throw "Invalid sort-context: " + sortContext + ".";
-        }
-        this.compile = function(element, attributes, transclude) {
-          var fillerTr, tbody, td, tdString, tds, _i, _len;
-          tbody = setupTr(element, repeatString);
-          if (typeof attributes.atFillLastPage !== "undefined") {
-            tds = element.find("td");
-            tdString = "";
-            for (_i = 0, _len = tds.length; _i < _len; _i++) {
-              td = tds[_i];
-              tdString += "<td>&nbsp;</td>";
-            }
-            fillerTr = angular.element(document.createElement("tr"));
-            fillerTr.html(tdString);
-            fillerTr.attr("ng-repeat", "item in " + paginationName + ".getFillerArray() ");
-            return tbody.append(fillerTr);
+    Table.prototype.constructHeader = function() {
+      var i, tr, _i, _len, _ref;
+      tr = angular.element(document.createElement("tr"));
+      _ref = this.get_column_configurations();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        i = _ref[_i];
+        tr.append(i.render_html());
+      }
+      return tr;
+    };
+
+    Table.prototype.setup_header = function() {
+      var header, thead, tr;
+      thead = this.element.find("thead");
+      if (thead) {
+        header = this.constructHeader();
+        tr = angular.element(thead).find("tr");
+        tr.remove();
+        return thead.append(header);
+      }
+    };
+
+    Table.prototype.validateInput = function() {
+      if (this.attributes.atPagination && this.attributes.atList) {
+        throw "You can not specify a list if you have specified a Pagination. The list defined for the pagnination will automatically be used.";
+      }
+      if (!this.attributes.atPagination && !this.attributes.atList) {
+        throw "Either a list or Pagination must be specified.";
+      }
+    };
+
+    Table.prototype.create_table_setup = function(attributes) {
+      if (attributes.atList) {
+        return new StandardTableSetup(attributes);
+      }
+      if (attributes.atPagination) {
+        return new PaginationTableSetup(attributes);
+      }
+    };
+
+    Table.prototype.compile = function() {
+      this.validateInput();
+      this.setup_header();
+      this.setup = this.create_table_setup(this.attributes);
+      return this.setup.compile(this.element, this.attributes);
+    };
+
+    Table.prototype.setup_initial_sorting = function($scope) {
+      var bd, _i, _len, _ref, _results;
+      _ref = this.get_column_configurations();
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        bd = _ref[_i];
+        if (bd.initialSorting) {
+          if (!bd.attribute) {
+            throw "initial-sorting specified without attribute.";
           }
-        };
-        this.link = function($scope, $element, $attributes) {
-          $scope.fromPage = function() {
-            if ($scope[paginationName]) {
-              return $scope[paginationName].fromPage();
-            }
-          };
-          return $scope.toPage = function() {
-            if ($scope[paginationName]) {
-              return $scope[paginationName].atItemsPerPage;
-            }
-          };
-        };
-      };
-      return function(attributes) {
-        if (attributes.atList) {
-          return new StandardSetup(attributes);
         }
-        if (attributes.pagination) {
-          return new PaginationSetup(attributes);
+        $scope.predicate = bd.attribute;
+        _results.push($scope.descending = bd.initialSorting === "desc");
+      }
+      return _results;
+    };
+
+    Table.prototype.post = function($scope, $element, $attributes) {
+      this.setup_initial_sorting($scope);
+      $scope.getSortIcon = function(predicate) {
+        if (predicate !== $scope.predicate) {
+          return "icon-minus";
+        }
+        if ($scope.descending) {
+          return "icon-chevron-down";
+        } else {
+          return "icon-chevron-up";
         }
       };
+      return this.setup.link($scope, $element, $attributes);
+    };
+
+    return Table;
+
+  })();
+
+  TableSetup = (function() {
+    TableSetup.prototype.orderByExpression = "| orderBy:predicate:descending";
+
+    TableSetup.prototype.limitToExpression = "| limitTo:fromPage() | limitTo:toPage()";
+
+    function TableSetup() {}
+
+    TableSetup.prototype.setupTr = function(element, repeatString) {
+      var tbody, tr;
+      tbody = element.find("tbody");
+      tr = tbody.find("tr");
+      tr.attr("ng-repeat", repeatString);
+      return tbody;
+    };
+
+    (function(attributes) {
+      if (attributes.atList) {
+        return new StandardSetup(attributes);
+      }
+      if (attributes.atPagination) {
+        return new PaginationSetup(attributes);
+      }
+    });
+
+    return TableSetup;
+
+  })();
+
+  ColumnConfiguration = (function() {
+    function ColumnConfiguration(body_markup, header_markup) {
+      this.attribute = body_markup.attribute;
+      this.title = body_markup.title;
+      this.sortable = body_markup.sortable;
+      this.width = body_markup.width;
+      this.initialSorting = body_markup.initialSorting;
+      if (header_markup) {
+        this.custom_content = header_markup.custom_content;
+        this.attributes = header_markup.attributes;
+      }
     }
-  ]);
+
+    ColumnConfiguration.prototype.create_element = function() {
+      var th;
+      th = angular.element(document.createElement("th"));
+      return th.attr("style", "cursor: pointer;");
+    };
+
+    ColumnConfiguration.prototype.render_title = function(element) {
+      return element.html(this.custom_content || this.title);
+    };
+
+    ColumnConfiguration.prototype.render_attributes = function(element) {
+      var attribute, _i, _len, _ref, _results;
+      if (this.custom_content) {
+        _ref = this.attributes;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          attribute = _ref[_i];
+          _results.push(element.attr(attribute.name, attribute.value));
+        }
+        return _results;
+      }
+    };
+
+    ColumnConfiguration.prototype.render_sorting = function(element) {
+      var icon;
+      if (this.sortable) {
+        element.attr("ng-click", "predicate = '" + this.attribute + "'; descending = !descending;");
+        icon = angular.element("<i style='margin-left: 10px;'></i>");
+        icon.attr("ng-class", "getSortIcon('" + this.attribute + "')");
+        return element.append(icon);
+      }
+    };
+
+    ColumnConfiguration.prototype.render_width = function(element) {
+      return element.attr("width", this.width);
+    };
+
+    ColumnConfiguration.prototype.render_html = function() {
+      var th;
+      th = this.create_element();
+      this.render_title(th);
+      this.render_attributes(th);
+      this.render_sorting(th);
+      this.render_width(th);
+      return th;
+    };
+
+    return ColumnConfiguration;
+
+  })();
+
+  DeclarativeTable = (function(_super) {
+    __extends(DeclarativeTable, _super);
+
+    function DeclarativeTable(element, attributes) {
+      this.element = element;
+      this.attributes = attributes;
+    }
+
+    DeclarativeTable.prototype.capitaliseFirstLetter = function(string) {
+      if (string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+      } else {
+        return "";
+      }
+    };
+
+    DeclarativeTable.prototype.extractWidth = function(classes) {
+      var width;
+      width = /([0-9]+px)/i.exec(classes);
+      if (width) {
+        return width[0];
+      } else {
+        return "";
+      }
+    };
+
+    DeclarativeTable.prototype.isSortable = function(classes) {
+      var sortable;
+      sortable = /(sortable)/i.exec(classes);
+      if (sortable) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+
+    DeclarativeTable.prototype.getInitialSorting = function(td) {
+      var initialSorting;
+      initialSorting = td.attr("at-initial-sorting");
+      if (initialSorting) {
+        if (initialSorting === "asc" || initialSorting === "desc") {
+          return initialSorting;
+        }
+        throw "Invalid value for initial-sorting: " + initialSorting + ". Allowed values are 'asc' or 'desc'.";
+      }
+      return void 0;
+    };
+
+    DeclarativeTable.prototype.collect_header_markup = function(table) {
+      var customHeaderMarkups, th, tr, _i, _len, _ref;
+      customHeaderMarkups = {};
+      tr = table.find("tr");
+      _ref = tr.find("th");
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        th = _ref[_i];
+        th = angular.element(th);
+        customHeaderMarkups[th.attr("at-attribute")] = {
+          custom_content: th.html(),
+          attributes: th[0].attributes
+        };
+      }
+      return customHeaderMarkups;
+    };
+
+    DeclarativeTable.prototype.collect_body_markup = function(table) {
+      var attribute, bodyDefinition, initialSorting, sortable, td, title, width, _i, _len, _ref;
+      bodyDefinition = [];
+      _ref = table.find("td");
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        td = _ref[_i];
+        td = angular.element(td);
+        attribute = td.attr("at-attribute");
+        title = td.attr("at-title") || this.capitaliseFirstLetter(td.attr("at-attribute"));
+        sortable = td.attr("at-sortable") !== void 0 || this.isSortable(td.attr("class"));
+        width = this.extractWidth(td.attr("class"));
+        initialSorting = this.getInitialSorting(td);
+        bodyDefinition.push({
+          attribute: attribute,
+          title: title,
+          sortable: sortable,
+          width: width,
+          initialSorting: initialSorting
+        });
+      }
+      return bodyDefinition;
+    };
+
+    DeclarativeTable.prototype.create_column_configurations = function() {
+      var body_markup, column_configurations, header_markup, i, _i, _len;
+      header_markup = this.collect_header_markup(this.element);
+      body_markup = this.collect_body_markup(this.element);
+      column_configurations = [];
+      for (_i = 0, _len = body_markup.length; _i < _len; _i++) {
+        i = body_markup[_i];
+        column_configurations.push(new ColumnConfiguration(i, header_markup[i.attribute]));
+      }
+      return column_configurations;
+    };
+
+    DeclarativeTable.prototype.get_column_configurations = function() {
+      return this.column_configurations || (this.column_configurations = this.create_column_configurations());
+    };
+
+    return DeclarativeTable;
+
+  })(Table);
+
+  StandardTableSetup = (function(_super) {
+    __extends(StandardTableSetup, _super);
+
+    function StandardTableSetup(attributes) {
+      this.repeatString = "item in " + attributes.atList + " " + this.orderByExpression;
+    }
+
+    StandardTableSetup.prototype.compile = function(element, attributes, transclude) {
+      return this.setupTr(element, this.repeatString);
+    };
+
+    StandardTableSetup.prototype.link = function() {};
+
+    return StandardTableSetup;
+
+  })(TableSetup);
+
+  PaginationTableSetup = (function(_super) {
+    __extends(PaginationTableSetup, _super);
+
+    function PaginationTableSetup(attributes) {
+      this.sortContext = attributes.atSortContext || "global";
+      this.paginationName = attributes.atPagination;
+      this.fillLastPage = attributes.atFillLastPage;
+      if (this.sortContext === "global") {
+        this.repeatString = "item in " + this.paginationName + ".atList " + this.orderByExpression + " " + this.limitToExpression;
+      } else if (this.sortContext === "page") {
+        this.repeatString = "item in " + this.paginationName + ".atList " + this.limitToExpression + " " + this.orderByExpression + " ";
+      } else {
+        throw "Invalid sort-context: " + this.sortContext + ".";
+      }
+    }
+
+    PaginationTableSetup.prototype.compile = function(element, attributes, transclude) {
+      var fillerTr, tbody, td, tdString, tds, _i, _len;
+      tbody = this.setupTr(element, this.repeatString);
+      if (typeof this.fillLastPage !== "undefined") {
+        tds = element.find("td");
+        tdString = "";
+        for (_i = 0, _len = tds.length; _i < _len; _i++) {
+          td = tds[_i];
+          tdString += "<td>&nbsp;</td>";
+        }
+        fillerTr = angular.element(document.createElement("tr"));
+        fillerTr.html(tdString);
+        fillerTr.attr("ng-repeat", "item in " + this.paginationName + ".getFillerArray() ");
+        tbody.append(fillerTr);
+      }
+    };
+
+    PaginationTableSetup.prototype.link = function($scope, $element, $attributes) {
+      var paginationName;
+      paginationName = this.paginationName;
+      $scope.fromPage = function() {
+        if ($scope[paginationName]) {
+          return $scope[paginationName].fromPage();
+        }
+      };
+      $scope.toPage = function() {
+        if ($scope[paginationName]) {
+          return $scope[paginationName].atItemsPerPage;
+        }
+      };
+    };
+
+    return PaginationTableSetup;
+
+  })(TableSetup);
 
 }).call(this);

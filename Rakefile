@@ -18,7 +18,12 @@ task :compile do
 end
 
 def collect_coffees src
-  files = ["atTable", "atImplicit", "atPagination", "metaCollector", "setupFactory"]
+  files = [
+    "atTable", "atImplicit", "atPagination",
+    "table", "table_setup",
+    "column_configuration", "declarative_table",
+    "standard_table_setup", "pagination_table_setup"
+  ]
   script = ""
   files.each do |file|
     script << File.read("#{src}/#{file}.coffee") << "\n"
