@@ -14,16 +14,16 @@ class Table
       thead.append(header)
 
   validateInput: () ->
-    if @attributes.atPagination and @attributes.atList
-      throw "You can not specify a list if you have specified a Pagination. The list defined for the pagnination will automatically be used."
+    # if @attributes.atPagination and @attributes.atList
+      # throw "You can not specify a list if you have specified a Pagination. The list defined for the pagnination will automatically be used."
     if not @attributes.atPagination and not @attributes.atList
       throw "Either a list or Pagination must be specified."
 
   create_table_setup: (attributes) ->
-    if attributes.atList
+    if attributes.atList && !attributes.atPagination
       return new StandardTableSetup(attributes)
-    if attributes.atPagination
-      return new PaginationTableSetup(attributes)
+    if attributes.atList && attributes.atPagination
+      return new PaginationTableSetup(attributes, @table_configuration)
     return
 
   compile: () ->
@@ -39,11 +39,11 @@ class Table
       $scope.predicate = bd.attribute
       $scope.descending = bd.initialSorting == "desc"
 
-  post: ($scope, $element, $attributes) ->
+  post: ($scope, $element, $attributes, $filter) ->
     @setup_initial_sorting($scope)
 
     $scope.getSortIcon = (predicate) ->
       return "icon-minus" if predicate != $scope.predicate
       if $scope.descending then "icon-chevron-down" else "icon-chevron-up"
 
-    @setup.link($scope, $element, $attributes)
+    @setup.link($scope, $element, $attributes, $filter)

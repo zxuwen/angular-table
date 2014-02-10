@@ -20,7 +20,7 @@ end
 def collect_coffees src
   files = [
     "atTable", "atImplicit", "atPagination",
-    "table", "table_setup",
+    "table", "table_setup", "table_configuration",
     "column_configuration", "declarative_table",
     "standard_table_setup", "pagination_table_setup"
   ]

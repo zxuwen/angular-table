@@ -1,6 +1,7 @@
 class TableSetup
+
   orderByExpression: "| orderBy:predicate:descending"
-  limitToExpression: "| limitTo:fromPage() | limitTo:toPage()"
+  limitToExpression: "| limitTo:#{irk_from_page} | limitTo:#{irk_items_per_page}"
 
   constructor: () ->
 
@@ -9,10 +10,3 @@ class TableSetup
     tr = tbody.find "tr"
     tr.attr("ng-repeat", repeatString)
     tbody
-
-  (attributes) ->
-    if attributes.atList
-      return new StandardSetup(attributes)
-    if attributes.atPagination
-      return new PaginationSetup(attributes)
-    return

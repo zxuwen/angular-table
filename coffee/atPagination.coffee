@@ -1,80 +1,62 @@
 angular.module("angular-table").directive "atPagination", [() ->
+
   {
     replace: true
     restrict: "E"
+
     template: "
       <div class='pagination' style='margin: 0px;'>
         <ul>
-          <li ng-class='{disabled: currentPage <= 0}'>
-            <a href='' ng-click='goToPage(currentPage - 1)'>&laquo;</a>
+          <li ng-class='{disabled: #{irk_current_page} <= 0}'>
+            <a href='' ng-click='go_to_page(#{irk_current_page} - 1)'>&laquo;</a>
           </li>
-          <li ng-class='{active: currentPage == page}' ng-repeat='page in pages'>
-            <a href='' ng-click='goToPage(page)'>{{page + 1}}</a>
+          <li ng-class='{active: #{irk_current_page} == page}' ng-repeat='page in pages'>
+            <a href='' ng-click='go_to_page(page)'>{{page + 1}}</a>
           </li>
-          <li ng-class='{disabled: currentPage >= numberOfPages - 1}'>
-            <a href='' ng-click='goToPage(currentPage + 1); normalize()'>&raquo;</a>
+          <li ng-class='{disabled: #{irk_current_page} >= #{irk_number_of_pages} - 1}'>
+            <a href='' ng-click='go_to_page(#{irk_current_page} + 1); normalize()'>&raquo;</a>
           </li>
         </ul>
       </div>"
-    scope: {
-      atItemsPerPage: "@"
-      atInstance: "="
-      atList: "="
-    }
+
+    controller: ["$scope", "$element", "$attrs", "angularTableManager",
+    ($scope, $element, $attrs, angularTableManager) ->
+      angularTableManager.register_pagination($attrs.atTableId, $scope)
+    ]
+
+    scope: true
+
     link: ($scope, $element, $attributes) ->
 
-      $scope.atInstance = $scope
-      $scope.currentPage = 0
+      $scope[irk_items_per_page] = $attributes.atItemsPerPage
+      $scope[irk_current_page] = 0
+
+      get_list = () ->
+        $scope[$scope[irk_list]]
+
+      update = (reset) ->
+        $scope[irk_current_page] = 0
+
+        if get_list()
+          if get_list().length > 0
+            $scope[irk_number_of_pages] = Math.ceil(get_list().length / $scope[irk_items_per_page])
+            $scope.pages = for x in [0..($scope[irk_number_of_pages] - 1)]
+              x
+          else
+            $scope[irk_number_of_pages] = 1
+            $scope.pages = [0]
 
       normalizePage = (page) ->
         page = Math.max(0, page)
-        page = Math.min($scope.numberOfPages - 1, page)
+        page = Math.min($scope[irk_number_of_pages] - 1, page)
         page
 
-      update = (reset) ->
-        # $scope.currentPage = if reset then 0 else normalizePage($scope.currentPage)
-        $scope.currentPage = 0
-
-        if $scope.atList
-          if $scope.atList.length > 0
-            $scope.numberOfPages = Math.ceil($scope.atList.length / $scope.atItemsPerPage)
-            $scope.pages = for x in [0..($scope.numberOfPages - 1)]
-              x
-          else
-            $scope.numberOfPages = 1
-            $scope.pages = [0]
-
-      $scope.fromPage = () ->
-        if $scope.atList
-          $scope.atItemsPerPage * $scope.currentPage - $scope.atList.length
-
-      $scope.getFillerArray = () ->
-        if $scope.currentPage == $scope.numberOfPages - 1
-          itemCountOnLastPage = $scope.atList.length % $scope.atItemsPerPage
-          if itemCountOnLastPage != 0 || $scope.atList.length == 0
-            fillerLength = $scope.atItemsPerPage - itemCountOnLastPage - 1
-            x for x in [($scope.atList.length)..($scope.atList.length + fillerLength)]
-          else
-            []
-
-      $scope.goToPage = (page) ->
-        $scope.currentPage = normalizePage(page)
+      $scope.go_to_page = (page) ->
+        $scope[irk_current_page] = normalizePage(page)
 
       update()
 
-      # $scope.$watch "list", (newValue, oldValue) ->
-      #   update()
-        # # console.log newValue.length, oldValue.length
-        # if newValue.length != oldValue.length
-        #   update false
-        # else
-        #   update true
-      # , true
-
-      # $scope.$watch "list.length", (newValue, oldValue) ->
-      #   update(false) if newValue != oldValue
-
-      $scope.$watch "atItemsPerPage", () ->
+      $scope.$watch irk_items_per_page, () ->
         update()
 
       $scope.$watch "atList", () ->

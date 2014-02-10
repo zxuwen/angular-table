@@ -1,6 +1,6 @@
 class DeclarativeTable extends Table
 
-  constructor: (@element, @attributes) ->
+  constructor: (@element, @attributes, @table_configuration) ->
 
   capitaliseFirstLetter: (string) ->
     if string then string.charAt(0).toUpperCase() + string.slice(1) else ""
@@ -64,3 +64,7 @@ class DeclarativeTable extends Table
 
   get_column_configurations: () ->
     @column_configurations ||= @create_column_configurations()
+
+  create_table_configuration: () ->
+
+  get_table_configuration: () ->
