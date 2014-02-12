@@ -1,10 +1,10 @@
 class PaginationTableSetup extends TableSetup
 
-  constructor: (attributes, table_configuration) ->
+  constructor: (table_configuration) ->
     @table_configuration = table_configuration
     @repeatString = "item in filtered_list()"
 
-  compile: (element, attributes, transclude) ->
+  compile: (element) ->
     tbody = @setupTr(element, @repeatString)
 
     tds = element.find("td")

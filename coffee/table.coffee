@@ -1,7 +1,10 @@
 class Table
+
+  constructor: (@element, @table_configuration) ->
+
   constructHeader: () ->
     tr = angular.element(document.createElement("tr"))
-    for i in @get_column_configurations()
+    for i in @table_configuration.column_configurations
       tr.append(i.render_html())
     return tr
 
@@ -13,27 +16,20 @@ class Table
       tr.remove()
       thead.append(header)
 
-  validateInput: () ->
-    # if @attributes.atPagination and @attributes.atList
-      # throw "You can not specify a list if you have specified a Pagination. The list defined for the pagnination will automatically be used."
-    if not @attributes.atPagination and not @attributes.atList
-      throw "Either a list or Pagination must be specified."
-
-  create_table_setup: (attributes) ->
-    if attributes.atList && !attributes.atPagination
-      return new StandardTableSetup(attributes)
-    if attributes.atList && attributes.atPagination
-      return new PaginationTableSetup(attributes, @table_configuration)
+  create_table_setup: () ->
+    if @table_configuration.paginated
+      return new PaginationTableSetup(@table_configuration)
+    else
+      return new StandardTableSetup(@table_configuration)
     return
 
   compile: () ->
-    @validateInput()
     @setup_header()
-    @setup = @create_table_setup(@attributes)
-    @setup.compile(@element, @attributes)
+    @setup = @create_table_setup()
+    @setup.compile(@element)
 
   setup_initial_sorting: ($scope) ->
-    for bd in @get_column_configurations()
+    for bd in @table_configuration.column_configurations
       if bd.initialSorting
         throw "initial-sorting specified without attribute." if not bd.attribute
       $scope.predicate = bd.attribute

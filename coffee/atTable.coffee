@@ -50,7 +50,7 @@ class AngularTableManager
     if tc.initial_fill_last_page
       scope.$parent[tc.fill_last_page] = tc.initial_fill_last_page
 
-  register_pagination: (id, pagination_scope) ->
+  register_pagination_scope: (id, pagination_scope) ->
     mapping = @mappings[id] ||= {}
     mapping.pagination_scope = pagination_scope
 
@@ -80,10 +80,10 @@ angular.module("angular-table").directive "atTable", ["$filter", "angularTableMa
     ]
 
     compile: (element, attributes, transclude) ->
-      tc = new TableConfiguration(attributes)
+      tc = new TableConfiguration(element, attributes)
       angularTableManager.register_table(tc)
 
-      dt = new DeclarativeTable(element, attributes, tc)
+      dt = new Table(element, tc)
       dt.compile()
       {
         post: ($scope, $element, $attributes) ->
@@ -91,18 +91,3 @@ angular.module("angular-table").directive "atTable", ["$filter", "angularTableMa
       }
   }
 ]
-
-# <table at-list="myList" at-items-per-page="itemsPerPage">
-
-# itemsPerPage ist im parent scope definiert
-#   table und pagination können diese variable watchen und müssen ihre eigen scopevariablen updaten
-#   das selbe gilt für fill-last-page und sort-context
-
-# <table at-list="myList" at-items-per-page="4">
-# es muss eine itemsPerPage variable im parent scope erstellt werden
-
-
-
-# current_page kann sich ändern in der pagination
-# dann muss table notifiziert werden
-

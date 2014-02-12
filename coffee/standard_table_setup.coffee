@@ -1,6 +1,6 @@
 class StandardTableSetup extends TableSetup
-  constructor: (attributes) ->
-    @repeatString = "item in #{attributes.atList} | orderBy:predicate:descending"
+  constructor: (table_configuration) ->
+    @repeatString = "item in #{table_configuration.list} | orderBy:predicate:descending"
 
   compile: (element, attributes, transclude) ->
     @setupTr(element, @repeatString)

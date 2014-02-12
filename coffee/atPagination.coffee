@@ -1,5 +1,4 @@
 angular.module("angular-table").directive "atPagination", ["angularTableManager", (angularTableManager) ->
-
   {
     replace: true
     restrict: "E"
@@ -19,31 +18,24 @@ angular.module("angular-table").directive "atPagination", ["angularTableManager"
         </ul>
       </div>"
 
-    controller: ["$scope", "$element", "$attrs", "angularTableManager",
+    controller: ["$scope", "$element", "$attrs",
     ($scope, $element, $attrs) ->
-      angularTableManager.register_pagination($attrs.atTableId, $scope)
+      angularTableManager.register_pagination_scope($attrs.atTableId, $scope)
     ]
 
     scope: true
 
     link: ($scope, $element, $attributes) ->
-
       tc = angularTableManager.get_table_configuration($attributes.atTableId)
 
-      # console.log tc.items_per_page()
-
-      # $scope[irk_items_per_page] = $attributes.atItemsPerPage
       $scope[irk_current_page] = 0
-
-      get_list = () ->
-        $scope[tc.list]
 
       update = (reset) ->
         $scope[irk_current_page] = 0
 
-        if get_list()
-          if get_list().length > 0
-            $scope[irk_number_of_pages] = Math.ceil(get_list().length / $scope[tc.items_per_page])
+        if $scope[tc.list]
+          if $scope[tc.list].length > 0
+            $scope[irk_number_of_pages] = Math.ceil($scope[tc.list].length / $scope[tc.items_per_page])
             $scope.pages = for x in [0..($scope[irk_number_of_pages] - 1)]
               x
           else
@@ -60,11 +52,10 @@ angular.module("angular-table").directive "atPagination", ["angularTableManager"
 
       update()
 
-      # TODO still needed, but could be replaced?
       $scope.$watch tc.items_per_page, () ->
         update()
 
-      $scope.$watch "atList", () ->
+      $scope.$watch tc.list, () ->
         update()
 
   }
