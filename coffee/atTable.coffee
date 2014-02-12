@@ -4,8 +4,6 @@ angular.module "angular-table", []
 irk_from_page       = "from_page"              # atTable
 irk_current_page    = "current_page"           # atTable (getFillerArray), atPagination
 irk_number_of_pages = "number_of_pages"        # atTable (getFillerArray), atPagination
-irk_items_per_page  = "items_per_page"         # atTable, atPagination (calculate number of pages)
-irk_list            = "list"                   # atTable, atPagination
 
 # external reserved keywords
 # table
@@ -27,8 +25,11 @@ class AngularTableManager
   constructor: () ->
     @mappings = {}
 
+  get_table_configuration: (id) ->
+    @mappings[id].table_configuration
+
   register_table: (table_configuration) ->
-    mapping = @mappings[table_configuration.get_id()] ||= {}
+    mapping = @mappings[table_configuration.id] ||= {}
 
     mapping.table_configuration = table_configuration
 
@@ -38,21 +39,29 @@ class AngularTableManager
   register_table_scope: (id, scope) ->
     @mappings[id].table_scope = scope
 
+    tc = @mappings[id].table_configuration
+
+    if tc.initial_items_per_page
+      scope.$parent[tc.items_per_page] = tc.initial_items_per_page
+
+    if tc.initial_sort_context
+      scope.$parent[tc.sort_context] = tc.initial_sort_context
+
+    if tc.initial_fill_last_page
+      scope.$parent[tc.fill_last_page] = tc.initial_fill_last_page
+
   register_pagination: (id, pagination_scope) ->
     mapping = @mappings[id] ||= {}
     mapping.pagination_scope = pagination_scope
 
     if mapping.table_configuration
-      pagination_scope[irk_list] = mapping.table_configuration.get_list()
-
       pagination_scope.$watch(irk_current_page, () ->
         ts = mapping.table_scope
         ts[irk_current_page]    = pagination_scope[irk_current_page]
-        ts[irk_items_per_page]  = pagination_scope[irk_items_per_page]
         ts[irk_number_of_pages] = pagination_scope[irk_number_of_pages]
-        ts[irk_from_page]       = calculate_from_page(ts[irk_items_per_page],
+        ts[irk_from_page]       = calculate_from_page(ts[mapping.table_configuration.items_per_page],
                                                       ts[irk_current_page],
-                                                      ts[mapping.table_configuration.get_list()])
+                                                      ts[mapping.table_configuration.list])
       )
 
 angular.module("angular-table").service "angularTableManager", [() ->
@@ -63,8 +72,8 @@ angular.module("angular-table").directive "atTable", ["$filter", "angularTableMa
   {
     restrict: "AC"
     scope: true
-    controller: ["$scope", "$element", "$attrs", "angularTableManager",
-    ($scope, $element, $attrs, angularTableManager) ->
+    controller: ["$scope", "$element", "$attrs",
+    ($scope, $element, $attrs) ->
       id = $attrs["id"]
       if id
         angularTableManager.register_table_scope(id, $scope)
