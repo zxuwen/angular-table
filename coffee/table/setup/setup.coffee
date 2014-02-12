@@ -1,4 +1,4 @@
-class TableSetup
+class Setup
 
   setupTr: (element, repeatString) ->
     tbody = element.find "tbody"

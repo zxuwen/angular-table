@@ -1,4 +1,5 @@
-class StandardTableSetup extends TableSetup
+class StandardSetup extends Setup
+
   constructor: (table_configuration) ->
     @repeatString = "item in #{table_configuration.list} | orderBy:predicate:descending"
 

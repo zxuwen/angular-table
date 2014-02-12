@@ -16,16 +16,16 @@ class Table
       tr.remove()
       thead.append(header)
 
-  create_table_setup: () ->
+  get_setup: () ->
     if @table_configuration.paginated
-      return new PaginationTableSetup(@table_configuration)
+      return new PaginatedSetup(@table_configuration)
     else
-      return new StandardTableSetup(@table_configuration)
+      return new StandardSetup(@table_configuration)
     return
 
   compile: () ->
     @setup_header()
-    @setup = @create_table_setup()
+    @setup = @get_setup()
     @setup.compile(@element)
 
   setup_initial_sorting: ($scope) ->

@@ -1,4 +1,4 @@
-class PaginationTableSetup extends TableSetup
+class PaginatedSetup extends Setup
 
   constructor: (table_configuration) ->
     @table_configuration = table_configuration

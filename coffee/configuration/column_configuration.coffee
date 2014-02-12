@@ -1,4 +1,5 @@
 class ColumnConfiguration
+
   constructor: (body_markup, header_markup) ->
     @attribute      = body_markup.attribute
     @title          = body_markup.title

@@ -7,7 +7,7 @@ task :compile do
   require "coffee-script"
   require "uglifier"
 
-  script = CoffeeScript.compile collect_coffees("coffee")
+  script = CoffeeScript.compile collect_coffees()
 
   prepend_author_notice(script)
 
@@ -17,16 +17,23 @@ task :compile do
 
 end
 
-def collect_coffees src
+def collect_coffees
   files = [
-    "atTable", "atImplicit", "atPagination",
-    "table", "table_setup", "table_configuration",
-    "column_configuration", "declarative_table",
-    "standard_table_setup", "pagination_table_setup"
+    "coffee/configuration/column_configuration.coffee",
+    "coffee/configuration/table_configuration.coffee",
+
+    "coffee/table/setup/setup.coffee",
+    "coffee/table/setup/standard_setup.coffee",
+    "coffee/table/setup/paginated_setup.coffee",
+    "coffee/table/table.coffee",
+
+    "coffee/at-table.coffee",
+    "coffee/at-pagination.coffee",
+    "coffee/at-implicit.coffee",
   ]
   script = ""
   files.each do |file|
-    script << File.read("#{src}/#{file}.coffee") << "\n"
+    script << File.read("#{file}") << "\n"
   end
   script
 end

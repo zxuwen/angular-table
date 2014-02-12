@@ -17,10 +17,19 @@ module.exports = function(config) {
       'http://code.angularjs.org/1.2.11/angular.min.js',
       'http://code.angularjs.org/1.2.11/angular-mocks.js',
       'http://underscorejs.org/underscore-min.js',
-      'coffee/atTable.coffee',
-      'coffee/table.coffee',
-      'coffee/table_setup.coffee',
-      'coffee/*.coffee',
+
+      'coffee/configuration/column_configuration.coffee',
+      'coffee/configuration/table_configuration.coffee',
+
+      'coffee/table/setup/setup.coffee',
+      'coffee/table/setup/standard_setup.coffee',
+      'coffee/table/setup/paginated_setup.coffee',
+      'coffee/table/table.coffee',
+
+      'coffee/at-table.coffee',
+      'coffee/at-pagination.coffee',
+      'coffee/at-implicit.coffee',
+
       'test/test_helper.coffee',
       'test/*.coffee',
       'test/templates/**/*.html'
@@ -33,7 +42,7 @@ module.exports = function(config) {
     ],
 
     preprocessors: {
-      'coffee/*.coffee': ['coffee'],
+      'coffee/**/**/*.coffee': ['coffee'],
       'test/*.coffee': ['coffee'],
       'test/templates/**/*.html': ['ng-html2js']
     },
