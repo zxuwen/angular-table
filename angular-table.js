@@ -3,356 +3,9 @@
 // license:  MIT 
 // homepage: http://github.com/samu/angular-table 
 (function() {
-  var AngularTableManager, ColumnConfiguration, DeclarativeTable, PaginationTableSetup, StandardTableSetup, Table, TableConfiguration, TableSetup, calculate_from_page, erk_attribute, erk_fill_last_page, erk_initial_sorting, erk_items_per_page, erk_list, erk_sort_context, erk_sortable, irk_current_page, irk_from_page, irk_number_of_pages,
+  var AngularTableManager, ColumnConfiguration, PaginatedSetup, Setup, StandardSetup, Table, TableConfiguration, calculate_from_page, erk_attribute, erk_fill_last_page, erk_initial_sorting, erk_items_per_page, erk_list, erk_sort_context, erk_sortable, irk_current_page, irk_from_page, irk_number_of_pages,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  angular.module("angular-table", []);
-
-  irk_from_page = "from_page";
-
-  irk_current_page = "current_page";
-
-  irk_number_of_pages = "number_of_pages";
-
-  erk_list = "atList";
-
-  erk_items_per_page = "atItemsPerPage";
-
-  erk_fill_last_page = "atFillLastPage";
-
-  erk_sort_context = "atSortContext";
-
-  erk_attribute = "at-attribute";
-
-  erk_sortable = "at-sortable";
-
-  erk_initial_sorting = "at-initial-sorting";
-
-  calculate_from_page = function(items_per_page, current_page, list) {
-    if (list) {
-      return items_per_page * current_page - list.length;
-    }
-  };
-
-  AngularTableManager = (function() {
-    function AngularTableManager() {
-      this.mappings = {};
-    }
-
-    AngularTableManager.prototype.get_table_configuration = function(id) {
-      return this.mappings[id].table_configuration;
-    };
-
-    AngularTableManager.prototype.register_table = function(table_configuration) {
-      var mapping, _base, _name;
-      mapping = (_base = this.mappings)[_name = table_configuration.id] || (_base[_name] = {});
-      mapping.table_configuration = table_configuration;
-      if (mapping.pagination_scope) {
-        throw "WHOOPS";
-      }
-    };
-
-    AngularTableManager.prototype.register_table_scope = function(id, scope) {
-      var tc;
-      this.mappings[id].table_scope = scope;
-      tc = this.mappings[id].table_configuration;
-      if (tc.initial_items_per_page) {
-        scope.$parent[tc.items_per_page] = tc.initial_items_per_page;
-      }
-      if (tc.initial_sort_context) {
-        scope.$parent[tc.sort_context] = tc.initial_sort_context;
-      }
-      if (tc.initial_fill_last_page) {
-        return scope.$parent[tc.fill_last_page] = tc.initial_fill_last_page;
-      }
-    };
-
-    AngularTableManager.prototype.register_pagination = function(id, pagination_scope) {
-      var mapping, _base;
-      mapping = (_base = this.mappings)[id] || (_base[id] = {});
-      mapping.pagination_scope = pagination_scope;
-      if (mapping.table_configuration) {
-        return pagination_scope.$watch(irk_current_page, function() {
-          var ts;
-          ts = mapping.table_scope;
-          ts[irk_current_page] = pagination_scope[irk_current_page];
-          ts[irk_number_of_pages] = pagination_scope[irk_number_of_pages];
-          return ts[irk_from_page] = calculate_from_page(ts[mapping.table_configuration.items_per_page], ts[irk_current_page], ts[mapping.table_configuration.list]);
-        });
-      }
-    };
-
-    return AngularTableManager;
-
-  })();
-
-  angular.module("angular-table").service("angularTableManager", [
-    function() {
-      return new AngularTableManager();
-    }
-  ]);
-
-  angular.module("angular-table").directive("atTable", [
-    "$filter", "angularTableManager", function($filter, angularTableManager) {
-      return {
-        restrict: "AC",
-        scope: true,
-        controller: [
-          "$scope", "$element", "$attrs", function($scope, $element, $attrs) {
-            var id;
-            id = $attrs["id"];
-            if (id) {
-              return angularTableManager.register_table_scope(id, $scope);
-            }
-          }
-        ],
-        compile: function(element, attributes, transclude) {
-          var dt, tc;
-          tc = new TableConfiguration(attributes);
-          angularTableManager.register_table(tc);
-          dt = new DeclarativeTable(element, attributes, tc);
-          dt.compile();
-          return {
-            post: function($scope, $element, $attributes) {
-              return dt.post($scope, $element, $attributes, $filter);
-            }
-          };
-        }
-      };
-    }
-  ]);
-
-  angular.module("angular-table").directive("atImplicit", [
-    function() {
-      return {
-        restrict: "AC",
-        compile: function(element, attributes, transclude) {
-          var attribute;
-          attribute = element.attr("at-attribute");
-          if (!attribute) {
-            throw "at-implicit specified without at-attribute: " + (element.html());
-          }
-          return element.append("{{item." + attribute + "}}");
-        }
-      };
-    }
-  ]);
-
-  angular.module("angular-table").directive("atPagination", [
-    "angularTableManager", function(angularTableManager) {
-      return {
-        replace: true,
-        restrict: "E",
-        template: "      <div class='pagination' style='margin: 0px;'>        <ul>          <li ng-class='{disabled: " + irk_current_page + " <= 0}'>            <a href='' ng-click='go_to_page(" + irk_current_page + " - 1)'>&laquo;</a>          </li>          <li ng-class='{active: " + irk_current_page + " == page}' ng-repeat='page in pages'>            <a href='' ng-click='go_to_page(page)'>{{page + 1}}</a>          </li>          <li ng-class='{disabled: " + irk_current_page + " >= " + irk_number_of_pages + " - 1}'>            <a href='' ng-click='go_to_page(" + irk_current_page + " + 1); normalize()'>&raquo;</a>          </li>        </ul>      </div>",
-        controller: [
-          "$scope", "$element", "$attrs", "angularTableManager", function($scope, $element, $attrs) {
-            return angularTableManager.register_pagination($attrs.atTableId, $scope);
-          }
-        ],
-        scope: true,
-        link: function($scope, $element, $attributes) {
-          var get_list, normalizePage, tc, update;
-          tc = angularTableManager.get_table_configuration($attributes.atTableId);
-          $scope[irk_current_page] = 0;
-          get_list = function() {
-            return $scope[tc.list];
-          };
-          update = function(reset) {
-            var x;
-            $scope[irk_current_page] = 0;
-            if (get_list()) {
-              if (get_list().length > 0) {
-                $scope[irk_number_of_pages] = Math.ceil(get_list().length / $scope[tc.items_per_page]);
-                return $scope.pages = (function() {
-                  var _i, _ref, _results;
-                  _results = [];
-                  for (x = _i = 0, _ref = $scope[irk_number_of_pages] - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; x = 0 <= _ref ? ++_i : --_i) {
-                    _results.push(x);
-                  }
-                  return _results;
-                })();
-              } else {
-                $scope[irk_number_of_pages] = 1;
-                return $scope.pages = [0];
-              }
-            }
-          };
-          normalizePage = function(page) {
-            page = Math.max(0, page);
-            page = Math.min($scope[irk_number_of_pages] - 1, page);
-            return page;
-          };
-          $scope.go_to_page = function(page) {
-            return $scope[irk_current_page] = normalizePage(page);
-          };
-          update();
-          $scope.$watch(tc.items_per_page, function() {
-            return update();
-          });
-          return $scope.$watch("atList", function() {
-            return update();
-          });
-        }
-      };
-    }
-  ]);
-
-  Table = (function() {
-    function Table() {}
-
-    Table.prototype.constructHeader = function() {
-      var i, tr, _i, _len, _ref;
-      tr = angular.element(document.createElement("tr"));
-      _ref = this.get_column_configurations();
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        i = _ref[_i];
-        tr.append(i.render_html());
-      }
-      return tr;
-    };
-
-    Table.prototype.setup_header = function() {
-      var header, thead, tr;
-      thead = this.element.find("thead");
-      if (thead) {
-        header = this.constructHeader();
-        tr = angular.element(thead).find("tr");
-        tr.remove();
-        return thead.append(header);
-      }
-    };
-
-    Table.prototype.validateInput = function() {
-      if (!this.attributes.atPagination && !this.attributes.atList) {
-        throw "Either a list or Pagination must be specified.";
-      }
-    };
-
-    Table.prototype.create_table_setup = function(attributes) {
-      if (attributes.atList && !attributes.atPagination) {
-        return new StandardTableSetup(attributes);
-      }
-      if (attributes.atList && attributes.atPagination) {
-        return new PaginationTableSetup(attributes, this.table_configuration);
-      }
-    };
-
-    Table.prototype.compile = function() {
-      this.validateInput();
-      this.setup_header();
-      this.setup = this.create_table_setup(this.attributes);
-      return this.setup.compile(this.element, this.attributes);
-    };
-
-    Table.prototype.setup_initial_sorting = function($scope) {
-      var bd, _i, _len, _ref, _results;
-      _ref = this.get_column_configurations();
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        bd = _ref[_i];
-        if (bd.initialSorting) {
-          if (!bd.attribute) {
-            throw "initial-sorting specified without attribute.";
-          }
-        }
-        $scope.predicate = bd.attribute;
-        _results.push($scope.descending = bd.initialSorting === "desc");
-      }
-      return _results;
-    };
-
-    Table.prototype.post = function($scope, $element, $attributes, $filter) {
-      this.setup_initial_sorting($scope);
-      $scope.getSortIcon = function(predicate) {
-        if (predicate !== $scope.predicate) {
-          return "icon-minus";
-        }
-        if ($scope.descending) {
-          return "icon-chevron-down";
-        } else {
-          return "icon-chevron-up";
-        }
-      };
-      return this.setup.link($scope, $element, $attributes, $filter);
-    };
-
-    return Table;
-
-  })();
-
-  TableSetup = (function() {
-    function TableSetup() {}
-
-    TableSetup.prototype.setupTr = function(element, repeatString) {
-      var tbody, tr;
-      tbody = element.find("tbody");
-      tr = tbody.find("tr");
-      tr.attr("ng-repeat", repeatString);
-      return tbody;
-    };
-
-    return TableSetup;
-
-  })();
-
-  TableConfiguration = (function() {
-    TableConfiguration.prototype.register_items_per_page = function(items_per_page) {
-      if (isNaN(items_per_page)) {
-        return this.items_per_page = items_per_page;
-      } else {
-        this.items_per_page = "" + this.id + "_itemsPerPage";
-        return this.initial_items_per_page = parseInt(items_per_page);
-      }
-    };
-
-    TableConfiguration.prototype.register_sort_context = function(sort_context) {
-      if (sort_context !== void 0) {
-        if (sort_context === "global") {
-          this.sort_context = "" + this.id + "_sortContext";
-          return this.initial_sort_context = "global";
-        } else if (sort_context === "page") {
-          this.sort_context = "" + this.id + "_sortContext";
-          return this.initial_sort_context = "page";
-        } else {
-          return this.sort_context = sort_context;
-        }
-      } else {
-        this.sort_context = "" + this.id + "_sortContext";
-        return this.initial_sort_context = "global";
-      }
-    };
-
-    TableConfiguration.prototype.register_fill_last_page = function(fill_last_page) {
-      if (fill_last_page !== void 0) {
-        if (fill_last_page === "true") {
-          this.fill_last_page = "" + this.id + "_fillLastPage";
-          return this.initial_fill_last_page = true;
-        } else if (fill_last_page === "false") {
-          this.fill_last_page = "" + this.id + "_fillLastPage";
-          return this.initial_fill_last_page = false;
-        } else if (fill_last_page === "") {
-          this.fill_last_page = "" + this.id + "_fillLastPage";
-          return this.initial_fill_last_page = true;
-        } else {
-          return this.fill_last_page = fill_last_page;
-        }
-      }
-    };
-
-    function TableConfiguration(attributes) {
-      this.id = attributes.id;
-      this.list = attributes[erk_list];
-      if (attributes[erk_items_per_page]) {
-        this.register_items_per_page(attributes[erk_items_per_page]);
-      }
-      this.register_sort_context(attributes[erk_sort_context]);
-      this.register_fill_last_page(attributes[erk_fill_last_page]);
-    }
-
-    return TableConfiguration;
-
-  })();
 
   ColumnConfiguration = (function() {
     function ColumnConfiguration(body_markup, header_markup) {
@@ -418,16 +71,65 @@
 
   })();
 
-  DeclarativeTable = (function(_super) {
-    __extends(DeclarativeTable, _super);
-
-    function DeclarativeTable(element, attributes, table_configuration) {
-      this.element = element;
+  TableConfiguration = (function() {
+    function TableConfiguration(table_element, attributes) {
+      this.table_element = table_element;
       this.attributes = attributes;
-      this.table_configuration = table_configuration;
+      this.id = this.attributes.id;
+      this.list = this.attributes[erk_list];
+      if (this.attributes[erk_items_per_page]) {
+        this.register_items_per_page(this.attributes[erk_items_per_page]);
+      }
+      this.register_sort_context(this.attributes[erk_sort_context]);
+      this.register_fill_last_page(this.attributes[erk_fill_last_page]);
+      this.paginated = this.items_per_page !== void 0;
+      this.create_column_configurations();
     }
 
-    DeclarativeTable.prototype.capitaliseFirstLetter = function(string) {
+    TableConfiguration.prototype.register_items_per_page = function(items_per_page) {
+      if (isNaN(items_per_page)) {
+        return this.items_per_page = items_per_page;
+      } else {
+        this.items_per_page = "" + this.id + "_itemsPerPage";
+        return this.initial_items_per_page = parseInt(items_per_page);
+      }
+    };
+
+    TableConfiguration.prototype.register_sort_context = function(sort_context) {
+      if (sort_context !== void 0) {
+        if (sort_context === "global") {
+          this.sort_context = "" + this.id + "_sortContext";
+          return this.initial_sort_context = "global";
+        } else if (sort_context === "page") {
+          this.sort_context = "" + this.id + "_sortContext";
+          return this.initial_sort_context = "page";
+        } else {
+          return this.sort_context = sort_context;
+        }
+      } else {
+        this.sort_context = "" + this.id + "_sortContext";
+        return this.initial_sort_context = "global";
+      }
+    };
+
+    TableConfiguration.prototype.register_fill_last_page = function(fill_last_page) {
+      if (fill_last_page !== void 0) {
+        if (fill_last_page === "true") {
+          this.fill_last_page = "" + this.id + "_fillLastPage";
+          return this.initial_fill_last_page = true;
+        } else if (fill_last_page === "false") {
+          this.fill_last_page = "" + this.id + "_fillLastPage";
+          return this.initial_fill_last_page = false;
+        } else if (fill_last_page === "") {
+          this.fill_last_page = "" + this.id + "_fillLastPage";
+          return this.initial_fill_last_page = true;
+        } else {
+          return this.fill_last_page = fill_last_page;
+        }
+      }
+    };
+
+    TableConfiguration.prototype.capitaliseFirstLetter = function(string) {
       if (string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
       } else {
@@ -435,7 +137,7 @@
       }
     };
 
-    DeclarativeTable.prototype.extractWidth = function(classes) {
+    TableConfiguration.prototype.extractWidth = function(classes) {
       var width;
       width = /([0-9]+px)/i.exec(classes);
       if (width) {
@@ -445,7 +147,7 @@
       }
     };
 
-    DeclarativeTable.prototype.isSortable = function(classes) {
+    TableConfiguration.prototype.isSortable = function(classes) {
       var sortable;
       sortable = /(sortable)/i.exec(classes);
       if (sortable) {
@@ -455,7 +157,7 @@
       }
     };
 
-    DeclarativeTable.prototype.getInitialSorting = function(td) {
+    TableConfiguration.prototype.getInitialSorting = function(td) {
       var initialSorting;
       initialSorting = td.attr("at-initial-sorting");
       if (initialSorting) {
@@ -467,7 +169,7 @@
       return void 0;
     };
 
-    DeclarativeTable.prototype.collect_header_markup = function(table) {
+    TableConfiguration.prototype.collect_header_markup = function(table) {
       var customHeaderMarkups, th, tr, _i, _len, _ref;
       customHeaderMarkups = {};
       tr = table.find("tr");
@@ -483,7 +185,7 @@
       return customHeaderMarkups;
     };
 
-    DeclarativeTable.prototype.collect_body_markup = function(table) {
+    TableConfiguration.prototype.collect_body_markup = function(table) {
       var attribute, bodyDefinition, initialSorting, sortable, td, title, width, _i, _len, _ref;
       bodyDefinition = [];
       _ref = table.find("td");
@@ -506,56 +208,63 @@
       return bodyDefinition;
     };
 
-    DeclarativeTable.prototype.create_column_configurations = function() {
-      var body_markup, column_configurations, header_markup, i, _i, _len;
-      header_markup = this.collect_header_markup(this.element);
-      body_markup = this.collect_body_markup(this.element);
-      column_configurations = [];
+    TableConfiguration.prototype.create_column_configurations = function() {
+      var body_markup, header_markup, i, _i, _len;
+      header_markup = this.collect_header_markup(this.table_element);
+      body_markup = this.collect_body_markup(this.table_element);
+      this.column_configurations = [];
       for (_i = 0, _len = body_markup.length; _i < _len; _i++) {
         i = body_markup[_i];
-        column_configurations.push(new ColumnConfiguration(i, header_markup[i.attribute]));
+        this.column_configurations.push(new ColumnConfiguration(i, header_markup[i.attribute]));
       }
-      return column_configurations;
+      return this.column_configurations;
     };
 
-    DeclarativeTable.prototype.get_column_configurations = function() {
-      return this.column_configurations || (this.column_configurations = this.create_column_configurations());
+    return TableConfiguration;
+
+  })();
+
+  Setup = (function() {
+    function Setup() {}
+
+    Setup.prototype.setupTr = function(element, repeatString) {
+      var tbody, tr;
+      tbody = element.find("tbody");
+      tr = tbody.find("tr");
+      tr.attr("ng-repeat", repeatString);
+      return tbody;
     };
 
-    DeclarativeTable.prototype.create_table_configuration = function() {};
+    return Setup;
 
-    DeclarativeTable.prototype.get_table_configuration = function() {};
+  })();
 
-    return DeclarativeTable;
+  StandardSetup = (function(_super) {
+    __extends(StandardSetup, _super);
 
-  })(Table);
-
-  StandardTableSetup = (function(_super) {
-    __extends(StandardTableSetup, _super);
-
-    function StandardTableSetup(attributes) {
-      this.repeatString = "item in " + attributes.atList + " | orderBy:predicate:descending";
+    function StandardSetup(table_configuration) {
+      this.repeatString = "item in " + table_configuration.list + " | orderBy:predicate:descending";
     }
 
-    StandardTableSetup.prototype.compile = function(element, attributes, transclude) {
+    StandardSetup.prototype.compile = function(element, attributes, transclude) {
       return this.setupTr(element, this.repeatString);
     };
 
-    StandardTableSetup.prototype.link = function() {};
+    StandardSetup.prototype.link = function() {};
 
-    return StandardTableSetup;
+    return StandardSetup;
 
-  })(TableSetup);
+  })(Setup);
 
-  PaginationTableSetup = (function(_super) {
-    __extends(PaginationTableSetup, _super);
+  PaginatedSetup = (function(_super) {
+    __extends(PaginatedSetup, _super);
 
-    function PaginationTableSetup(attributes, table_configuration) {
+    function PaginatedSetup(table_configuration) {
       this.table_configuration = table_configuration;
       this.repeatString = "item in filtered_list()";
     }
 
-    PaginationTableSetup.prototype.compile = function(element, attributes, transclude) {
+    PaginatedSetup.prototype.compile = function(element) {
       var fillerTr, tbody, td, tdString, tds, _i, _len;
       tbody = this.setupTr(element, this.repeatString);
       tds = element.find("td");
@@ -571,7 +280,7 @@
       tbody.append(fillerTr);
     };
 
-    PaginationTableSetup.prototype.link = function($scope, $element, $attributes, $filter) {
+    PaginatedSetup.prototype.link = function($scope, $element, $attributes, $filter) {
       var ipp, list_name, sc;
       list_name = this.table_configuration.list;
       ipp = this.table_configuration.items_per_page;
@@ -608,8 +317,274 @@
       };
     };
 
-    return PaginationTableSetup;
+    return PaginatedSetup;
 
-  })(TableSetup);
+  })(Setup);
+
+  Table = (function() {
+    function Table(element, table_configuration) {
+      this.element = element;
+      this.table_configuration = table_configuration;
+    }
+
+    Table.prototype.constructHeader = function() {
+      var i, tr, _i, _len, _ref;
+      tr = angular.element(document.createElement("tr"));
+      _ref = this.table_configuration.column_configurations;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        i = _ref[_i];
+        tr.append(i.render_html());
+      }
+      return tr;
+    };
+
+    Table.prototype.setup_header = function() {
+      var header, thead, tr;
+      thead = this.element.find("thead");
+      if (thead) {
+        header = this.constructHeader();
+        tr = angular.element(thead).find("tr");
+        tr.remove();
+        return thead.append(header);
+      }
+    };
+
+    Table.prototype.get_setup = function() {
+      if (this.table_configuration.paginated) {
+        return new PaginatedSetup(this.table_configuration);
+      } else {
+        return new StandardSetup(this.table_configuration);
+      }
+    };
+
+    Table.prototype.compile = function() {
+      this.setup_header();
+      this.setup = this.get_setup();
+      return this.setup.compile(this.element);
+    };
+
+    Table.prototype.setup_initial_sorting = function($scope) {
+      var bd, _i, _len, _ref, _results;
+      _ref = this.table_configuration.column_configurations;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        bd = _ref[_i];
+        if (bd.initialSorting) {
+          if (!bd.attribute) {
+            throw "initial-sorting specified without attribute.";
+          }
+        }
+        $scope.predicate = bd.attribute;
+        _results.push($scope.descending = bd.initialSorting === "desc");
+      }
+      return _results;
+    };
+
+    Table.prototype.post = function($scope, $element, $attributes, $filter) {
+      this.setup_initial_sorting($scope);
+      $scope.getSortIcon = function(predicate) {
+        if (predicate !== $scope.predicate) {
+          return "icon-minus";
+        }
+        if ($scope.descending) {
+          return "icon-chevron-down";
+        } else {
+          return "icon-chevron-up";
+        }
+      };
+      return this.setup.link($scope, $element, $attributes, $filter);
+    };
+
+    return Table;
+
+  })();
+
+  angular.module("angular-table", []);
+
+  irk_from_page = "from_page";
+
+  irk_current_page = "current_page";
+
+  irk_number_of_pages = "number_of_pages";
+
+  erk_list = "atList";
+
+  erk_items_per_page = "atItemsPerPage";
+
+  erk_fill_last_page = "atFillLastPage";
+
+  erk_sort_context = "atSortContext";
+
+  erk_attribute = "at-attribute";
+
+  erk_sortable = "at-sortable";
+
+  erk_initial_sorting = "at-initial-sorting";
+
+  calculate_from_page = function(items_per_page, current_page, list) {
+    if (list) {
+      return items_per_page * current_page - list.length;
+    }
+  };
+
+  AngularTableManager = (function() {
+    function AngularTableManager() {
+      this.mappings = {};
+    }
+
+    AngularTableManager.prototype.get_table_configuration = function(id) {
+      return this.mappings[id].table_configuration;
+    };
+
+    AngularTableManager.prototype.register_table = function(table_configuration) {
+      var mapping, _base, _name;
+      mapping = (_base = this.mappings)[_name = table_configuration.id] || (_base[_name] = {});
+      mapping.table_configuration = table_configuration;
+      if (mapping.pagination_scope) {
+        throw "WHOOPS";
+      }
+    };
+
+    AngularTableManager.prototype.register_table_scope = function(id, scope) {
+      var tc;
+      this.mappings[id].table_scope = scope;
+      tc = this.mappings[id].table_configuration;
+      if (tc.initial_items_per_page) {
+        scope.$parent[tc.items_per_page] = tc.initial_items_per_page;
+      }
+      if (tc.initial_sort_context) {
+        scope.$parent[tc.sort_context] = tc.initial_sort_context;
+      }
+      if (tc.initial_fill_last_page) {
+        return scope.$parent[tc.fill_last_page] = tc.initial_fill_last_page;
+      }
+    };
+
+    AngularTableManager.prototype.register_pagination_scope = function(id, pagination_scope) {
+      var mapping, _base;
+      mapping = (_base = this.mappings)[id] || (_base[id] = {});
+      mapping.pagination_scope = pagination_scope;
+      if (mapping.table_configuration) {
+        return pagination_scope.$watch(irk_current_page, function() {
+          var ts;
+          ts = mapping.table_scope;
+          ts[irk_current_page] = pagination_scope[irk_current_page];
+          ts[irk_number_of_pages] = pagination_scope[irk_number_of_pages];
+          return ts[irk_from_page] = calculate_from_page(ts[mapping.table_configuration.items_per_page], ts[irk_current_page], ts[mapping.table_configuration.list]);
+        });
+      }
+    };
+
+    return AngularTableManager;
+
+  })();
+
+  angular.module("angular-table").service("angularTableManager", [
+    function() {
+      return new AngularTableManager();
+    }
+  ]);
+
+  angular.module("angular-table").directive("atTable", [
+    "$filter", "angularTableManager", function($filter, angularTableManager) {
+      return {
+        restrict: "AC",
+        scope: true,
+        controller: [
+          "$scope", "$element", "$attrs", function($scope, $element, $attrs) {
+            var id;
+            id = $attrs["id"];
+            if (id) {
+              return angularTableManager.register_table_scope(id, $scope);
+            }
+          }
+        ],
+        compile: function(element, attributes, transclude) {
+          var dt, tc;
+          tc = new TableConfiguration(element, attributes);
+          angularTableManager.register_table(tc);
+          dt = new Table(element, tc);
+          dt.compile();
+          return {
+            post: function($scope, $element, $attributes) {
+              return dt.post($scope, $element, $attributes, $filter);
+            }
+          };
+        }
+      };
+    }
+  ]);
+
+  angular.module("angular-table").directive("atPagination", [
+    "angularTableManager", function(angularTableManager) {
+      return {
+        replace: true,
+        restrict: "E",
+        template: "      <div class='pagination' style='margin: 0px;'>        <ul>          <li ng-class='{disabled: " + irk_current_page + " <= 0}'>            <a href='' ng-click='go_to_page(" + irk_current_page + " - 1)'>&laquo;</a>          </li>          <li ng-class='{active: " + irk_current_page + " == page}' ng-repeat='page in pages'>            <a href='' ng-click='go_to_page(page)'>{{page + 1}}</a>          </li>          <li ng-class='{disabled: " + irk_current_page + " >= " + irk_number_of_pages + " - 1}'>            <a href='' ng-click='go_to_page(" + irk_current_page + " + 1); normalize()'>&raquo;</a>          </li>        </ul>      </div>",
+        controller: [
+          "$scope", "$element", "$attrs", function($scope, $element, $attrs) {
+            return angularTableManager.register_pagination_scope($attrs.atTableId, $scope);
+          }
+        ],
+        scope: true,
+        link: function($scope, $element, $attributes) {
+          var normalizePage, tc, update;
+          tc = angularTableManager.get_table_configuration($attributes.atTableId);
+          $scope[irk_current_page] = 0;
+          update = function(reset) {
+            var x;
+            $scope[irk_current_page] = 0;
+            if ($scope[tc.list]) {
+              if ($scope[tc.list].length > 0) {
+                $scope[irk_number_of_pages] = Math.ceil($scope[tc.list].length / $scope[tc.items_per_page]);
+                return $scope.pages = (function() {
+                  var _i, _ref, _results;
+                  _results = [];
+                  for (x = _i = 0, _ref = $scope[irk_number_of_pages] - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; x = 0 <= _ref ? ++_i : --_i) {
+                    _results.push(x);
+                  }
+                  return _results;
+                })();
+              } else {
+                $scope[irk_number_of_pages] = 1;
+                return $scope.pages = [0];
+              }
+            }
+          };
+          normalizePage = function(page) {
+            page = Math.max(0, page);
+            page = Math.min($scope[irk_number_of_pages] - 1, page);
+            return page;
+          };
+          $scope.go_to_page = function(page) {
+            return $scope[irk_current_page] = normalizePage(page);
+          };
+          update();
+          $scope.$watch(tc.items_per_page, function() {
+            return update();
+          });
+          return $scope.$watch(tc.list, function() {
+            return update();
+          });
+        }
+      };
+    }
+  ]);
+
+  angular.module("angular-table").directive("atImplicit", [
+    function() {
+      return {
+        restrict: "AC",
+        compile: function(element, attributes, transclude) {
+          var attribute;
+          attribute = element.attr("at-attribute");
+          if (!attribute) {
+            throw "at-implicit specified without at-attribute: " + (element.html());
+          }
+          return element.append("{{item." + attribute + "}}");
+        }
+      };
+    }
+  ]);
 
 }).call(this);
