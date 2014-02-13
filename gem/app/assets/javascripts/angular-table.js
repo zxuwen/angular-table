@@ -136,7 +136,7 @@
           return this.max_pages = max_pages;
         } else {
           this.max_pages = "" + this.id + "_maxPages";
-          return this.initial_items_per_page = parseInt(max_pages);
+          return this.initial_max_pages = parseInt(max_pages);
         }
       }
     };
@@ -476,7 +476,10 @@
         scope.$parent[tc.sort_context] = tc.initial_sort_context;
       }
       if (tc.initial_fill_last_page) {
-        return scope.$parent[tc.fill_last_page] = tc.initial_fill_last_page;
+        scope.$parent[tc.fill_last_page] = tc.initial_fill_last_page;
+      }
+      if (tc.initial_max_pages) {
+        return scope.$parent[tc.max_pages] = tc.initial_max_pages;
       }
     };
 
