@@ -58,6 +58,9 @@ class AngularTableManager
     if tc.initial_fill_last_page
       scope.$parent[tc.fill_last_page] = tc.initial_fill_last_page
 
+    if tc.initial_max_pages
+      scope.$parent[tc.max_pages] = tc.initial_max_pages
+
 
   register_pagination_scope: (id, pagination_scope) ->
     mapping = @mappings[id] ||= {}

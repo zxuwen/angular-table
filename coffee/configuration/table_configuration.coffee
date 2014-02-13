@@ -52,7 +52,7 @@ class TableConfiguration
         @max_pages = max_pages
       else
         @max_pages = "#{@id}_maxPages"
-        @initial_items_per_page = parseInt(max_pages)
+        @initial_max_pages = parseInt(max_pages)
 
   capitaliseFirstLetter: (string) ->
     if string then string.charAt(0).toUpperCase() + string.slice(1) else ""
