@@ -6,9 +6,11 @@ class TableConfiguration
     @register_items_per_page(@attributes[erk_items_per_page]) if @attributes[erk_items_per_page]
     @register_sort_context(@attributes[erk_sort_context])
     @register_fill_last_page(@attributes[erk_fill_last_page])
-    @paginated = @items_per_page != undefined
+    @register_max_pages(@attributes[erk_max_pages])
+    @paginated       = @items_per_page != undefined
     @create_column_configurations()
 
+  # TODO: refactor the following 4 methods into nicer, if-less logic
   register_items_per_page: (items_per_page) ->
     if isNaN(items_per_page)
       @items_per_page = items_per_page
@@ -43,6 +45,14 @@ class TableConfiguration
         @initial_fill_last_page = true
       else
         @fill_last_page = fill_last_page
+
+  register_max_pages: (max_pages) ->
+    if max_pages isnt undefined
+      if isNaN(max_pages)
+        @max_pages = max_pages
+      else
+        @max_pages = "#{@id}_maxPages"
+        @initial_items_per_page = parseInt(max_pages)
 
   capitaliseFirstLetter: (string) ->
     if string then string.charAt(0).toUpperCase() + string.slice(1) else ""

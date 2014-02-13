@@ -11,6 +11,7 @@ erk_list            = "atList"
 erk_items_per_page  = "atItemsPerPage"
 erk_fill_last_page  = "atFillLastPage"
 erk_sort_context    = "atSortContext"
+erk_max_pages       = "atMaxPages"
 # column
 erk_attribute       = "at-attribute"
 erk_sortable        = "at-sortable"
@@ -19,6 +20,13 @@ erk_initial_sorting = "at-initial-sorting"
 calculate_from_page = (items_per_page, current_page, list) ->
   if list
     items_per_page * current_page - list.length
+
+update_table_scope = (table_scope, pagination_scope, table_configuration) ->
+  table_scope[irk_current_page]    = pagination_scope[irk_current_page]
+  table_scope[irk_number_of_pages] = pagination_scope[irk_number_of_pages]
+  table_scope[irk_from_page]       = calculate_from_page(table_scope[table_configuration.items_per_page],
+                                                         table_scope[irk_current_page],
+                                                         table_scope[table_configuration.list])
 
 class AngularTableManager
 
@@ -50,18 +58,18 @@ class AngularTableManager
     if tc.initial_fill_last_page
       scope.$parent[tc.fill_last_page] = tc.initial_fill_last_page
 
+
   register_pagination_scope: (id, pagination_scope) ->
     mapping = @mappings[id] ||= {}
     mapping.pagination_scope = pagination_scope
 
     if mapping.table_configuration
       pagination_scope.$watch(irk_current_page, () ->
-        ts = mapping.table_scope
-        ts[irk_current_page]    = pagination_scope[irk_current_page]
-        ts[irk_number_of_pages] = pagination_scope[irk_number_of_pages]
-        ts[irk_from_page]       = calculate_from_page(ts[mapping.table_configuration.items_per_page],
-                                                      ts[irk_current_page],
-                                                      ts[mapping.table_configuration.list])
+        update_table_scope(mapping.table_scope, pagination_scope, mapping.table_configuration)
+      )
+
+      pagination_scope.$watch(irk_number_of_pages, () ->
+        update_table_scope(mapping.table_scope, pagination_scope, mapping.table_configuration)
       )
 
 angular.module("angular-table").service "angularTableManager", [() ->
