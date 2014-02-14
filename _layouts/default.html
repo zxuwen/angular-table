@@ -12,6 +12,9 @@
     <script type="text/javascript" src="js/angular-table.min.js"></script>
     <script type="text/javascript" src="js/angular-tabs.min.js"></script>
 
+    <script type="text/javascript" src="js/examplesModule.js"></script>
+    <script type="text/javascript" src="js/completeExampleCtrl.js"></script>
+
     <link rel="stylesheet" type="text/css" href="css/syntax.css">
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -47,77 +50,78 @@
 
     <script type="text/javascript">
 
-      (function() {
-        angular.module("angular-table-example", ["angular-table", "angular-tabs"]);
+      {% include js/completeExampleCtrl.js %}
 
-        angular.module("angular-table-example").controller("example-ctrl", ["$scope", "$filter", function($scope, $filter) {
-            var generateData, loremArray, nameArray, randomArray, randomWord;
+      // (function() {
 
-            loremArray = ["Lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipisicing", "elit", "sed", "do", "eiusmod", "tempor", "incididunt", "ut", "labore", "et", "dolore", "magna", "aliqua", "Ut", "enim", "ad", "minim", "veniam", "quis", "nostrud", "exercitation", "ullamco", "laboris", "nisi", "ut", "aliquip", "ex", "ea", "commodo", "consequat", "Duis", "aute", "irure", "dolor", "in", "reprehenderit", "in", "voluptate", "velit", "esse", "cillum", "dolore", "eu", "fugiat", "nulla", "pariatur", "Excepteur", "sint", "occaecat", "cupidatat", "non", "proident", "sunt", "in", "culpa", "qui", "officia", "deserunt", "mollit", "anim", "id", "est", "laborum"];
+      //   angular.module("angular-table-example").controller("example-ctrl", ["$scope", "$filter", function($scope, $filter) {
+      //       var generateData, loremArray, nameArray, randomArray, randomWord;
+
+      //       loremArray = ["Lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipisicing", "elit", "sed", "do", "eiusmod", "tempor", "incididunt", "ut", "labore", "et", "dolore", "magna", "aliqua", "Ut", "enim", "ad", "minim", "veniam", "quis", "nostrud", "exercitation", "ullamco", "laboris", "nisi", "ut", "aliquip", "ex", "ea", "commodo", "consequat", "Duis", "aute", "irure", "dolor", "in", "reprehenderit", "in", "voluptate", "velit", "esse", "cillum", "dolore", "eu", "fugiat", "nulla", "pariatur", "Excepteur", "sint", "occaecat", "cupidatat", "non", "proident", "sunt", "in", "culpa", "qui", "officia", "deserunt", "mollit", "anim", "id", "est", "laborum"];
 
 
-            randomWord = function(src) {
-              return src[Math.floor(Math.random() * (src.length))];
-            };
+      //       randomWord = function(src) {
+      //         return src[Math.floor(Math.random() * (src.length))];
+      //       };
 
-            randomArray = function(src, maxLength) {
-              var length = Math.floor(Math.random() * maxLength);
-              var results = [];
-              for (var i = 0; i <= length; i++) {
-                var word = randomWord(src);
-                results.push({
-                  idx: i,
-                  word: word
-                });
-              }
-              return results;
-            };
+      //       randomArray = function(src, maxLength) {
+      //         var length = Math.floor(Math.random() * maxLength);
+      //         var results = [];
+      //         for (var i = 0; i <= length; i++) {
+      //           var word = randomWord(src);
+      //           results.push({
+      //             idx: i,
+      //             word: word
+      //           });
+      //         }
+      //         return results;
+      //       };
 
-            randomList = function(src, length) {
-              var results = [];
-              for (var i = 0; i < length; i++) {
-                entry = {
-                  id: i,
-                  description: randomWord(src),
-                  // name: randomWord(src),
-                  // strings: randomArray(src, 5)
-                };
-                entry.lengthOfDescription = entry.description.length;
-                // entry.numberOfStrings = entry.strings.length;
-                results.push(entry);
-              }
-              return results;
-            };
+      //       randomList = function(src, length) {
+      //         var results = [];
+      //         for (var i = 0; i < length; i++) {
+      //           entry = {
+      //             id: i,
+      //             description: randomWord(src),
+      //             // name: randomWord(src),
+      //             // strings: randomArray(src, 5)
+      //           };
+      //           entry.lengthOfDescription = entry.description.length;
+      //           // entry.numberOfStrings = entry.strings.length;
+      //           results.push(entry);
+      //         }
+      //         return results;
+      //       };
 
-            $scope.shortLoremList = randomList(loremArray, 5);
+      //       $scope.shortLoremList = randomList(loremArray, 5);
 
-            $scope.longLoremList = randomList(loremArray, 50);
+      //       $scope.longLoremList = randomList(loremArray, 50);
 
-            $scope.filteredList = $scope.longLoremList
+      //       $scope.filteredList = $scope.longLoremList
 
-            $scope.queryChanged = function(query) {
-              $scope.filteredList = $filter("filter")($scope.longLoremList, query);
-            };
+      //       $scope.queryChanged = function(query) {
+      //         $scope.filteredList = $filter("filter")($scope.longLoremList, query);
+      //       };
 
-            var vowels = ["a", "e", "i", "o", "u"];
-            $scope.vowelsList = function(word) {
-              list = [];
-              for(var i = 0; i < vowels.length; i++) {
-                if (word.indexOf(vowels[i]) > -1) {
-                  list.push(vowels[i]);
-                }
-              }
-              return list;
-            };
+      //       var vowels = ["a", "e", "i", "o", "u"];
+      //       $scope.vowelsList = function(word) {
+      //         list = [];
+      //         for(var i = 0; i < vowels.length; i++) {
+      //           if (word.indexOf(vowels[i]) > -1) {
+      //             list.push(vowels[i]);
+      //           }
+      //         }
+      //         return list;
+      //       };
 
-            var vowelClasses = ["badge-success", "badge-warning", "badge-important", "badge-info", "badge-inverse"];
-            $scope.vowelClass = function(vowel) {
-              return vowelClasses[vowels.indexOf(vowel)];
-            };
-          }
-        ]);
+      //       var vowelClasses = ["badge-success", "badge-warning", "badge-important", "badge-info", "badge-inverse"];
+      //       $scope.vowelClass = function(vowel) {
+      //         return vowelClasses[vowels.indexOf(vowel)];
+      //       };
+      //     }
+      //   ]);
 
-      }).call(this);
+      // }).call(this);
 
     </script>
 

@@ -1,0 +1,21 @@
+{% raw %}
+<div ng-controller="completeExampleCtrl">
+  <table id="completeExampleTable" class="table table-striped table-bordered"
+    at-table
+    at-list="list"
+    at-items-per-page="itemsPerPage"
+    at-max-pages="maxPages"
+    at-fill-last-page="fillLastPage">
+    <thead></thead>
+    <tbody>
+      <tr>
+        <td at-implicit at-sortable at-attribute="index" width="150"></td>
+        <td at-implicit at-sortable at-attribute="name"  width="250"></td>
+        <td at-implicit at-sortable at-attribute="email"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <at-pagination class="pagination-centered" at-table-id="completeExampleTable"></at-pagination>
+</div>
+{% endraw %}

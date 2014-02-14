@@ -2,6 +2,54 @@
 layout: default
 ---
 
+<!-- <angular-tabs-control for="examplestab"></angular-tabs-control> -->
+
+<div class="row-fluid">
+  <div class="span2"></div>
+  <div class="span8">
+    <angular-tabs id="mainTabs" active-tab="Complete Example">
+      <div tab-title="Complete Example">
+
+        <angular-tabs id="completeExampleTabs" active-tab="Result">
+          <div tab-title="Result">
+            <div class="row-fluid">
+              <div class="span8">
+                {% include html/complete_example.html %}
+              </div>
+              <div class="span4">
+                {% include html/control_panel.html %}
+              </div>
+            </div>
+          </div>
+          <div tab-title="Code">
+            <div class="row-fluid">
+              <div class="span12">
+                <div ng-non-bindable>
+                  <h4>Html</h4>
+{% highlight html %}
+{% include html/complete_example.html %}
+{% endhighlight %}
+
+                  <h4>Javascript</h4>
+{% highlight javascript %}
+{% include js/completeExampleCtrl.js %}
+{% endhighlight %}
+<!--
+                  <h4>Settings Panel HTML</h4>
+{% highlight html %}
+{% include html/control_panel.html %}
+{% endhighlight %} -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </angular-tabs>
+      </div>
+    </angular-tabs>
+  </div>
+</div>
+
+<!--
 <angular-tabs-control for="examplestab"></angular-tabs-control>
 
 <angular-tabs id="examplestab" active-tab="Implicit">
@@ -136,3 +184,4 @@ $scope.queryChanged = function(query) {
     </div>
   </div>
 </angular-tabs>
+ -->
