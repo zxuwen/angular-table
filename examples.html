@@ -2,8 +2,10 @@
 layout: default
 ---
 
-<angular-tabs active-tab="Implicit">
-  <div title="Implicit">
+<angular-tabs-control for="examplestab"></angular-tabs-control>
+
+<angular-tabs id="examplestab" active-tab="Implicit">
+  <div tab-title="Implicit">
     <div class="row-fluid">
       <div class="span12">
         <h2>implicit cells, fixed widths, custom title</h2>
@@ -24,7 +26,7 @@ layout: default
     </div>
   </div>
 
-  <div title="Sorting / Pagination">
+  <div tab-title="Sorting / Pagination">
     <div class="row-fluid">
       <div class="span12">
         <h2>sorting, pagination, custom cells</h2>
@@ -45,7 +47,7 @@ layout: default
     </div>
   </div>
 
-  <div title="Custom">
+  <div tab-title="Custom">
     <div class="row-fluid">
       <div class="span12">
         <h2>custom header, custom cells</h2>
@@ -66,7 +68,7 @@ layout: default
     </div>
   </div>
 
-  <div title="Filtering">
+  <div tab-title="Filtering">
     <div class="row-fluid">
       <div class="span12">
         <h2>filtering</h2>
@@ -97,7 +99,7 @@ $scope.queryChanged = function(query) {
 
   </div>
 
-  <div title="Styling">
+  <div tab-title="Styling">
     <div class="row-fluid">
       <div class="span12">
         <h2>use your own css</h2>
