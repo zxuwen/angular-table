@@ -32,8 +32,8 @@ class Table
     for bd in @table_configuration.column_configurations
       if bd.initialSorting
         throw "initial-sorting specified without attribute." if not bd.attribute
-      $scope.predicate = bd.attribute
-      $scope.descending = bd.initialSorting == "desc"
+        $scope.predicate = bd.attribute
+        $scope.descending = bd.initialSorting == "desc"
 
   post: ($scope, $element, $attributes, $filter) ->
     @setup_initial_sorting($scope)

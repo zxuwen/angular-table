@@ -385,9 +385,11 @@
           if (!bd.attribute) {
             throw "initial-sorting specified without attribute.";
           }
+          $scope.predicate = bd.attribute;
+          _results.push($scope.descending = bd.initialSorting === "desc");
+        } else {
+          _results.push(void 0);
         }
-        $scope.predicate = bd.attribute;
-        _results.push($scope.descending = bd.initialSorting === "desc");
       }
       return _results;
     };
