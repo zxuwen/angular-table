@@ -1,5 +1,7 @@
 # angular-table
 
+_work in progress!_
+
 Angular directive which allows to declare sortable tables and to add
 pagination with very little effort.
 
