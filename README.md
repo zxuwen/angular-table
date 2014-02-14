@@ -1,34 +1,34 @@
 # angular-table
 
-Html tables with sorting and pagination.
+Angular directive which allows to declare sortable tables and to add
+pagination with very little effort.
 
-[Written in CoffeeScript.](https://github.com/samu/angular-table/blob/master/coffee)
+## Features
+  * Makes columns sortable
+  * Adds pagination in a plug-and-play manner
+  * Implicitly renders cell contents by name convention and allows custom cell content if needed
+  * Renders headers implicitly and allows custom header declarations if needed
+  * Lets you define pagination options `items per page`, `maximum pages`, `sort context` and `fill last page`
+  * 100% declarative, no code required in your controllers
 
-Check out the [examples](http://samu.github.io/angular-table/examples.html) for more information.
+Check out the [examples](http://samu.github.io/angular-table/examples.html) for a demo.
 
-## How
+## Configuration
 
-All you have to do in your controller is setting up a list on your `$scope`:
+### Configurations for a table with pagination
 
-```javascript
-$scope.nameList = [{name: "Laura"}, {name: "Lea"}, {name: "Sara"}]
-```
+The following configurations can be used inside the `<table>` tag and come into play when a pagination is used:
 
-Defining a table is 100% declarative. Here's a simple example:
+  * `at-items-per-page=integer` defines the maximum amount of items to be displayed per page.
 
-```html
-<table at-table list="nameList">
-  <!-- the header will automatically be created according to the body definition. -->
-  <thead></thead>
-  <tbody>
-    <tr>
-      <!-- for each item in list a cell will be rendered, containing the value in attribute. -->
-      <td at-implicit attribute="name"></td>
-      <!-- you can still render custom cells if you need to. -->
-      <td title="Custom cell">
-        The name is {{item.name}}
-      </td>
-    </tr>
-  </tbody>
-</table>
-```
+  * `at-fill-last-page=string` fills up the remaining space of the last page of your table.
+
+  * `at-maximum-pages=integer` comes in handy if you expect your list to contain a lot of entries.
+
+  * `at-sort-context` allows to set the sorting behaviour to `'global'` or `'page'`.
+
+These options can be configured by using a scope model, such as `at-items-per-page="yourScopeVariable"`. However,
+you can also directly assign values, such as `at-items-per-page="5"`. In that case, `angular-table` will automatically
+set up appropriate variables in your scope, prefixed with the id of the table, for example `$scope.tableId_itemsPerPage`.
+
+### Column options
