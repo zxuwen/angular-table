@@ -2,35 +2,27 @@
 layout: default
 ---
 
-<div class="container" class="span7">
-
-</div>
-
-<!-- <angular-tabs-control for="examplestab"></angular-tabs-control> -->
 
 <div class="container">
   <!-- <div class="span3"></div> -->
-  <div class="span12">
-    <h1>angular-table</h1>
+  <div class="span5">
+    <h1>angular-table</h1> <br>
     <angular-tabs id="mainTabs" active-tab="Complete Example">
       <div tab-title="Complete Example">
-        <angular-tabs id="completeExampleTabs" active-tab="Result">
+        <angular-tabs id="completeExampleTabs" active-tab="Result"> <br>
           <div tab-title="Result">
-            <div class="row-fluid">
-              <div class="span12">
+            <div class="row">
+              <div class="col-md-10">
                 {% include html/complete_example.html %}
               </div>
-              <!-- <div class="span2">
+              <div class="col-md-2">
                 {% include html/control_panel.html %}
-              </div> -->
+              </div>
             </div>
-            {% include html/control_panel.html %}
           </div>
           <div tab-title="Code">
-            <div class="row-fluid">
-              <div class="span12">
-                <div ng-non-bindable>
-                  <h4>Html</h4>
+            <div ng-non-bindable>
+              <h4>Html</h4>
 {% highlight html %}
 {% include html/complete_example.html %}
 {% endhighlight %}
@@ -39,13 +31,6 @@ layout: default
 {% highlight javascript %}
 {% include js/completeExampleCtrl.js %}
 {% endhighlight %}
-<!--
-                  <h4>Settings Panel HTML</h4>
-{% highlight html %}
-{% include html/control_panel.html %}
-{% endhighlight %} -->
-                </div>
-              </div>
             </div>
           </div>
         </angular-tabs>
