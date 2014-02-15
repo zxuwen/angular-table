@@ -38,8 +38,9 @@ class Table
   post: ($scope, $element, $attributes, $filter) ->
     @setup_initial_sorting($scope)
 
-    $scope.getSortIcon = (predicate) ->
-      return "icon-minus" if predicate != $scope.predicate
-      if $scope.descending then "icon-chevron-down" else "icon-chevron-up"
+    if not $scope.getSortIcon
+      $scope.getSortIcon = (predicate, current_predicate) ->
+        return "icon-minus" if predicate != $scope.predicate
+        if $scope.descending then "glyphicon glyphicon-chevron-down" else "glyphicon glyphicon-chevron-up"
 
     @setup.link($scope, $element, $attributes, $filter)

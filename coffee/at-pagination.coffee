@@ -4,8 +4,8 @@ angular.module("angular-table").directive "atPagination", ["angularTableManager"
     restrict: "E"
 
     template: "
-      <div class='pagination' style='margin: 0px;'>
-        <ul>
+      <div style='margin: 0px;'>
+        <ul class='pagination'>
           <li ng-class='{disabled: #{irk_current_page} <= 0}'>
             <a href='' ng-click='step_page(-#{irk_number_of_pages})'>First</a>
           </li>

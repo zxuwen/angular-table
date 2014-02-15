@@ -48,7 +48,7 @@
       if (this.sortable) {
         element.attr("ng-click", "predicate = '" + this.attribute + "'; descending = !descending;");
         icon = angular.element("<i style='margin-left: 10px;'></i>");
-        icon.attr("ng-class", "getSortIcon('" + this.attribute + "')");
+        icon.attr("ng-class", "getSortIcon('" + this.attribute + "', predicate)");
         return element.append(icon);
       }
     };
@@ -396,16 +396,18 @@
 
     Table.prototype.post = function($scope, $element, $attributes, $filter) {
       this.setup_initial_sorting($scope);
-      $scope.getSortIcon = function(predicate) {
-        if (predicate !== $scope.predicate) {
-          return "icon-minus";
-        }
-        if ($scope.descending) {
-          return "icon-chevron-down";
-        } else {
-          return "icon-chevron-up";
-        }
-      };
+      if (!$scope.getSortIcon) {
+        $scope.getSortIcon = function(predicate, current_predicate) {
+          if (predicate !== $scope.predicate) {
+            return "icon-minus";
+          }
+          if ($scope.descending) {
+            return "glyphicon glyphicon-chevron-down";
+          } else {
+            return "glyphicon glyphicon-chevron-up";
+          }
+        };
+      }
       return this.setup.link($scope, $element, $attributes, $filter);
     };
 
@@ -544,7 +546,7 @@
       return {
         replace: true,
         restrict: "E",
-        template: "      <div class='pagination' style='margin: 0px;'>        <ul>          <li ng-class='{disabled: " + irk_current_page + " <= 0}'>            <a href='' ng-click='step_page(-" + irk_number_of_pages + ")'>First</a>          </li>          <li ng-show='show_sectioning()' ng-class='{disabled: " + irk_current_page + " <= 0}'>            <a href='' ng-click='jump_back()'>&laquo;</a>          </li>          <li ng-class='{disabled: " + irk_current_page + " <= 0}'>            <a href='' ng-click='step_page(-1)'>&lsaquo;</a>          </li>          <li ng-class='{active: " + irk_current_page + " == page}' ng-repeat='page in pages'>            <a href='' ng-click='go_to_page(page)'>{{page + 1}}</a>          </li>          <li ng-class='{disabled: " + irk_current_page + " >= " + irk_number_of_pages + " - 1}'>            <a href='' ng-click='step_page(1)'>&rsaquo;</a>          </li>          <li ng-show='show_sectioning()' ng-class='{disabled: " + irk_current_page + " >= " + irk_number_of_pages + " - 1}'>            <a href='' ng-click='jump_ahead()'>&raquo;</a>          </li>          <li ng-class='{disabled: " + irk_current_page + " >= " + irk_number_of_pages + " - 1}'>            <a href='' ng-click='step_page(" + irk_number_of_pages + ")'>Last</a>          </li>        </ul>      </div>",
+        template: "      <div style='margin: 0px;'>        <ul class='pagination'>          <li ng-class='{disabled: " + irk_current_page + " <= 0}'>            <a href='' ng-click='step_page(-" + irk_number_of_pages + ")'>First</a>          </li>          <li ng-show='show_sectioning()' ng-class='{disabled: " + irk_current_page + " <= 0}'>            <a href='' ng-click='jump_back()'>&laquo;</a>          </li>          <li ng-class='{disabled: " + irk_current_page + " <= 0}'>            <a href='' ng-click='step_page(-1)'>&lsaquo;</a>          </li>          <li ng-class='{active: " + irk_current_page + " == page}' ng-repeat='page in pages'>            <a href='' ng-click='go_to_page(page)'>{{page + 1}}</a>          </li>          <li ng-class='{disabled: " + irk_current_page + " >= " + irk_number_of_pages + " - 1}'>            <a href='' ng-click='step_page(1)'>&rsaquo;</a>          </li>          <li ng-show='show_sectioning()' ng-class='{disabled: " + irk_current_page + " >= " + irk_number_of_pages + " - 1}'>            <a href='' ng-click='jump_ahead()'>&raquo;</a>          </li>          <li ng-class='{disabled: " + irk_current_page + " >= " + irk_number_of_pages + " - 1}'>            <a href='' ng-click='step_page(" + irk_number_of_pages + ")'>Last</a>          </li>        </ul>      </div>",
         controller: [
           "$scope", "$element", "$attrs", function($scope, $element, $attrs) {
             return angularTableManager.register_pagination_scope($attrs.atTableId, $scope);
