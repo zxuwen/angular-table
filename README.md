@@ -34,3 +34,4 @@ you can also directly assign values, such as `at-items-per-page="5"`. In that ca
 set up appropriate variables in your scope, prefixed with the id of the table, for example `$scope.tableId_itemsPerPage`.
 
 ### Column options
+
