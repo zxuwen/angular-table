@@ -1,6 +1,7 @@
 {% raw %}
 <div ng-controller="filteredTableCtrl">
   <input placeholder="Search..." type="text" ng-model="query" ng-change="queryChanged(query)" class="form-control">
+
   <table id="filteredTable" class="table table-striped"
     at-table
     at-list="filteredList"
