@@ -1,0 +1,14 @@
+{
+  "name": "angular-table",
+  "version": "0.0.8",
+  "author": "Samuel Mueller",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/samu/angular-table.git"
+  },
+  "devDependencies": {
+  },
+  "scripts": {
+    "test": "karma start --single-run --no-auto-watch"
+  }
+}
