@@ -1,4 +1,4 @@
-# angular-table
+# angular-table [![Build Status](https://travis-ci.org/samu/angular-table.png?branch=master)](https://travis-ci.org/samu/angular-table)
 
 _work in progress!_
 
