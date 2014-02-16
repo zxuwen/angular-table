@@ -12,7 +12,8 @@ describe "angular-table", () ->
       expect(tds).toEqual ["Till", "Richard", "Christoph", "Paul"]
 
       paginationLinks = @element.find "a"
-      _.find(paginationLinks, (link) -> angular.element(link).html() == "2").click()
+      link = _.find(paginationLinks, (link) -> angular.element(link).html() == "2")
+      click(link)
 
       tds = extract_html_to_array(@element.find("td"))
       expect(tds).toEqual ["Flake", "Oliver", "&nbsp;", "&nbsp;"]

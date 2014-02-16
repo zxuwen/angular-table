@@ -13,6 +13,6 @@ describe "angular-table", () ->
       expect(tds).toEqual ["Zurich", "Helsinki", "Amsterdam"]
 
     it "makes columns sortable", () ->
-      @element.find("th")[0].click()
+      click(@element.find("th")[0])
       tds = extract_html_to_array(@element.find("td"))
       expect(tds).toEqual ["Amsterdam", "Helsinki", "Zurich"]
