@@ -1,19 +1,19 @@
-
-<label>Items Per Page</label>
+<label>$scope.itemsPerPage</label>
 <select ng-model="itemsPerPage" ng-init="itemsPerPage=9" class="form-control">
   <option value="3">3</option>
   <option value="5">5</option>
   <option value="9">9</option>
 </select>
 
-<label>Maximum Pages</label>
+<label>$scope.maxPages</label>
 <select ng-model="maxPages" ng-init="maxPages=9" class="form-control">
+  <option value="1">1</option>
   <option value="3">3</option>
   <option value="5">5</option>
   <option value="9">9</option>
 </select>
 
-<label>Fill Last Page</label>
+<label>$scope.fillLastPage</label>
 <select ng-model="fillLastPage" ng-init="fillLastPage='yes'" class="form-control">
   <option value="yes">yes</option>
   <option value="no">no</option>

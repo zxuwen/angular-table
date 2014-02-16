@@ -81,8 +81,5 @@ angular.module("angular-table-example")
         email: "rita@parsons.au"
       }
     ]
-
-
-
 }
 ]);

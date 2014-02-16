@@ -1,0 +1,49 @@
+<div ng-controller="customizingTheHeaderCtrl">
+  <h3>Implicit Title</h3>
+    <div class="row">
+      <div class="col-md-3">
+        {% include html/customizing_the_header/e1.html %}
+      </div>
+      <div class="col-md-9">
+{% highlight html %}
+{% include html/customizing_the_header/e1.html %}
+{% endhighlight %}
+      </div>
+    </div>
+
+  <h3>No Header</h3>
+    <div class="row">
+      <div class="col-md-3">
+        {% include html/customizing_the_header/e2.html %}
+      </div>
+      <div class="col-md-9">
+{% highlight html %}
+{% include html/customizing_the_header/e2.html %}
+{% endhighlight %}
+      </div>
+    </div>
+
+  <h3>With <code>at-title</code> Setting</h3>
+    <div class="row">
+      <div class="col-md-3">
+        {% include html/customizing_the_header/e3.html %}
+      </div>
+      <div class="col-md-9">
+{% highlight html %}
+{% include html/customizing_the_header/e3.html %}
+{% endhighlight %}
+      </div>
+    </div>
+
+    <h3>With Markup</h3>
+    <div class="row">
+      <div class="col-md-3">
+        {% include html/customizing_the_header/e4.html %}
+      </div>
+      <div class="col-md-9">
+{% highlight html %}
+{% include html/customizing_the_header/e4.html %}
+{% endhighlight %}
+      </div>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+{% raw %}
+<div ng-controller="filteredTableCtrl">
+  <input placeholder="Search..." type="text" ng-model="query" ng-change="queryChanged(query)" class="form-control">
+  <table id="filteredTable" class="table table-striped"
+    at-table
+    at-list="filteredList"
+    at-items-per-page="itemsPerPage"
+    at-max-pages="maxPages"
+    at-fill-last-page="fillLastPage">
+    <thead></thead>
+    <tbody>
+      <tr>
+        <td at-implicit at-sortable at-attribute="index" class="150px" at-initial-sorting="asc"></td>
+        <td at-implicit at-sortable at-attribute="name"  class="250px"></td>
+        <td at-implicit at-sortable at-attribute="email"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <at-pagination at-table-id="filteredTable"></at-pagination>
+</div>
+{% endraw %}

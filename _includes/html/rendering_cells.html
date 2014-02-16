@@ -1,0 +1,25 @@
+<div ng-controller="renderingCellsCtrl">
+  <h3>Using <code>at-implicit</code> And <code>at-attribute</code></h3>
+    <div class="row">
+      <div class="col-md-3">
+        {% include html/rendering_cells/e1.html %}
+      </div>
+      <div class="col-md-9">
+{% highlight html %}
+{% include html/rendering_cells/e1.html %}
+{% endhighlight %}
+      </div>
+    </div>
+
+  <h3>Using  <code>item</code> And Custom Markup</h3>
+    <div class="row">
+      <div class="col-md-3">
+        {% include html/rendering_cells/e2.html %}
+      </div>
+      <div class="col-md-9" ng-non-bindable>
+{% highlight html %}
+{% include html/rendering_cells/e2.html %}
+{% endhighlight %}
+      </div>
+    </div>
+</div>
