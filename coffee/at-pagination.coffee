@@ -116,5 +116,8 @@ angular.module("angular-table").directive "atPagination", ["angularTableManager"
       $scope.$watch tc.list, () ->
         update()
 
+      $scope.$watch "#{tc.list}.length", () ->
+        update()
+
   }
 ]
