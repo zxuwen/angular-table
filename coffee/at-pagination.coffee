@@ -52,11 +52,12 @@ angular.module("angular-table").directive "atPagination", ["angularTableManager"
         x for x in [start..end]
 
       update = (reset) ->
-        $scope[irk_current_page] = 0
+        # $scope[irk_current_page] = 0
 
         if $scope[tc.list]
           if $scope[tc.list].length > 0
             $scope[irk_number_of_pages] = Math.ceil($scope[tc.list].length / $scope[tc.items_per_page])
+            $scope[irk_current_page] = keep_in_bounds($scope[irk_current_page], 0, $scope[irk_number_of_pages])
             if $scope.show_sectioning()
               $scope.pages = generate_page_array(0, $scope[tc.max_pages] - 1)
             else

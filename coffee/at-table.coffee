@@ -97,8 +97,6 @@ class AngularTableManager
         scope[tc.items_per_page]
       )
 
-      console.log scope.filler_array.length if scope.filler_array
-
     scope.notify_change = (current_page, number_of_pages) ->
       scope[irk_current_page] = current_page
       scope[irk_number_of_pages] = number_of_pages
@@ -106,7 +104,6 @@ class AngularTableManager
 
     scope.$watch("#{tc.list}.length", () ->
       scope[irk_number_of_pages] = Math.ceil(scope[tc.list].length / scope[tc.items_per_page])
-      console.log "it changed!"
       update_stuff()
     )
 
