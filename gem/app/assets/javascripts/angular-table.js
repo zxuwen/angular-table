@@ -489,10 +489,10 @@
         return update_stuff();
       };
       scope.$watch("" + tc.list + ".length", function() {
+        scope[irk_number_of_pages] = Math.ceil(scope[tc.list].length / scope[tc.items_per_page]);
         console.log("it changed!");
         return update_stuff();
       });
-      tc = this.mappings[id].table_configuration;
       if (tc.initial_items_per_page) {
         scope.$parent[tc.items_per_page] = tc.initial_items_per_page;
       }
