@@ -478,10 +478,7 @@
       tc = this.mappings[id].table_configuration;
       update_stuff = function() {
         scope.sorted_and_paginated_list = get_sorted_and_paginated_list(scope[tc.list], scope[irk_current_page], scope[tc.items_per_page], scope[tc.sort_context], scope.predicate, scope.descending, filter);
-        scope.filler_array = get_filler_array(scope[tc.list], scope[irk_current_page], scope[irk_number_of_pages], scope[tc.items_per_page]);
-        if (scope.filler_array) {
-          return console.log(scope.filler_array.length);
-        }
+        return scope.filler_array = get_filler_array(scope[tc.list], scope[irk_current_page], scope[irk_number_of_pages], scope[tc.items_per_page]);
       };
       scope.notify_change = function(current_page, number_of_pages) {
         scope[irk_current_page] = current_page;
@@ -490,7 +487,6 @@
       };
       scope.$watch("" + tc.list + ".length", function() {
         scope[irk_number_of_pages] = Math.ceil(scope[tc.list].length / scope[tc.items_per_page]);
-        console.log("it changed!");
         return update_stuff();
       });
       if (tc.initial_items_per_page) {
@@ -586,10 +582,10 @@
             return _results;
           };
           update = function(reset) {
-            $scope[irk_current_page] = 0;
             if ($scope[tc.list]) {
               if ($scope[tc.list].length > 0) {
                 $scope[irk_number_of_pages] = Math.ceil($scope[tc.list].length / $scope[tc.items_per_page]);
+                $scope[irk_current_page] = keep_in_bounds($scope[irk_current_page], 0, $scope[irk_number_of_pages]);
                 if ($scope.show_sectioning()) {
                   return $scope.pages = generate_page_array(0, $scope[tc.max_pages] - 1);
                 } else {
