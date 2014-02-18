@@ -489,6 +489,12 @@
         scope[irk_number_of_pages] = Math.ceil(scope[tc.list].length / scope[tc.items_per_page]);
         return update_stuff();
       });
+      scope.$watch("predicate", function() {
+        return update_stuff();
+      });
+      scope.$watch("descending", function() {
+        return update_stuff();
+      });
       if (tc.initial_items_per_page) {
         scope.$parent[tc.items_per_page] = tc.initial_items_per_page;
       }

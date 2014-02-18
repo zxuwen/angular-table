@@ -107,6 +107,14 @@ class AngularTableManager
       update_stuff()
     )
 
+    scope.$watch("predicate", () ->
+      update_stuff()
+    )
+
+    scope.$watch("descending", () ->
+      update_stuff()
+    )
+
     # tc = @mappings[id].table_configuration
 
     if tc.initial_items_per_page
