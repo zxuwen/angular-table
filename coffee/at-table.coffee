@@ -46,7 +46,7 @@ get_sorted_and_paginated_list = (list, current_page, items_per_page, sort_contex
 
     return val
   else
-    console.log "RETURNING NOTHING!!"
+    console.log "RETURNING EMPTY"
     return []
 
 get_filler_array = (list, current_page, number_of_pages, items_per_page) ->

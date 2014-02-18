@@ -432,7 +432,7 @@
       }
       return val;
     } else {
-      console.log("RETURNING NOTHING!!");
+      console.log("RETURNING EMPTY");
       return [];
     }
   };
@@ -586,7 +586,6 @@
               if ($scope[tc.list].length > 0) {
                 $scope[irk_number_of_pages] = Math.ceil($scope[tc.list].length / $scope[tc.items_per_page]);
                 $scope[irk_current_page] = keep_in_bounds($scope[irk_current_page], 0, $scope[irk_number_of_pages] - 1);
-                console.log("current page after update: ", $scope[irk_current_page]);
                 if ($scope.show_sectioning()) {
                   return $scope.update_sectioning();
                 } else {
@@ -619,8 +618,6 @@
           };
           $scope.update_sectioning = function() {
             var diff, new_start;
-            console.log("last displayed page: ", $scope.pages[$scope.pages.length - 1]);
-            console.log("current page: ", $scope[irk_current_page]);
             new_start = void 0;
             if ($scope.pages[0] > $scope[irk_current_page]) {
               diff = $scope.pages[0] - $scope[irk_current_page];
@@ -628,9 +625,8 @@
             } else if ($scope.pages[$scope.pages.length - 1] < $scope[irk_current_page]) {
               diff = $scope[irk_current_page] - $scope.pages[$scope.pages.length - 1];
               return shift_sectioning($scope.pages[0], diff, $scope[tc.max_pages], $scope[irk_number_of_pages]);
-            } else if ($scope.pages[$scope.pages.length - 1] > $scope[irk_number_of_pages]) {
+            } else if ($scope.pages[$scope.pages.length - 1] > ($scope[irk_number_of_pages] - 1)) {
               diff = $scope[irk_current_page] - $scope.pages[$scope.pages.length - 1];
-              console.log(diff);
               return shift_sectioning($scope.pages[0], diff, $scope[tc.max_pages], $scope[irk_number_of_pages]);
             }
           };

@@ -56,7 +56,6 @@ angular.module("angular-table").directive "atPagination", ["angularTableManager"
           if $scope[tc.list].length > 0
             $scope[irk_number_of_pages] = Math.ceil($scope[tc.list].length / $scope[tc.items_per_page])
             $scope[irk_current_page] = keep_in_bounds($scope[irk_current_page], 0, $scope[irk_number_of_pages] - 1)
-            console.log "current page after update: ", $scope[irk_current_page]
             if $scope.show_sectioning()
               # $scope.pages = generate_page_array(0, $scope[tc.max_pages] - 1)
               $scope.update_sectioning()
@@ -84,10 +83,6 @@ angular.module("angular-table").directive "atPagination", ["angularTableManager"
         $scope.pages = generate_page_array(new_start, new_start + parseInt($scope[tc.max_pages]) - 1)
 
       $scope.update_sectioning = () ->
-
-        console.log "last displayed page: ", $scope.pages[$scope.pages.length - 1]
-        console.log "current page: ", $scope[irk_current_page]
-
         new_start = undefined
         if $scope.pages[0] > $scope[irk_current_page]
           diff = $scope.pages[0] - $scope[irk_current_page]
@@ -95,9 +90,8 @@ angular.module("angular-table").directive "atPagination", ["angularTableManager"
         else if $scope.pages[$scope.pages.length - 1] < $scope[irk_current_page]
           diff = $scope[irk_current_page] - $scope.pages[$scope.pages.length - 1]
           shift_sectioning($scope.pages[0], diff, $scope[tc.max_pages], $scope[irk_number_of_pages])
-        else if $scope.pages[$scope.pages.length - 1] > $scope[irk_number_of_pages]
+        else if $scope.pages[$scope.pages.length - 1] > ($scope[irk_number_of_pages] - 1)
           diff = $scope[irk_current_page] - $scope.pages[$scope.pages.length - 1]
-          console.log diff
           shift_sectioning($scope.pages[0], diff, $scope[tc.max_pages], $scope[irk_number_of_pages])
 
 
