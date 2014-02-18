@@ -3,7 +3,7 @@
 // license:  MIT 
 // homepage: http://github.com/samu/angular-table 
 (function() {
-  var AngularTableManager, ColumnConfiguration, PaginatedSetup, Setup, StandardSetup, Table, TableConfiguration, calculate_from_page, erk_attribute, erk_fill_last_page, erk_initial_sorting, erk_items_per_page, erk_list, erk_max_pages, erk_sort_context, erk_sortable, irk_current_page, irk_from_page, irk_number_of_pages, update_table_scope,
+  var AngularTableManager, ColumnConfiguration, PaginatedSetup, Setup, StandardSetup, Table, TableConfiguration, calculate_from_page, erk_attribute, erk_fill_last_page, erk_initial_sorting, erk_items_per_page, erk_list, erk_max_pages, erk_sort_context, erk_sortable, get_filler_array, get_sorted_and_paginated_list, irk_current_page, irk_from_page, irk_number_of_pages, update_table_scope,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -273,7 +273,7 @@
 
     function PaginatedSetup(table_configuration) {
       this.table_configuration = table_configuration;
-      this.repeatString = "item in filtered_list()";
+      this.repeatString = "item in sorted_and_paginated_list";
     }
 
     PaginatedSetup.prototype.compile = function(element) {
@@ -288,46 +288,11 @@
       fillerTr = angular.element(document.createElement("tr"));
       fillerTr.attr("ng-show", this.table_configuration.fill_last_page);
       fillerTr.html(tdString);
-      fillerTr.attr("ng-repeat", "item in getFillerArray() ");
+      fillerTr.attr("ng-repeat", "item in filler_array");
       tbody.append(fillerTr);
     };
 
-    PaginatedSetup.prototype.link = function($scope, $element, $attributes, $filter) {
-      var ipp, list_name, sc;
-      list_name = this.table_configuration.list;
-      ipp = this.table_configuration.items_per_page;
-      sc = this.table_configuration.sort_context;
-      $scope.filtered_list = function() {
-        var val;
-        val = $scope[list_name];
-        if ($scope[sc] === "global") {
-          val = $filter("orderBy")(val, $scope.predicate, $scope.descending);
-          val = $filter("limitTo")(val, $scope[irk_from_page]);
-          val = $filter("limitTo")(val, $scope[ipp]);
-        } else {
-          val = $filter("limitTo")(val, $scope[irk_from_page]);
-          val = $filter("limitTo")(val, $scope[ipp]);
-          val = $filter("orderBy")(val, $scope.predicate, $scope.descending);
-        }
-        return val;
-      };
-      return $scope.getFillerArray = function() {
-        var fillerLength, itemCountOnLastPage, x, _i, _ref, _ref1, _results;
-        if ($scope[irk_current_page] === $scope[irk_number_of_pages] - 1) {
-          itemCountOnLastPage = $scope[list_name].length % $scope[ipp];
-          if (itemCountOnLastPage !== 0 || $scope[list_name].length === 0) {
-            fillerLength = $scope[ipp] - itemCountOnLastPage - 1;
-            _results = [];
-            for (x = _i = _ref = $scope[list_name].length, _ref1 = $scope[list_name].length + fillerLength; _ref <= _ref1 ? _i <= _ref1 : _i >= _ref1; x = _ref <= _ref1 ? ++_i : --_i) {
-              _results.push(x);
-            }
-            return _results;
-          } else {
-            return [];
-          }
-        }
-      };
-    };
+    PaginatedSetup.prototype.link = function($scope, $element, $attributes, $filter) {};
 
     return PaginatedSetup;
 
@@ -451,6 +416,44 @@
     return table_scope[irk_from_page] = calculate_from_page(table_scope[table_configuration.items_per_page], table_scope[irk_current_page], table_scope[table_configuration.list]);
   };
 
+  get_sorted_and_paginated_list = function(list, current_page, items_per_page, sort_context, predicate, descending, $filter) {
+    var from_page, val;
+    if (list) {
+      val = list;
+      from_page = items_per_page * current_page - list.length;
+      if (sort_context === "global") {
+        val = $filter("orderBy")(val, predicate, descending);
+        val = $filter("limitTo")(val, from_page);
+        val = $filter("limitTo")(val, items_per_page);
+      } else {
+        val = $filter("limitTo")(val, from_page);
+        val = $filter("limitTo")(val, items_per_page);
+        val = $filter("orderBy")(val, predicate, descending);
+      }
+      return val;
+    } else {
+      console.log("RETURNING EMPTY");
+      return [];
+    }
+  };
+
+  get_filler_array = function(list, current_page, number_of_pages, items_per_page) {
+    var fillerLength, itemCountOnLastPage, x, _i, _ref, _ref1, _results;
+    if (current_page === number_of_pages - 1) {
+      itemCountOnLastPage = list.length % items_per_page;
+      if (itemCountOnLastPage !== 0 || list.length === 0) {
+        fillerLength = items_per_page - itemCountOnLastPage - 1;
+        _results = [];
+        for (x = _i = _ref = list.length, _ref1 = list.length + fillerLength; _ref <= _ref1 ? _i <= _ref1 : _i >= _ref1; x = _ref <= _ref1 ? ++_i : --_i) {
+          _results.push(x);
+        }
+        return _results;
+      } else {
+        return [];
+      }
+    }
+  };
+
   AngularTableManager = (function() {
     function AngularTableManager() {
       this.mappings = {};
@@ -469,10 +472,29 @@
       }
     };
 
-    AngularTableManager.prototype.register_table_scope = function(id, scope) {
-      var tc;
+    AngularTableManager.prototype.register_table_scope = function(id, scope, filter) {
+      var tc, update_stuff;
       this.mappings[id].table_scope = scope;
       tc = this.mappings[id].table_configuration;
+      update_stuff = function() {
+        scope.sorted_and_paginated_list = get_sorted_and_paginated_list(scope[tc.list], scope[irk_current_page], scope[tc.items_per_page], scope[tc.sort_context], scope.predicate, scope.descending, filter);
+        return scope.filler_array = get_filler_array(scope[tc.list], scope[irk_current_page], scope[irk_number_of_pages], scope[tc.items_per_page]);
+      };
+      scope.notify_change = function(current_page, number_of_pages) {
+        scope[irk_current_page] = current_page;
+        scope[irk_number_of_pages] = number_of_pages;
+        return update_stuff();
+      };
+      scope.$watch("" + tc.list + ".length", function() {
+        scope[irk_number_of_pages] = Math.ceil(scope[tc.list].length / scope[tc.items_per_page]);
+        return update_stuff();
+      });
+      scope.$watch("predicate", function() {
+        return update_stuff();
+      });
+      scope.$watch("descending", function() {
+        return update_stuff();
+      });
       if (tc.initial_items_per_page) {
         scope.$parent[tc.items_per_page] = tc.initial_items_per_page;
       }
@@ -493,10 +515,10 @@
       mapping.pagination_scope = pagination_scope;
       if (mapping.table_configuration) {
         pagination_scope.$watch(irk_current_page, function() {
-          return update_table_scope(mapping.table_scope, pagination_scope, mapping.table_configuration);
+          return mapping.table_scope.notify_change(pagination_scope[irk_current_page], pagination_scope[irk_number_of_pages]);
         });
         return pagination_scope.$watch(irk_number_of_pages, function() {
-          return update_table_scope(mapping.table_scope, pagination_scope, mapping.table_configuration);
+          return mapping.table_scope.notify_change(pagination_scope[irk_current_page], pagination_scope[irk_number_of_pages]);
         });
       }
     };
@@ -521,7 +543,7 @@
             var id;
             id = $attrs["id"];
             if (id) {
-              return angularTableManager.register_table_scope(id, $scope);
+              return angularTableManager.register_table_scope(id, $scope, $filter);
             }
           }
         ],
@@ -546,7 +568,7 @@
       return {
         replace: true,
         restrict: "E",
-        template: "      <div style='margin: 0px;'>        <ul class='pagination'>          <li ng-class='{disabled: " + irk_current_page + " <= 0}'>            <a href='' ng-click='step_page(-" + irk_number_of_pages + ")'>First</a>          </li>          <li ng-show='show_sectioning()' ng-class='{disabled: " + irk_current_page + " <= 0}'>            <a href='' ng-click='jump_back()'>&laquo;</a>          </li>          <li ng-class='{disabled: " + irk_current_page + " <= 0}'>            <a href='' ng-click='step_page(-1)'>&lsaquo;</a>          </li>          <li ng-class='{active: " + irk_current_page + " == page}' ng-repeat='page in pages'>            <a href='' ng-click='go_to_page(page)'>{{page + 1}}</a>          </li>          <li ng-class='{disabled: " + irk_current_page + " >= " + irk_number_of_pages + " - 1}'>            <a href='' ng-click='step_page(1)'>&rsaquo;</a>          </li>          <li ng-show='show_sectioning()' ng-class='{disabled: " + irk_current_page + " >= " + irk_number_of_pages + " - 1}'>            <a href='' ng-click='jump_ahead()'>&raquo;</a>          </li>          <li ng-class='{disabled: " + irk_current_page + " >= " + irk_number_of_pages + " - 1}'>            <a href='' ng-click='step_page(" + irk_number_of_pages + ")'>Last</a>          </li>        </ul>      </div>",
+        template: "<div style='margin: 0px;'> <ul class='pagination'> <li ng-class='{disabled: " + irk_current_page + " <= 0}'> <a href='' ng-click='step_page(-" + irk_number_of_pages + ")'>First</a> </li> <li ng-show='show_sectioning()' ng-class='{disabled: " + irk_current_page + " <= 0}'> <a href='' ng-click='jump_back()'>&laquo;</a> </li> <li ng-class='{disabled: " + irk_current_page + " <= 0}'> <a href='' ng-click='step_page(-1)'>&lsaquo;</a> </li> <li ng-class='{active: " + irk_current_page + " == page}' ng-repeat='page in pages'> <a href='' ng-click='go_to_page(page)'>{{page + 1}}</a> </li> <li ng-class='{disabled: " + irk_current_page + " >= " + irk_number_of_pages + " - 1}'> <a href='' ng-click='step_page(1)'>&rsaquo;</a> </li> <li ng-show='show_sectioning()' ng-class='{disabled: " + irk_current_page + " >= " + irk_number_of_pages + " - 1}'> <a href='' ng-click='jump_ahead()'>&raquo;</a> </li> <li ng-class='{disabled: " + irk_current_page + " >= " + irk_number_of_pages + " - 1}'> <a href='' ng-click='step_page(" + irk_number_of_pages + ")'>Last</a> </li> </ul> </div>",
         controller: [
           "$scope", "$element", "$attrs", function($scope, $element, $attrs) {
             return angularTableManager.register_pagination_scope($attrs.atTableId, $scope);
@@ -566,12 +588,12 @@
             return _results;
           };
           update = function(reset) {
-            $scope[irk_current_page] = 0;
             if ($scope[tc.list]) {
               if ($scope[tc.list].length > 0) {
                 $scope[irk_number_of_pages] = Math.ceil($scope[tc.list].length / $scope[tc.items_per_page]);
+                $scope[irk_current_page] = keep_in_bounds($scope[irk_current_page], 0, $scope[irk_number_of_pages] - 1);
                 if ($scope.show_sectioning()) {
-                  return $scope.pages = generate_page_array(0, $scope[tc.max_pages] - 1);
+                  return $scope.update_sectioning();
                 } else {
                   return $scope.pages = generate_page_array(0, $scope[irk_number_of_pages] - 1);
                 }
@@ -609,6 +631,9 @@
             } else if ($scope.pages[$scope.pages.length - 1] < $scope[irk_current_page]) {
               diff = $scope[irk_current_page] - $scope.pages[$scope.pages.length - 1];
               return shift_sectioning($scope.pages[0], diff, $scope[tc.max_pages], $scope[irk_number_of_pages]);
+            } else if ($scope.pages[$scope.pages.length - 1] > ($scope[irk_number_of_pages] - 1)) {
+              diff = $scope[irk_current_page] - $scope.pages[$scope.pages.length - 1];
+              return shift_sectioning($scope.pages[0], diff, $scope[tc.max_pages], $scope[irk_number_of_pages]);
             }
           };
           $scope.step_page = function(step) {
@@ -632,7 +657,10 @@
           $scope.$watch(tc.max_pages, function() {
             return update();
           });
-          return $scope.$watch(tc.list, function() {
+          $scope.$watch(tc.list, function() {
+            return update();
+          });
+          return $scope.$watch("" + tc.list + ".length", function() {
             return update();
           });
         }

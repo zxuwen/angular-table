@@ -28,6 +28,36 @@ update_table_scope = (table_scope, pagination_scope, table_configuration) ->
                                                          table_scope[irk_current_page],
                                                          table_scope[table_configuration.list])
 
+get_sorted_and_paginated_list = (list, current_page, items_per_page, sort_context, predicate, descending, $filter) ->
+  if list
+    val = list
+
+    from_page  = items_per_page * current_page - list.length
+
+    # if $scope[sc] == "global"
+    if sort_context == "global"
+      val = $filter("orderBy")(val, predicate, descending)
+      val = $filter("limitTo")(val, from_page)
+      val = $filter("limitTo")(val, items_per_page)
+    else
+      val = $filter("limitTo")(val, from_page)
+      val = $filter("limitTo")(val, items_per_page)
+      val = $filter("orderBy")(val, predicate, descending)
+
+    return val
+  else
+    console.log "RETURNING EMPTY"
+    return []
+
+get_filler_array = (list, current_page, number_of_pages, items_per_page) ->
+  if current_page == number_of_pages - 1
+    itemCountOnLastPage = list.length % items_per_page
+    if itemCountOnLastPage != 0 || list.length == 0
+      fillerLength = items_per_page - itemCountOnLastPage - 1
+      x for x in [(list.length)..(list.length + fillerLength)]
+    else
+      []
+
 class AngularTableManager
 
   constructor: () ->
@@ -44,10 +74,48 @@ class AngularTableManager
     if mapping.pagination_scope
       throw "WHOOPS"
 
-  register_table_scope: (id, scope) ->
+  register_table_scope: (id, scope, filter) ->
     @mappings[id].table_scope = scope
 
     tc = @mappings[id].table_configuration
+
+    update_stuff = () ->
+      scope.sorted_and_paginated_list = get_sorted_and_paginated_list(
+        scope[tc.list],
+        scope[irk_current_page],
+        scope[tc.items_per_page],
+        scope[tc.sort_context]
+        scope.predicate,
+        scope.descending,
+        filter
+      )
+
+      scope.filler_array = get_filler_array(
+        scope[tc.list],
+        scope[irk_current_page],
+        scope[irk_number_of_pages],
+        scope[tc.items_per_page]
+      )
+
+    scope.notify_change = (current_page, number_of_pages) ->
+      scope[irk_current_page] = current_page
+      scope[irk_number_of_pages] = number_of_pages
+      update_stuff()
+
+    scope.$watch("#{tc.list}.length", () ->
+      scope[irk_number_of_pages] = Math.ceil(scope[tc.list].length / scope[tc.items_per_page])
+      update_stuff()
+    )
+
+    scope.$watch("predicate", () ->
+      update_stuff()
+    )
+
+    scope.$watch("descending", () ->
+      update_stuff()
+    )
+
+    # tc = @mappings[id].table_configuration
 
     if tc.initial_items_per_page
       scope.$parent[tc.items_per_page] = tc.initial_items_per_page
@@ -68,11 +136,13 @@ class AngularTableManager
 
     if mapping.table_configuration
       pagination_scope.$watch(irk_current_page, () ->
-        update_table_scope(mapping.table_scope, pagination_scope, mapping.table_configuration)
+        # update_table_scope(mapping.table_scope, pagination_scope, mapping.table_configuration)
+        mapping.table_scope.notify_change(pagination_scope[irk_current_page], pagination_scope[irk_number_of_pages])
       )
 
       pagination_scope.$watch(irk_number_of_pages, () ->
-        update_table_scope(mapping.table_scope, pagination_scope, mapping.table_configuration)
+        mapping.table_scope.notify_change(pagination_scope[irk_current_page], pagination_scope[irk_number_of_pages])
+        # update_table_scope(mapping.table_scope, pagination_scope, mapping.table_configuration)
       )
 
 angular.module("angular-table").service "angularTableManager", [() ->
@@ -87,7 +157,7 @@ angular.module("angular-table").directive "atTable", ["$filter", "angularTableMa
     ($scope, $element, $attrs) ->
       id = $attrs["id"]
       if id
-        angularTableManager.register_table_scope(id, $scope)
+        angularTableManager.register_table_scope(id, $scope, $filter)
     ]
 
     compile: (element, attributes, transclude) ->
