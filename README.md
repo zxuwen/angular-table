@@ -36,3 +36,7 @@ set up appropriate variables in your scope, prefixed with the id of the table, f
 ### Column options
 
 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/samu/angular-table/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
