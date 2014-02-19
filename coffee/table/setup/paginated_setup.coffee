@@ -45,6 +45,8 @@ class PaginatedSetup extends Setup
         return []
 
     get_filler_array = (list, current_page, number_of_pages, items_per_page) ->
+      items_per_page = parseInt(items_per_page)
+
       if current_page == number_of_pages - 1
         itemCountOnLastPage = list.length % items_per_page
         if itemCountOnLastPage != 0 || list.length == 0
@@ -54,6 +56,7 @@ class PaginatedSetup extends Setup
           []
 
     update_stuff = () ->
+
       $scope.sorted_and_paginated_list = get_sorted_and_paginated_list(
         w.get_list(),
         w.get_current_page(),
@@ -64,10 +67,12 @@ class PaginatedSetup extends Setup
         $filter
       )
 
+      nop = Math.ceil(w.get_list().length / w.get_items_per_page())
+
       $scope.filler_array = get_filler_array(
         w.get_list(),
         w.get_current_page(),
-        $scope[irk_number_of_pages],
+        nop,
         w.get_items_per_page()
       )
 

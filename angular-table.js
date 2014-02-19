@@ -3,7 +3,7 @@
 // license:  MIT 
 // homepage: http://github.com/samu/angular-table 
 (function() {
-  var AngularTableManager, ColumnConfiguration, PaginatedSetup, ScopeConfigWrapper, Setup, StandardSetup, Table, TableConfiguration, erk_attribute, erk_current_page, erk_fill_last_page, erk_initial_sorting, erk_items_per_page, erk_list, erk_max_pages, erk_sort_context, erk_sortable, irk_current_page, irk_from_page, irk_number_of_pages,
+  var AngularTableManager, ColumnConfiguration, PageSequence, PaginatedSetup, ScopeConfigWrapper, Setup, StandardSetup, Table, TableConfiguration, erk_attribute, erk_current_page, erk_fill_last_page, erk_initial_sorting, erk_items_per_page, erk_list, erk_max_pages, erk_sort_context, erk_sortable, irk_current_page, irk_from_page, irk_number_of_pages,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -332,6 +332,7 @@
       };
       get_filler_array = function(list, current_page, number_of_pages, items_per_page) {
         var fillerLength, itemCountOnLastPage, x, _i, _ref, _ref1, _results;
+        items_per_page = parseInt(items_per_page);
         if (current_page === number_of_pages - 1) {
           itemCountOnLastPage = list.length % items_per_page;
           if (itemCountOnLastPage !== 0 || list.length === 0) {
@@ -347,8 +348,10 @@
         }
       };
       update_stuff = function() {
+        var nop;
         $scope.sorted_and_paginated_list = get_sorted_and_paginated_list(w.get_list(), w.get_current_page(), w.get_items_per_page(), $scope[tc.sort_context], $scope.predicate, $scope.descending, $filter);
-        return $scope.filler_array = get_filler_array(w.get_list(), w.get_current_page(), $scope[irk_number_of_pages], w.get_items_per_page());
+        nop = Math.ceil(w.get_list().length / w.get_items_per_page());
+        return $scope.filler_array = get_filler_array(w.get_list(), w.get_current_page(), nop, w.get_items_per_page());
       };
       $scope.$watch(tc.current_page, function() {
         return update_stuff();
@@ -591,12 +594,73 @@
     }
   ]);
 
+  PageSequence = (function() {
+    PageSequence.prototype.generate = function(start) {
+      var x, _i, _ref, _results;
+      if (start > (this.upper_bound - this.length)) {
+        start = this.upper_bound - this.length;
+      } else if (start < this.lower_bound) {
+        start = this.lower_bound;
+      }
+      _results = [];
+      for (x = _i = start, _ref = parseInt(start) + parseInt(this.length) - 1; start <= _ref ? _i <= _ref : _i >= _ref; x = start <= _ref ? ++_i : --_i) {
+        _results.push(x);
+      }
+      return _results;
+    };
+
+    function PageSequence(lower_bound, upper_bound, start, length) {
+      this.lower_bound = lower_bound != null ? lower_bound : 0;
+      this.upper_bound = upper_bound != null ? upper_bound : 1;
+      if (start == null) {
+        start = 0;
+      }
+      this.length = length != null ? length : 1;
+      if (this.length > (this.upper_bound - this.lower_bound)) {
+        throw "sequence is too long";
+      }
+      this.data = this.generate(start);
+    }
+
+    PageSequence.prototype.reset_parameters = function(lower_bound, upper_bound, length) {
+      this.lower_bound = lower_bound;
+      this.upper_bound = upper_bound;
+      this.length = length;
+      if (this.length > (this.upper_bound - this.lower_bound)) {
+        throw "sequence is too long";
+      }
+      return this.data = this.generate(this.data[0]);
+    };
+
+    PageSequence.prototype.relocate = function(distance) {
+      var new_start;
+      new_start = this.data[0] + distance;
+      return this.data = this.generate(new_start, new_start + this.length);
+    };
+
+    PageSequence.prototype.realign_greedy = function(page) {
+      var new_start;
+      if (page < this.data[0]) {
+        new_start = page;
+        return this.data = this.generate(new_start);
+      } else if (page > this.data[this.length - 1]) {
+        new_start = page - (this.length - 1);
+        return this.data = this.generate(new_start);
+      }
+    };
+
+    PageSequence.prototype.realign_generous = function(page) {};
+
+    return PageSequence;
+
+  })();
+
   angular.module("angular-table").directive("atPagination", [
     "angularTableManager", function(angularTableManager) {
       return {
         replace: true,
         restrict: "E",
-        template: "<div style='margin: 0px;'> <ul class='pagination'> <li ng-class='{disabled: get_current_page() <= 0}'> <a href='' ng-click='step_page(-" + irk_number_of_pages + ")'>First</a> </li> <li ng-show='show_sectioning()' ng-class='{disabled: get_current_page() <= 0}'> <a href='' ng-click='jump_back()'>&laquo;</a> </li> <li ng-class='{disabled: get_current_page() <= 0}'> <a href='' ng-click='step_page(-1)'>&lsaquo;</a> </li> <li ng-class='{active: get_current_page() == page}' ng-repeat='page in pages'> <a href='' ng-click='go_to_page(page)'>{{page + 1}}</a> </li> <li ng-class='{disabled: get_current_page() >= " + irk_number_of_pages + " - 1}'> <a href='' ng-click='step_page(1)'>&rsaquo;</a> </li> <li ng-show='show_sectioning()' ng-class='{disabled: get_current_page() >= " + irk_number_of_pages + " - 1}'> <a href='' ng-click='jump_ahead()'>&raquo;</a> </li> <li ng-class='{disabled: get_current_page() >= " + irk_number_of_pages + " - 1}'> <a href='' ng-click='step_page(" + irk_number_of_pages + ")'>Last</a> </li> </ul> </div>",
+        template: "<div style='margin: 0px;'> <ul class='pagination'> <li ng-class='{disabled: get_current_page() <= 0}'> <a href='' ng-click='step_page(-" + irk_number_of_pages + ")'>First</a> </li> <li ng-show='show_sectioning()' ng-class='{disabled: get_current_page() <= 0}'> <a href='' ng-click='jump_back()'>&laquo;</a> </li> <li ng-class='{disabled: get_current_page() <= 0}'> <a href='' ng-click='step_page(-1)'>&lsaquo;</a> </li> <li ng-class='{active: get_current_page() == page}' ng-repeat='page in page_sequence.data'> <a href='' ng-click='go_to_page(page)'>{{page + 1}}</a> </li> <li ng-class='{disabled: get_current_page() >= " + irk_number_of_pages + " - 1}'> <a href='' ng-click='step_page(1)'>&rsaquo;</a> </li> <li ng-show='show_sectioning()' ng-class='{disabled: get_current_page() >= " + irk_number_of_pages + " - 1}'> <a href='' ng-click='jump_ahead()'>&raquo;</a> </li> <li ng-class='{disabled: get_current_page() >= " + irk_number_of_pages + " - 1}'> <a href='' ng-click='step_page(" + irk_number_of_pages + ")'>Last</a> </li> </ul> </div>",
         controller: [
           "$scope", "$element", "$attrs", function($scope, $element, $attrs) {
             return angularTableManager.register_pagination_scope($attrs.atTableId, $scope);
@@ -604,17 +668,10 @@
         ],
         scope: true,
         link: function($scope, $element, $attributes) {
-          var generate_page_array, get_number_of_pages, keep_in_bounds, set_current_page, set_number_of_pages, shift_sectioning, tc, update, w;
+          var get_number_of_pages, keep_in_bounds, set_current_page, set_number_of_pages, tc, update, w;
           tc = angularTableManager.get_table_configuration($attributes.atTableId);
           w = new ScopeConfigWrapper($scope, tc);
-          generate_page_array = function(start, end) {
-            var x, _i, _results;
-            _results = [];
-            for (x = _i = start; start <= end ? _i <= end : _i >= end; x = start <= end ? ++_i : --_i) {
-              _results.push(x);
-            }
-            return _results;
-          };
+          $scope.page_sequence = new PageSequence();
           set_current_page = function(current_page) {
             return $scope.$parent.$eval("" + tc.current_page + "=" + current_page);
           };
@@ -625,15 +682,19 @@
             return $scope[irk_number_of_pages] = number_of_pages;
           };
           update = function(reset) {
+            var new_number_of_pages, pages_to_display;
             if ($scope[tc.list]) {
               if ($scope[tc.list].length > 0) {
-                set_number_of_pages(Math.ceil($scope[tc.list].length / w.get_items_per_page()));
-                set_current_page(keep_in_bounds(w.get_current_page(), 0, get_number_of_pages() - 1));
+                new_number_of_pages = Math.ceil($scope[tc.list].length / w.get_items_per_page());
+                set_number_of_pages(new_number_of_pages);
                 if ($scope.show_sectioning()) {
-                  return $scope.update_sectioning();
+                  pages_to_display = w.get_max_pages();
                 } else {
-                  return $scope.pages = generate_page_array(0, get_number_of_pages() - 1);
+                  pages_to_display = new_number_of_pages;
                 }
+                $scope.page_sequence.reset_parameters(0, new_number_of_pages, pages_to_display);
+                $scope.page_sequence.realign_greedy(w.get_current_page());
+                return set_current_page(keep_in_bounds(w.get_current_page(), 0, get_number_of_pages() - 1));
               } else {
                 set_number_of_pages(1);
                 return $scope.pages = [0];
@@ -645,43 +706,15 @@
             return Math.min(max, val);
           };
           $scope.show_sectioning = function() {
-            return tc.max_pages && get_number_of_pages() > w.get_max_pages();
+            return w.get_max_pages() && get_number_of_pages() > w.get_max_pages();
           };
           $scope.get_current_page = function() {
             return w.get_current_page();
           };
-          shift_sectioning = function(current_start, steps, length, upper_bound) {
-            var new_start;
-            new_start = current_start + steps;
-            if (new_start > (upper_bound - length)) {
-              upper_bound - length;
-            } else if (new_start < 0) {
-              0;
-            } else {
-              new_start;
-            }
-            return $scope.pages = generate_page_array(new_start, new_start + parseInt(w.get_max_pages()) - 1);
-          };
-          $scope.update_sectioning = function() {
-            var diff, new_start;
-            new_start = void 0;
-            if ($scope.pages[0] > w.get_current_page()) {
-              diff = $scope.pages[0] - w.get_current_page();
-              return shift_sectioning($scope.pages[0], -diff, w.get_max_pages(), get_number_of_pages());
-            } else if ($scope.pages[$scope.pages.length - 1] < w.get_current_page()) {
-              diff = w.get_current_page() - $scope.pages[$scope.pages.length - 1];
-              return shift_sectioning($scope.pages[0], diff, w.get_max_pages(), get_number_of_pages());
-            } else if ($scope.pages[$scope.pages.length - 1] > (get_number_of_pages() - 1)) {
-              diff = w.get_current_page() - $scope.pages[$scope.pages.length - 1];
-              return shift_sectioning($scope.pages[0], diff, w.get_max_pages(), get_number_of_pages());
-            } else {
-              return $scope.pages = generate_page_array(0, parseInt(w.get_max_pages()) - 1);
-            }
-          };
           $scope.step_page = function(step) {
             step = parseInt(step);
             set_current_page(keep_in_bounds(w.get_current_page() + step, 0, get_number_of_pages() - 1));
-            return $scope.update_sectioning();
+            return $scope.page_sequence.realign_greedy(w.get_current_page());
           };
           $scope.go_to_page = function(page) {
             return set_current_page(page);
