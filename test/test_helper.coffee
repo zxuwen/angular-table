@@ -1,8 +1,19 @@
 getChildrenFor = (element, selector) ->
   element[0].querySelectorAll(selector)
 
-extract_html_to_array = (tds) ->
-  _.map(tds, (td) -> angular.element(td).html())
+extract_visible_elements = (elements) ->
+  _.reject(elements, (element) ->
+    angular.element(element).hasClass("ng-hide")
+  )
+
+extract_html_to_array = (elements) ->
+  _.map(elements, (element) ->
+    angular.element(element).html()
+  )
+
+extract_pagination_to_array = (elements) ->
+  elements = extract_visible_elements(elements)
+  angular.element(element).find("a").html() for element in elements
 
 load_template = (template_name, template_cache) ->
   angular.element(template_cache.get(template_name))
