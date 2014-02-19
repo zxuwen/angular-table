@@ -55,7 +55,7 @@ class PaginatedSetup extends Setup
 
     update_stuff = () ->
       $scope.sorted_and_paginated_list = get_sorted_and_paginated_list(
-        $scope[tc.list],
+        w.get_list(),
         w.get_current_page(),
         w.get_items_per_page(),
         $scope[tc.sort_context],
@@ -65,7 +65,7 @@ class PaginatedSetup extends Setup
       )
 
       $scope.filler_array = get_filler_array(
-        $scope[tc.list],
+        w.get_list(),
         w.get_current_page(),
         $scope[irk_number_of_pages],
         w.get_items_per_page()

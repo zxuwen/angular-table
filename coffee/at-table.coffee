@@ -24,6 +24,9 @@ class ScopeConfigWrapper
     @scope = table_scope
     @config = table_configuration
 
+  get_list: () ->
+    @scope.$eval(@config.list)
+
   get_items_per_page: () ->
     @scope.$eval(@config.items_per_page)
 
@@ -32,6 +35,9 @@ class ScopeConfigWrapper
 
   get_max_pages: () ->
     @scope.$eval(@config.max_pages)
+
+  get_sort_context: () ->
+    @scope.$eval(@config.sort_context)
 
 class AngularTableManager
 

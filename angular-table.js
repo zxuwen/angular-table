@@ -347,8 +347,8 @@
         }
       };
       update_stuff = function() {
-        $scope.sorted_and_paginated_list = get_sorted_and_paginated_list($scope[tc.list], w.get_current_page(), w.get_items_per_page(), $scope[tc.sort_context], $scope.predicate, $scope.descending, $filter);
-        return $scope.filler_array = get_filler_array($scope[tc.list], w.get_current_page(), $scope[irk_number_of_pages], w.get_items_per_page());
+        $scope.sorted_and_paginated_list = get_sorted_and_paginated_list(w.get_list(), w.get_current_page(), w.get_items_per_page(), $scope[tc.sort_context], $scope.predicate, $scope.descending, $filter);
+        return $scope.filler_array = get_filler_array(w.get_list(), w.get_current_page(), $scope[irk_number_of_pages], w.get_items_per_page());
       };
       $scope.$watch(tc.current_page, function() {
         return update_stuff();
@@ -486,6 +486,10 @@
       this.config = table_configuration;
     }
 
+    ScopeConfigWrapper.prototype.get_list = function() {
+      return this.scope.$eval(this.config.list);
+    };
+
     ScopeConfigWrapper.prototype.get_items_per_page = function() {
       return this.scope.$eval(this.config.items_per_page);
     };
@@ -496,6 +500,10 @@
 
     ScopeConfigWrapper.prototype.get_max_pages = function() {
       return this.scope.$eval(this.config.max_pages);
+    };
+
+    ScopeConfigWrapper.prototype.get_sort_context = function() {
+      return this.scope.$eval(this.config.sort_context);
     };
 
     return ScopeConfigWrapper;
