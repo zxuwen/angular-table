@@ -23,35 +23,72 @@ class PaginatedSetup extends Setup
     return
 
   link: ($scope, $element, $attributes, $filter) ->
-    # list_name = @table_configuration.list
-    # ipp = @table_configuration.items_per_page
-    # sc = @table_configuration.sort_context
-    # tc = @table_configuration
+    tc = @table_configuration
 
-    # $scope.filtered_list = () ->
-    #   val = $scope[list_name]
+    w = new ScopeConfigWrapper($scope, tc)
 
-    #   from_page  = calculate_from_page($scope[tc.items_per_page],
-    #                                            $scope[irk_current_page],
-    #                                            $scope[tc.list])
+    get_sorted_and_paginated_list = (list, current_page, items_per_page, sort_context, predicate, descending, $filter) ->
+      if list
+        val = list
+        from_page  = items_per_page * current_page - list.length
+        if sort_context == "global"
+          val = $filter("orderBy")(val, predicate, descending)
+          val = $filter("limitTo")(val, from_page)
+          val = $filter("limitTo")(val, items_per_page)
+        else
+          val = $filter("limitTo")(val, from_page)
+          val = $filter("limitTo")(val, items_per_page)
+          val = $filter("orderBy")(val, predicate, descending)
 
-    #   if $scope[sc] == "global"
-    #     val = $filter("orderBy")(val, $scope.predicate, $scope.descending)
-    #     val = $filter("limitTo")(val, from_page)
-    #     val = $filter("limitTo")(val, $scope[ipp])
-    #   else
-    #     val = $filter("limitTo")(val, from_page)
-    #     val = $filter("limitTo")(val, $scope[ipp])
-    #     val = $filter("orderBy")(val, $scope.predicate, $scope.descending)
+        return val
+      else
+        return []
 
+    get_filler_array = (list, current_page, number_of_pages, items_per_page) ->
+      if current_page == number_of_pages - 1
+        itemCountOnLastPage = list.length % items_per_page
+        if itemCountOnLastPage != 0 || list.length == 0
+          fillerLength = items_per_page - itemCountOnLastPage - 1
+          x for x in [(list.length)..(list.length + fillerLength)]
+        else
+          []
 
-    #   return val
+    update_stuff = () ->
+      $scope.sorted_and_paginated_list = get_sorted_and_paginated_list(
+        $scope[tc.list],
+        w.get_current_page(),
+        w.get_items_per_page(),
+        $scope[tc.sort_context],
+        $scope.predicate,
+        $scope.descending,
+        $filter
+      )
 
-    # $scope.getFillerArray = () ->
-    #   if $scope[irk_current_page] == $scope[irk_number_of_pages] - 1
-    #     itemCountOnLastPage = $scope[list_name].length % $scope[ipp]
-    #     if itemCountOnLastPage != 0 || $scope[list_name].length == 0
-    #       fillerLength = $scope[ipp] - itemCountOnLastPage - 1
-    #       x for x in [($scope[list_name].length)..($scope[list_name].length + fillerLength)]
-    #     else
-    #       []
+      $scope.filler_array = get_filler_array(
+        $scope[tc.list],
+        w.get_current_page(),
+        $scope[irk_number_of_pages],
+        w.get_items_per_page()
+      )
+
+    $scope.$watch(tc.current_page, () ->
+      update_stuff()
+    )
+
+    $scope.$watch(tc.items_per_page, () ->
+      update_stuff()
+    )
+
+    $scope.$watch("#{tc.list}.length", () ->
+      $scope[irk_number_of_pages] = Math.ceil($scope[tc.list].length / w.get_items_per_page())
+      update_stuff()
+    )
+
+    $scope.$watch("predicate", () ->
+      update_stuff()
+    )
+
+    $scope.$watch("descending", () ->
+      update_stuff()
+    )
+

@@ -7,6 +7,7 @@ class TableConfiguration
     @register_sort_context(@attributes[erk_sort_context])
     @register_fill_last_page(@attributes[erk_fill_last_page])
     @register_max_pages(@attributes[erk_max_pages])
+    @register_current_page(@attributes[erk_current_page])
     @paginated       = @items_per_page != undefined
     @create_column_configurations()
 
@@ -53,6 +54,17 @@ class TableConfiguration
       else
         @max_pages = "#{@id}_maxPages"
         @initial_max_pages = parseInt(max_pages)
+
+  register_current_page: (current_page) ->
+    if current_page isnt undefined
+      if isNaN(current_page)
+        @current_page = current_page
+      else
+        @current_page = "#{@id}_currentPage"
+        @initial_current_page = parseInt(current_page)
+    else
+      @current_page = "#{@id}_currentPage"
+      @initial_current_page = 0
 
   capitaliseFirstLetter: (string) ->
     if string then string.charAt(0).toUpperCase() + string.slice(1) else ""
