@@ -68,25 +68,102 @@ describe "angular-table", () ->
 
 
 
-  # describe "complete configuration hardcoded", () ->
-  #   beforeEach () ->
-  #     @element = prepare_element(new TemplateCompiler("pagination/complete_config_hardcoded.html"), (scope) ->
-  #       scope.list = [
-  #         {name: "g"}, {name: "h"}, {name: "i"}, {name: "j"}, {name: "k"}, {name: "l"}
-  #         {name: "a"}, {name: "b"}, {name: "c"}, {name: "d"}, {name: "e"}, {name: "f"},
-  #       ]
-  #     )
-
-  #   it "shows", () ->
-  #     tds = extract_html_to_array(@element.find("td"))
-  #     expect(tds).toEqual ["a", "b", "c"]
-
-  #     paginationLinks = @element.find "a"
-  #     console.log paginationLinks
 
   describe "pagination", () ->
+    step_back  = '‹'
+    step_ahead = '›'
+    jump_back  = '«'
+    jump_ahead = '»'
+    first      = 'First'
+    last       = 'Last'
+
+    describe "complete configuration hardcoded", () ->
+
+      beforeEach () ->
+        @comp = new TemplateCompiler("pagination/complete_config_hardcoded.html")
+
+        @element = @comp.prepare_element((scope) ->
+          scope.list = [
+            {name: "g"}, {name: "h"}, {name: "i"}, {name: "j"}, {name: "k"}, {name: "l"}
+            {name: "a"}, {name: "b"}, {name: "c"}, {name: "d"}, {name: "e"}, {name: "f"},
+            {name: "m"}
+          ]
+        )
+
+        @gui = new GUI(@element, @comp.scope)
+
+      it "allows to select pages", () ->
+        expect(@gui.pagination.pages).toEqual [1, 2]
+        expect(@gui.pagination.current_page).toEqual 1
+
+        @gui.alter_scope((scope) ->
+          scope.completeConfigHardcoded_itemsPerPage = 4
+          scope.completeConfigHardcoded_maxPages = 4
+        )
+
+        expect(@gui.table.rows).toEqual [['a'], ['b'], ['c'], ['d']]
+        expect(@gui.pagination.pages).toEqual [1, 2, 3, 4]
+
+        @gui.click_pagination(2)
+
+        expect(@gui.table.rows).toEqual [['e'], ['f'], ['g'], ['h']]
+        expect(@gui.pagination.current_page).toEqual 2
+
+        @gui.click_pagination(4)
+
+        expect(@gui.table.rows).toEqual [['m'], ['&nbsp;'], ['&nbsp;'], ['&nbsp;']]
+        expect(@gui.pagination.current_page).toEqual 4
+
+
+      it "allows to step back and forth", () ->
+        expect(@gui.table.rows).toEqual [['a'], ['b'], ['c']]
+
+        expect(@gui.table.rows).toEqual [['a'], ['b'], ['c']]
+        expect(@gui.pagination.current_page).toEqual 1
+        expect(@gui.pagination.pages).toEqual [1, 2]
+
+        @gui.click_pagination(step_ahead)
+
+        expect(@gui.table.rows).toEqual [['d'], ['e'], ['f']]
+        expect(@gui.pagination.current_page).toEqual 2
+        expect(@gui.pagination.pages).toEqual [1, 2]
+
+        @gui.click_pagination(step_ahead)
+
+        expect(@gui.table.rows).toEqual [['g'], ['h'], ['i']]
+        expect(@gui.pagination.current_page).toEqual 3
+        expect(@gui.pagination.pages).toEqual [2, 3]
+
+        @gui.click_pagination(step_ahead)
+        @gui.click_pagination(step_ahead)
+
+        # we reached the end of the pagination by now
+
+        expect(@gui.table.rows).toEqual [['m'], ['&nbsp;'], ['&nbsp;']]
+        expect(@gui.pagination.current_page).toEqual 5
+        expect(@gui.pagination.pages).toEqual [4, 5]
+
+        @gui.click_pagination(step_ahead)
+
+        expect(@gui.table.rows).toEqual [['m'], ['&nbsp;'], ['&nbsp;']]
+        expect(@gui.pagination.current_page).toEqual 5
+        expect(@gui.pagination.pages).toEqual [4, 5]
+
+        @gui.click_pagination(step_back)
+
+        expect(@gui.table.rows).toEqual [['j'], ['k'], ['l']]
+        expect(@gui.pagination.current_page).toEqual 4
+        expect(@gui.pagination.pages).toEqual [4, 5]
+
+        @gui.click_pagination(step_back)
+
+        expect(@gui.table.rows).toEqual [['g'], ['h'], ['i']]
+        expect(@gui.pagination.current_page).toEqual 3
+        expect(@gui.pagination.pages).toEqual [3, 4]
+
     it "adds pagination to a table", () ->
-      @element = prepare_element(new TemplateCompiler("pagination/pagination.html"), (scope) ->
+      comp = new TemplateCompiler("pagination/pagination.html")
+      @element = comp.prepare_element((scope) ->
         scope.rammstein = [
           {name: "Till"}, {name: "Richard"}, {name: "Christoph"},
           {name: "Paul"}, {name: "Flake"}, {name: "Oliver"}
@@ -96,14 +173,10 @@ describe "angular-table", () ->
       tds = extract_html_to_array(@element.find("td"))
       expect(tds).toEqual ["Till", "Richard", "Christoph", "Paul"]
 
-      paginationLinks = @element.find("a")
-      visible_pagination = extract_pagination_to_array(@element.find("li"))
+      p = new PaginationGUI(@element)
+      expect(p.pages).toEqual [1, 2]
 
-      expect(visible_pagination).toEqual ['First', '‹', '1', '2', '›', 'Last']
-
-      link = _.find(paginationLinks, (link) -> angular.element(link).html() == "2")
-      click(link)
-
+      p.click(step_ahead)
       tds = extract_html_to_array(@element.find("td"))
       expect(tds).toEqual ["Flake", "Oliver", "&nbsp;", "&nbsp;"]
 
@@ -113,11 +186,13 @@ describe "angular-table", () ->
                          {char: "a"}, {char: "e"}, {char: "h"}, {char: "g"}]
 
       it "allows to set the sort context to global", () ->
-        @element = prepare_element(new TemplateCompiler("pagination/sort_context_global.html"), callback)
+        comp = new TemplateCompiler("pagination/sort_context_global.html")
+        @element = comp.prepare_element(callback)
         tds = extract_html_to_array(@element.find("td"))
         expect(tds).toEqual ["a", "b", "c", "d"]
 
       it "allows to set the sort context to page", () ->
-        @element = prepare_element(new TemplateCompiler("pagination/sort_context_page.html"), callback)
+        comp = new TemplateCompiler("pagination/sort_context_page.html")
+        @element = comp.prepare_element(callback)
         tds = extract_html_to_array(@element.find("td"))
         expect(tds).toEqual ["b", "c", "d", "f"]
