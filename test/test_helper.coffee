@@ -54,7 +54,6 @@ class TemplateCompiler
     return element
 
 class TableGUI
-
   constructor: (@element) ->
     @reload()
 
@@ -68,7 +67,6 @@ class TableGUI
 
 
 class PaginationGUI
-
   constructor: (@element) ->
     @reload()
 
