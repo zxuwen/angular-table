@@ -1,11 +1,22 @@
-<label>$scope.itemsPerPage</label>
+<h4>Add</h4>
+<div class="input-group col-lg-6">
+  <input type="text" class="form-control" ng-model="nameToAdd">
+  <span class="input-group-btn">
+    <button class="btn btn-default btn-success" type="button" ng-click="add()">Add</button>
+  </span>
+</div>
+
+<h4>Filter</h4>
+<input type="text" class="form-control" ng-model="query" ng-change="updateFilteredList()">
+
+<h4>$scope.itemsPerPage</h4>
 <select ng-model="config.itemsPerPage" class="form-control">
   <option value="3">3</option>
   <option value="5">5</option>
   <option value="9">9</option>
 </select>
 
-<label>$scope.maxPages</label>
+<h4>$scope.maxPages</h4>
 <select ng-model="config.maxPages" class="form-control">
   <option value="1">1</option>
   <option value="3">3</option>
@@ -13,8 +24,10 @@
   <option value="9">9</option>
 </select>
 
-<label>$scope.fillLastPage</label>
+<h4>$scope.fillLastPage</h4>
 <select ng-model="config.fillLastPage" class="form-control">
   <option value="yes">yes</option>
   <option value="no">no</option>
 </select>
+<br>
+{% raw %}{{config}}{% endraw %}

@@ -8,82 +8,82 @@ angular.module("angular-table-example")
       {
         index: 1,
         name: "Kristin Hill",
-        email: "allen@vaughan.lk"
+        email: "kristin@hill.com"
       },
       {
         index: 2,
         name: "Valerie Francis",
-        email: "julia@hardy.ky"
+        email: "valerie@francis.com"
       },
       {
         index: 3,
         name: "Bob Abbott",
-        email: "gene@katz.pn"
+        email: "bob@abbott.com"
       },
       {
         index: 4,
         name: "Greg Boyd",
-        email: "sherri@lam.fm"
+        email: "greg@boyd.com"
       },
       {
         index: 5,
         name: "Peggy Massey",
-        email: "wesley@bowles.um"
+        email: "peggy@massey.com"
       },
       {
         index: 6,
         name: "Janet Bolton",
-        email: "donald@eason.br"
+        email: "janet@bolton.com"
       },
       {
         index: 7,
         name: "Maria Liu",
-        email: "james@rose.ai"
+        email: "maria@liu.com"
       },
       {
         index: 8,
         name: "Anne Warren",
-        email: "alfred@cowan.es"
+        email: "anne@warren.com"
       },
       {
         index: 9,
         name: "Keith Steele",
-        email: "janet@carey.mk"
+        email: "keith@steele.com"
       },
       {
         index: 10,
         name: "Jerome Lyons",
-        email: "clifford@carey.ax"
+        email: "jerome@lyons.com"
       },
       {
         index: 11,
         name: "Jacob Stone",
-        email: "joe@bolton.gt"
+        email: "jacob@stone.com"
       },
       {
         index: 12,
         name: "Marion Dunlap",
-        email: "wade@creech.np"
+        email: "marion@dunlap.com"
       },
       {
         index: 13,
         name: "Stacy Robinson",
-        email: "bradley@houston.pl"
+        email: "stacy@robinson.com"
       },
       {
         index: 14,
         name: "Luis Chappell",
-        email: "joanne@jernigan.tf"
+        email: "luis@chappell.com"
       },
       {
         index: 15,
         name: "Kimberly Horne",
-        email: "rita@parsons.au"
+        email: "kimberly@horne.com"
       },
       {
         index: 16,
         name: "Andy Smith",
-        email: "ronda@bolton.pl"
+        email: "andy@smith.com"
       }
     ]
 }

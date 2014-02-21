@@ -6,7 +6,7 @@ layout: default
   <div class="span5">
     <h1>angular-table</h1>
     <br>
-    <angular-tabs id="mainTabs" active-tab="Basic Example">
+    <angular-tabs id="mainTabs" active-tab="Interactive Example">
       <div tab-title="Basic Example"><br>
         <angular-tabs id="basicExampleTabs" active-tab="Result"> <br>
           <div tab-title="Result">
@@ -31,22 +31,14 @@ layout: default
         </angular-tabs>
       </div>
 
-      <div tab-title="Rendering Cells">
-        {% include html/rendering_cells.html %}
-      </div>
-
-      <div tab-title="Customizing The Header">
-        {% include html/customizing_the_header.html %}
-      </div>
-
-      <div tab-title="Filtered Table"><br>
-        <angular-tabs id="filteredTableTabs" active-tab="Result"> <br>
+      <div tab-title="Interactive Example"><br>
+        <angular-tabs id="interactiveExampleTabs" active-tab="Result"> <br>
           <div tab-title="Result">
-            <div class="row">
-              <div class="col-md-10">
-                {% include html/filtered_table.html %}
+            <div class="row"ng-controller="interactiveExampleCtrl">
+              <div class="col-md-7">
+                {% include html/interactive_example.html %}
               </div>
-              <div class="col-md-2">
+              <div class="col-md-5">
                 {% include html/control_panel.html %}
               </div>
             </div>
@@ -55,15 +47,23 @@ layout: default
             <div ng-non-bindable>
               <h4>Html</h4>
 {% highlight html %}
-{% include html/filtered_table.html %}
+{% include html/interactive_example.html %}
 {% endhighlight %}
               <h4>Javascript</h4>
 {% highlight javascript %}
-{% include js/filteredTableCtrl.js %}
+{% include js/interactiveExampleCtrl.js %}
 {% endhighlight %}
             </div>
           </div>
         </angular-tabs>
+      </div>
+
+      <div tab-title="Rendering Cells">
+        {% include html/rendering_cells.html %}
+      </div>
+
+      <div tab-title="Customizing The Header">
+        {% include html/customizing_the_header.html %}
       </div>
     </angular-tabs>
   </div>
