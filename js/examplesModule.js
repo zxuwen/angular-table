@@ -79,13 +79,12 @@ angular.module("angular-table-example")
         index: 15,
         name: "Kimberly Horne",
         email: "rita@parsons.au"
+      },
+      {
+        index: 16,
+        name: "Andy Smith",
+        email: "ronda@bolton.pl"
       }
     ]
-
-    $scope.config = {
-      itemsPerPage: 3,
-      maxPages: 3,
-      fillLastPage: true
-    }
 }
 ]);
