@@ -1,13 +1,16 @@
 {% raw %}
 <div ng-controller="filteredTableCtrl">
+
+  hier: {{config}}
+
   <input placeholder="Search..." type="text" ng-model="query" ng-change="updateFilteredList(query)" class="form-control">
 
   <table id="filteredTable" class="table table-striped"
     at-table
     at-list="list"
-    at-items-per-page="itemsPerPage"
-    at-max-pages="maxPages"
-    at-fill-last-page="fillLastPage">
+    at-items-per-page="config.itemsPerPage"
+    at-max-pages="config.maxPages"
+    at-fill-last-page="config.fillLastPage">
     <thead></thead>
     <tbody>
       <tr>

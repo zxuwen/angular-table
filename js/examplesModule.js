@@ -81,5 +81,11 @@ angular.module("angular-table-example")
         email: "rita@parsons.au"
       }
     ]
+
+    $scope.config = {
+      itemsPerPage: 3,
+      maxPages: 3,
+      fillLastPage: true
+    }
 }
 ]);
