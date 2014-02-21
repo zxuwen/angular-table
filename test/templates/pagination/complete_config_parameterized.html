@@ -1,14 +1,15 @@
 <div ng-init="config={
   my_items_per_page: 3,
   my_max_pages: 2,
-  my_sort_context: 'global'
+  my_sort_context: 'global',
+  my_fill_last_page: true
 }"></div>
 <table id="completeConfigParameterized"
   at-table
   at-list="list"
   at-items-per-page="config.my_items_per_page"
   at-max-pages="config.my_max_pages"
-  at-fill-last-page="true"
+  at-fill-last-page="config.my_fill_last_page"
   at-sort-context="config.my_sort_context"
   >
   <thead></thead>

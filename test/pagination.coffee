@@ -108,6 +108,49 @@ describe "angular-table", () ->
             expect(@gui.pagination.current_page).toEqual(3)
             expect(@gui.pagination.pages).toEqual([3, 4])
 
+          it "allows to jump back and forth", () ->
+            expect(@gui.table.rows).toEqual([['a'], ['b'], ['c']])
+            expect(@gui.pagination.current_page).toEqual(1)
+            expect(@gui.pagination.pages).toEqual([1, 2])
+
+            @gui.click_pagination(jump_ahead)
+
+            expect(@gui.table.rows).toEqual([['g'], ['h'], ['i']])
+            expect(@gui.pagination.current_page).toEqual(3)
+            expect(@gui.pagination.pages).toEqual([2, 3])
+
+            @gui.click_pagination(jump_ahead)
+
+            # we reached the end of the pagination by now
+
+            expect(@gui.table.rows).toEqual([['m'], ['&nbsp;'], ['&nbsp;']])
+            expect(@gui.pagination.current_page).toEqual(5)
+            expect(@gui.pagination.pages).toEqual([4, 5])
+
+            @gui.click_pagination(jump_ahead)
+
+            expect(@gui.table.rows).toEqual([['m'], ['&nbsp;'], ['&nbsp;']])
+            expect(@gui.pagination.current_page).toEqual(5)
+            expect(@gui.pagination.pages).toEqual([4, 5])
+
+            @gui.click_pagination(step_back)
+
+            expect(@gui.table.rows).toEqual([['j'], ['k'], ['l']])
+            expect(@gui.pagination.current_page).toEqual(4)
+            expect(@gui.pagination.pages).toEqual([4, 5])
+
+            @gui.click_pagination(jump_back)
+
+            expect(@gui.table.rows).toEqual([['d'], ['e'], ['f']])
+            expect(@gui.pagination.current_page).toEqual(2)
+            expect(@gui.pagination.pages).toEqual([2, 3])
+
+            @gui.click_pagination(jump_back)
+
+            expect(@gui.table.rows).toEqual([['a'], ['b'], ['c']])
+            expect(@gui.pagination.current_page).toEqual(1)
+            expect(@gui.pagination.pages).toEqual([1, 2])
+
           describe "the maximum pages setting", () ->
             for val in [undefined, null]
               it "shows all pages if max_pages is undefined or null", () ->
@@ -128,3 +171,117 @@ describe "angular-table", () ->
               expect(@gui.pagination.pages).toEqual([1, 2, 3])
               expect(@gui.pagination.representation).toEqual(
                   [ 'First', '«', '‹', '1', '2', '3', '›', '»', 'Last' ])
+
+          describe "heavy interaction", () ->
+            it "does stuff", () ->
+              @gui.alter_scope((scope_wrapper, vars) ->
+                scope_wrapper.set(vars.items_per_page, 5)
+                scope_wrapper.set(vars.max_pages, 4)
+              )
+
+              @gui.click_pagination(step_ahead)
+
+              expect(@gui.pagination.current_page).toEqual 2
+              expect(@gui.table.rows).toEqual([['f'], ['g'], ['h'], ['i'], ['j']])
+              expect(@gui.pagination.pages).toEqual([1, 2, 3])
+
+              @gui.alter_scope((scope_wrapper, vars) ->
+                scope_wrapper.set(vars.max_pages, 2)
+              )
+
+              expect(@gui.pagination.current_page).toEqual 2
+              expect(@gui.table.rows).toEqual([['f'], ['g'], ['h'], ['i'], ['j']])
+              expect(@gui.pagination.pages).toEqual([1, 2])
+
+              @gui.alter_scope((scope_wrapper, vars) ->
+                scope_wrapper.set(vars.max_pages, 1)
+              )
+
+              expect(@gui.pagination.current_page).toEqual 2
+              expect(@gui.table.rows).toEqual([['f'], ['g'], ['h'], ['i'], ['j']])
+              expect(@gui.pagination.pages).toEqual([2])
+
+              @gui.alter_scope((scope_wrapper, vars) ->
+                scope_wrapper.set(vars.items_per_page, 2)
+              )
+
+              expect(@gui.pagination.current_page).toEqual 2
+              expect(@gui.table.rows).toEqual([['c'], ['d']])
+              expect(@gui.pagination.pages).toEqual([2])
+
+              @gui.alter_scope((scope_wrapper, vars) ->
+                scope_wrapper.set(vars.items_per_page, 3)
+              )
+
+              expect(@gui.pagination.current_page).toEqual 2
+              expect(@gui.table.rows).toEqual([['d'], ['e'], ['f']])
+              expect(@gui.pagination.pages).toEqual([2])
+
+              @gui.click_pagination(step_ahead)
+
+              expect(@gui.pagination.current_page).toEqual 3
+              expect(@gui.table.rows).toEqual([['g'], ['h'], ['i']])
+              expect(@gui.pagination.pages).toEqual([3])
+
+              @gui.click_pagination(step_ahead)
+              @gui.click_pagination(step_ahead)
+
+              expect(@gui.table.rows).toEqual([['m'], ['&nbsp;'], ['&nbsp;']])
+              expect(@gui.pagination.current_page).toEqual(5)
+              expect(@gui.pagination.pages).toEqual([5])
+
+              @gui.alter_scope((scope_wrapper, vars) ->
+                scope_wrapper.set(vars.max_pages, 3)
+              )
+
+              expect(@gui.table.rows).toEqual([['m'], ['&nbsp;'], ['&nbsp;']])
+              expect(@gui.pagination.current_page).toEqual(5)
+              expect(@gui.pagination.pages).toEqual([3, 4, 5])
+
+              @gui.click_pagination(jump_back)
+
+              expect(@gui.pagination.current_page).toEqual 2
+              expect(@gui.table.rows).toEqual([['d'], ['e'], ['f']])
+              expect(@gui.pagination.pages).toEqual([2, 3, 4])
+
+              @gui.alter_scope((scope_wrapper, vars) ->
+                scope_wrapper.set(vars.max_pages, 4)
+              )
+
+              expect(@gui.pagination.current_page).toEqual 2
+              expect(@gui.table.rows).toEqual([['d'], ['e'], ['f']])
+              expect(@gui.pagination.pages).toEqual([2, 3, 4, 5])
+
+              @gui.alter_scope((scope_wrapper, vars) ->
+                scope_wrapper.set(vars.items_per_page, 6)
+              )
+
+              expect(@gui.pagination.current_page).toEqual 2
+              expect(@gui.table.rows).toEqual([['g'], ['h'], ['i'], ['j'], ['k'], ['l']])
+              expect(@gui.pagination.pages).toEqual([1, 2, 3])
+
+              @gui.alter_scope((scope_wrapper, vars) ->
+                scope_wrapper.set(vars.items_per_page, 2)
+                scope_wrapper.set(vars.max_pages, 2)
+              )
+
+              @gui.click_pagination(jump_ahead)
+
+              expect(@gui.pagination.current_page).toEqual 4
+
+              @gui.click_pagination(jump_ahead)
+
+              expect(@gui.pagination.current_page).toEqual 6
+
+              @gui.click_pagination(jump_ahead)
+
+              expect(@gui.pagination.current_page).toEqual 7
+
+              @gui.alter_scope((scope_wrapper, vars) ->
+                scope_wrapper.set(vars.items_per_page, 6)
+                scope_wrapper.set(vars.max_pages, 4)
+              )
+
+              expect(@gui.table.rows).toEqual([['m'], ['&nbsp;'], ['&nbsp;'], ['&nbsp;'], ['&nbsp;'], ['&nbsp;']])
+              expect(@gui.pagination.current_page).toEqual(3)
+              expect(@gui.pagination.pages).toEqual([1, 2, 3])
