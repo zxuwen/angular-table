@@ -5,18 +5,14 @@ layout: default
 <div class="container">
   <div class="span5">
     <h1>angular-table</h1>
-    <!-- <iframe src="http://ghbtns.com/github-btn.html?user=samu&repo=angular-table&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe style="float: right;"> -->
     <br>
-    <angular-tabs id="mainTabs" active-tab="Complete Example">
-      <div tab-title="Complete Example"><br>
-        <angular-tabs id="completeExampleTabs" active-tab="Result"> <br>
+    <angular-tabs id="mainTabs" active-tab="Basic Example">
+      <div tab-title="Basic Example"><br>
+        <angular-tabs id="basicExampleTabs" active-tab="Result"> <br>
           <div tab-title="Result">
-            <div class="row">
-              <div class="col-md-10">
-                {% include html/complete_example.html %}
-              </div>
-              <div class="col-md-2">
-                {% include html/control_panel.html %}
+            <div class="row" ng-controller="basicExampleCtrl">
+              <div class="col-md-12">
+                {% include html/basic_example.html %}
               </div>
             </div>
           </div>
@@ -24,11 +20,11 @@ layout: default
             <div ng-non-bindable>
               <h4>Html</h4>
 {% highlight html %}
-{% include html/complete_example.html %}
+{% include html/basic_example.html %}
 {% endhighlight %}
               <h4>Javascript</h4>
 {% highlight javascript %}
-{% include js/completeExampleCtrl.js %}
+{% include js/basicExampleCtrl.js %}
 {% endhighlight %}
             </div>
           </div>

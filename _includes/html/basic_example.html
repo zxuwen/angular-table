@@ -1,0 +1,18 @@
+{% raw %}{% endraw %}
+<table id="basicExampleTable" class="table table-striped"
+  at-table
+  at-list="list"
+  at-items-per-page="5"
+  at-max-pages="3"
+  at-fill-last-page="true">
+  <thead></thead>
+  <tbody>
+    <tr>
+      <td at-implicit at-sortable at-attribute="index" width="150" at-initial-sorting="asc"></td>
+      <td at-implicit at-sortable at-attribute="name"  width="250"></td>
+      <td at-implicit at-sortable at-attribute="email"></td>
+    </tr>
+  </tbody>
+</table>
+
+<at-pagination at-table-id="basicExampleTable"></at-pagination>
