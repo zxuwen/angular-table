@@ -61,7 +61,7 @@ class PaginatedSetup extends Setup
         w.get_list(),
         w.get_current_page(),
         w.get_items_per_page(),
-        $scope[tc.sort_context],
+        w.get_sort_context(),
         $scope.predicate,
         $scope.descending,
         $filter

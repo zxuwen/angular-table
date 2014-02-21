@@ -1,0 +1,22 @@
+<div ng-init="config={
+  my_items_per_page: 3,
+  my_max_pages: 2,
+  my_sort_context: 'global'
+}"></div>
+<table id="completeConfigParameterized"
+  at-table
+  at-list="list"
+  at-items-per-page="config.my_items_per_page"
+  at-max-pages="config.my_max_pages"
+  at-fill-last-page="true"
+  at-sort-context="config.my_sort_context"
+  >
+  <thead></thead>
+  <tbody>
+    <tr>
+      <td at-implicit at-attribute="name" at-sortable at-initial-sorting="asc"></td>
+    </tr>
+  </tbody>
+</table>
+
+<at-pagination at-table-id="completeConfigParameterized">

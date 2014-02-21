@@ -1,8 +1,8 @@
 angular.module "angular-table", []
 
 # internal reserved keywords
-irk_from_page       = "from_page"              # atTable
-irk_current_page    = "current_page"           # atTable (getFillerArray), atPagination
+# irk_from_page       = "from_page"              # atTable
+# irk_current_page    = "current_page"           # atTable (getFillerArray), atPagination
 irk_number_of_pages = "number_of_pages"        # atTable (getFillerArray), atPagination
 
 # external reserved keywords

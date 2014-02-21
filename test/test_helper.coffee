@@ -16,7 +16,14 @@ extract_pagination_to_array = (elements) ->
   angular.element(element).find("a").html() for element in elements
 
 
+class ScopeWrapper
+  constructor: (@scope) ->
 
+  set: (expression, value) ->
+    @scope.$eval("#{expression}=#{value}")
+
+  get: (expression) ->
+    $scope.$eval("#{expression}")
 
 class TemplateCompiler
   constructor: (template_name) ->
@@ -88,17 +95,16 @@ class PaginationGUI
     @reload()
 
 class GUI
-  constructor: (@element, scope) ->
+  constructor: (@element, @scope, @variable_names) ->
     @pagination = new PaginationGUI(@element)
     @table = new TableGUI(@element)
-    @scope = scope
 
   reload: () ->
     @table.reload()
     @pagination.reload()
 
   alter_scope: (f) ->
-    f(@scope)
+    f(new ScopeWrapper(@scope), @variable_names)
     @scope.$digest()
     @reload()
 
@@ -111,3 +117,10 @@ click = (el) ->
   ev.initMouseEvent "click", true, true, window, null, 0, 0, 0, 0, false, false, false, false, 0, null
   el.dispatchEvent ev
   return
+
+# currently untested
+# - jump back/ahead buttons
+# - enabled/disabled buttons
+# - interactive table (removing/adding elements)
+# - sort context
+# - fill last page
