@@ -3,7 +3,7 @@
 // license:  MIT 
 // homepage: http://github.com/samu/angular-table 
 (function() {
-  var AngularTableManager, ColumnConfiguration, PageSequence, PaginatedSetup, ScopeConfigWrapper, Setup, StandardSetup, Table, TableConfiguration, erk_attribute, erk_current_page, erk_fill_last_page, erk_initial_sorting, erk_items_per_page, erk_list, erk_max_pages, erk_sort_context, erk_sortable, irk_current_page, irk_from_page, irk_number_of_pages,
+  var AngularTableManager, ColumnConfiguration, PageSequence, PaginatedSetup, ScopeConfigWrapper, Setup, StandardSetup, Table, TableConfiguration, erk_attribute, erk_current_page, erk_fill_last_page, erk_initial_sorting, erk_items_per_page, erk_list, erk_max_pages, erk_sort_context, erk_sortable, irk_number_of_pages,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -349,7 +349,7 @@
       };
       update_stuff = function() {
         var nop;
-        $scope.sorted_and_paginated_list = get_sorted_and_paginated_list(w.get_list(), w.get_current_page(), w.get_items_per_page(), $scope[tc.sort_context], $scope.predicate, $scope.descending, $filter);
+        $scope.sorted_and_paginated_list = get_sorted_and_paginated_list(w.get_list(), w.get_current_page(), w.get_items_per_page(), w.get_sort_context(), $scope.predicate, $scope.descending, $filter);
         nop = Math.ceil(w.get_list().length / w.get_items_per_page());
         return $scope.filler_array = get_filler_array(w.get_list(), w.get_current_page(), nop, w.get_items_per_page());
       };
@@ -458,10 +458,6 @@
   })();
 
   angular.module("angular-table", []);
-
-  irk_from_page = "from_page";
-
-  irk_current_page = "current_page";
 
   irk_number_of_pages = "number_of_pages";
 
