@@ -10,8 +10,8 @@ angular.module("angular-table-example").controller("interactiveExampleCtrl", ["$
   };
 
   $scope.add = function() {
-    $scope.originalList.push({name: $scope.nameToAdd})
-    $scope.updateFilteredList()
+    $scope.originalList.push({name: $scope.nameToAdd});
+    $scope.updateFilteredList();
   }
 
   $scope.updateFilteredList = function() {
