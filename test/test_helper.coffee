@@ -11,11 +11,6 @@ extract_html_to_array = (elements) ->
     angular.element(element).html()
   )
 
-extract_pagination_to_array = (elements) ->
-  elements = extract_visible_elements(elements)
-  angular.element(element).find("a").html() for element in elements
-
-
 class ScopeWrapper
   constructor: (@scope) ->
 
