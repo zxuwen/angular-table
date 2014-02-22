@@ -13,14 +13,16 @@ describe "angular-table", () ->
         template: "pagination/complete_config_hardcoded.html"
         variable_names: {
           items_per_page: "completeConfigHardcoded_itemsPerPage",
-          max_pages:      "completeConfigHardcoded_maxPages"
+          max_pages:      "completeConfigHardcoded_maxPages",
+          sort_context:   "completeConfigHardcoded_sortContext"
         }
       },
       {
         template: "pagination/complete_config_parameterized.html"
         variable_names: {
           items_per_page: "config.my_items_per_page",
-          max_pages:      "config.my_max_pages"
+          max_pages:      "config.my_max_pages",
+          sort_context:      "config.my_sort_context"
         }
       }
     ]
@@ -33,7 +35,7 @@ describe "angular-table", () ->
 
             @element = @comp.prepare_element((scope) ->
               scope.list = [
-                {name: "g"}, {name: "h"}, {name: "i"}, {name: "j"}, {name: "k"}, {name: "l"}
+                {name: "i"}, {name: "g"}, {name: "h"}, {name: "j"}, {name: "k"}, {name: "l"}
                 {name: "a"}, {name: "b"}, {name: "c"}, {name: "d"}, {name: "e"}, {name: "f"},
                 {name: "m"}
               ]
@@ -150,6 +152,28 @@ describe "angular-table", () ->
             expect(@gui.table.rows).toEqual([['a'], ['b'], ['c']])
             expect(@gui.pagination.current_page).toEqual(1)
             expect(@gui.pagination.pages).toEqual([1, 2])
+
+          it "allows to set a sort context", () ->
+            @gui.alter_scope((scope_wrapper, vars) ->
+              scope_wrapper.set(vars.items_per_page, 4)
+              scope_wrapper.set(vars.sort_context, "'global'")
+            )
+
+            expect(@gui.table.rows).toEqual([['a'], ['b'], ['c'], ['d']])
+
+            @gui.table.sort(0)
+
+            expect(@gui.table.rows).toEqual([['m'], ['l'], ['k'], ['j']])
+
+            @gui.alter_scope((scope_wrapper, vars) ->
+              scope_wrapper.set(vars.sort_context, "'page'")
+            )
+
+            expect(@gui.table.rows).toEqual([['j'], ['i'], ['h'], ['g']])
+
+            @gui.table.sort(0)
+
+            expect(@gui.table.rows).toEqual([['g'], ['h'], ['i'], ['j']])
 
           describe "the maximum pages setting", () ->
             for val in [undefined, null]

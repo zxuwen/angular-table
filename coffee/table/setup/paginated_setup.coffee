@@ -84,6 +84,10 @@ class PaginatedSetup extends Setup
       update_stuff()
     )
 
+    $scope.$watch(tc.sort_context, () ->
+      update_stuff()
+    )
+
     $scope.$watch("#{tc.list}.length", () ->
       $scope[irk_number_of_pages] = Math.ceil($scope[tc.list].length / w.get_items_per_page())
       update_stuff()

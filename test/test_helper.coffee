@@ -18,7 +18,7 @@ class ScopeWrapper
     @scope.$eval("#{expression}=#{value}")
 
   get: (expression) ->
-    $scope.$eval("#{expression}")
+    @scope.$eval("#{expression}")
 
 class TemplateCompiler
   constructor: (template_name) ->
@@ -59,6 +59,10 @@ class TableGUI
       )
     )
     @rows.shift() if @rows[0].length == 0
+
+  sort: (i) ->
+    click(@element.find("th")[i])
+    @reload()
 
 
 class PaginationGUI
@@ -112,8 +116,6 @@ click = (el) ->
   return
 
 # currently untested
-# - jump back/ahead buttons
 # - enabled/disabled buttons
 # - interactive table (removing/adding elements)
-# - sort context
 # - fill last page
