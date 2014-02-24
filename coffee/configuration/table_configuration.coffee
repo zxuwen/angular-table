@@ -2,12 +2,12 @@ class TableConfiguration
 
   constructor: (@table_element, @attributes) ->
     @id              = @attributes.id
-    @list            = @attributes[erk_list]
-    @register_items_per_page(@attributes[erk_items_per_page]) if @attributes[erk_items_per_page]
-    @register_sort_context(@attributes[erk_sort_context])
-    @register_fill_last_page(@attributes[erk_fill_last_page])
-    @register_max_pages(@attributes[erk_max_pages])
-    @register_current_page(@attributes[erk_current_page])
+    @list            = @attributes["atList"]
+    @register_items_per_page(@attributes["atItemsPerPage"]) if @attributes["atItemsPerPage"]
+    @register_sort_context(@attributes["atSortContext"])
+    @register_fill_last_page(@attributes["atFillLastPage"])
+    @register_max_pages(@attributes["atMaxPages"])
+    @register_current_page(@attributes["atCurrentPage"])
     @paginated       = @items_per_page != undefined
     @create_column_configurations()
 

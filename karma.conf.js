@@ -18,6 +18,8 @@ module.exports = function(config) {
       'http://code.angularjs.org/1.2.11/angular-mocks.js',
       'http://underscorejs.org/underscore-min.js',
 
+      'coffee/angular_table.coffee',
+
       'coffee/configuration/column_configuration.coffee',
       'coffee/configuration/table_configuration.coffee',
 
@@ -25,6 +27,8 @@ module.exports = function(config) {
       'coffee/directives/table/setup/standard_setup.coffee',
       'coffee/directives/table/setup/paginated_setup.coffee',
       'coffee/directives/table/table.coffee',
+
+      'coffee/directives/pagination/page_sequence.coffee',
 
       'coffee/directives/at_table.coffee',
       'coffee/directives/at_pagination.coffee',
