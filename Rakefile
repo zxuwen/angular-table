@@ -19,17 +19,21 @@ end
 
 def collect_coffees
   files = [
+    "coffee/angular_table.coffee",
+
     "coffee/configuration/column_configuration.coffee",
     "coffee/configuration/table_configuration.coffee",
 
-    "coffee/table/setup/setup.coffee",
-    "coffee/table/setup/standard_setup.coffee",
-    "coffee/table/setup/paginated_setup.coffee",
-    "coffee/table/table.coffee",
+    "coffee/directives/table/setup/setup.coffee",
+    "coffee/directives/table/setup/standard_setup.coffee",
+    "coffee/directives/table/setup/paginated_setup.coffee",
+    "coffee/directives/table/table.coffee",
 
-    "coffee/at-table.coffee",
-    "coffee/at-pagination.coffee",
-    "coffee/at-implicit.coffee",
+    "coffee/directives/pagination/page_sequence.coffee",
+
+    "coffee/directives/at_table.coffee",
+    "coffee/directives/at_pagination.coffee",
+    "coffee/directives/at_implicit.coffee",
   ]
   script = ""
   files.each do |file|
