@@ -331,17 +331,23 @@
         }
       };
       get_filler_array = function(list, current_page, number_of_pages, items_per_page) {
-        var fillerLength, itemCountOnLastPage, x, _i, _ref, _ref1, _results;
+        var fillerLength, itemCountOnLastPage, x, _i, _j, _ref, _ref1, _ref2, _results, _results1;
         items_per_page = parseInt(items_per_page);
-        if (current_page === number_of_pages - 1) {
+        if (list.length <= 0) {
+          _results = [];
+          for (x = _i = 0, _ref = items_per_page - 1; 0 <= _ref ? _i <= _ref : _i >= _ref; x = 0 <= _ref ? ++_i : --_i) {
+            _results.push(x);
+          }
+          return _results;
+        } else if (current_page === number_of_pages - 1) {
           itemCountOnLastPage = list.length % items_per_page;
-          if (itemCountOnLastPage !== 0 || list.length === 0) {
+          if (itemCountOnLastPage !== 0) {
             fillerLength = items_per_page - itemCountOnLastPage - 1;
-            _results = [];
-            for (x = _i = _ref = list.length, _ref1 = list.length + fillerLength; _ref <= _ref1 ? _i <= _ref1 : _i >= _ref1; x = _ref <= _ref1 ? ++_i : --_i) {
-              _results.push(x);
+            _results1 = [];
+            for (x = _j = _ref1 = list.length, _ref2 = list.length + fillerLength; _ref1 <= _ref2 ? _j <= _ref2 : _j >= _ref2; x = _ref1 <= _ref2 ? ++_j : --_j) {
+              _results1.push(x);
             }
-            return _results;
+            return _results1;
           } else {
             return [];
           }
@@ -357,6 +363,9 @@
         return update_stuff();
       });
       $scope.$watch(tc.items_per_page, function() {
+        return update_stuff();
+      });
+      $scope.$watch(tc.sort_context, function() {
         return update_stuff();
       });
       $scope.$watch("" + tc.list + ".length", function() {
@@ -689,11 +698,13 @@
                   pages_to_display = new_number_of_pages;
                 }
                 $scope.page_sequence.reset_parameters(0, new_number_of_pages, pages_to_display);
-                $scope.page_sequence.realign_greedy(w.get_current_page());
-                return set_current_page(keep_in_bounds(w.get_current_page(), 0, get_number_of_pages() - 1));
+                set_current_page(keep_in_bounds(w.get_current_page(), 0, get_number_of_pages() - 1));
+                return $scope.page_sequence.realign_greedy(w.get_current_page());
               } else {
                 set_number_of_pages(1);
-                return $scope.pages = [0];
+                $scope.page_sequence.reset_parameters(0, 1, 1);
+                set_current_page(0);
+                return $scope.page_sequence.realign_greedy(0);
               }
             }
           };
