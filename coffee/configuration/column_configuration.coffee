@@ -13,7 +13,6 @@ class ColumnConfiguration
 
   create_element: () ->
     th = angular.element(document.createElement("th"))
-    th.attr("style","cursor: pointer;")
 
   render_title: (element) ->
     element.html(@custom_content || @title)
