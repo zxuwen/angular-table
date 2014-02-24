@@ -14,7 +14,8 @@ describe "angular-table", () ->
         variable_names: {
           items_per_page: "completeConfigHardcoded_itemsPerPage",
           max_pages:      "completeConfigHardcoded_maxPages",
-          sort_context:   "completeConfigHardcoded_sortContext"
+          sort_context:   "completeConfigHardcoded_sortContext",
+          fill_last_page: "completeConfigHardcoded_fillLastPage"
         }
       },
       {
@@ -22,7 +23,8 @@ describe "angular-table", () ->
         variable_names: {
           items_per_page: "config.my_items_per_page",
           max_pages:      "config.my_max_pages",
-          sort_context:      "config.my_sort_context"
+          sort_context:   "config.my_sort_context",
+          fill_last_page: "config.my_fill_last_page"
         }
       }
     ]
@@ -44,7 +46,6 @@ describe "angular-table", () ->
             @gui = new GUI(@element, @comp.scope, setup.variable_names)
 
           it "allows to select pages", () ->
-
             expect(@gui.pagination.pages).toEqual([1, 2])
             expect(@gui.pagination.current_page).toEqual(1)
 
@@ -174,6 +175,22 @@ describe "angular-table", () ->
             @gui.table.sort(0)
 
             expect(@gui.table.rows).toEqual([['g'], ['h'], ['i'], ['j']])
+
+          it "shows an empty table if fill-last-page is true and the list is empty", () ->
+            @gui.click_pagination(2)
+
+            expect(@gui.table.rows).toEqual [['d'], ['e'], ['f']]
+            expect(@gui.pagination.current_page).toEqual 2
+
+            @gui.alter_scope((scope_wrapper, vars) ->
+              scope_wrapper.set(vars.items_per_page, 3)
+              scope_wrapper.set(vars.fill_last_page, true)
+              scope_wrapper.set("list", "[]")
+            )
+
+            expect(@gui.table.rows).toEqual [['&nbsp;'], ['&nbsp;'], ['&nbsp;']]
+            expect(@gui.pagination.pages).toEqual [1]
+            expect(@gui.pagination.current_page).toEqual 1
 
           describe "the maximum pages setting", () ->
             for val in [undefined, null]

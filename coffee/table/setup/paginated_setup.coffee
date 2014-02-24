@@ -46,10 +46,11 @@ class PaginatedSetup extends Setup
 
     get_filler_array = (list, current_page, number_of_pages, items_per_page) ->
       items_per_page = parseInt(items_per_page)
-
-      if current_page == number_of_pages - 1
+      if list.length <= 0
+        x for x in [0..items_per_page - 1]
+      else if current_page == number_of_pages - 1
         itemCountOnLastPage = list.length % items_per_page
-        if itemCountOnLastPage != 0 || list.length == 0
+        if itemCountOnLastPage != 0
           fillerLength = items_per_page - itemCountOnLastPage - 1
           x for x in [(list.length)..(list.length + fillerLength)]
         else

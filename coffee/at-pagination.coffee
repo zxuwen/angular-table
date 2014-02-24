@@ -104,12 +104,16 @@ angular.module("angular-table").directive "atPagination", ["angularTableManager"
               pages_to_display = w.get_max_pages()
             else
               pages_to_display = new_number_of_pages
+
             $scope.page_sequence.reset_parameters(0, new_number_of_pages, pages_to_display)
-            $scope.page_sequence.realign_greedy(w.get_current_page())
+            # TODO warum ist die reihenfolge der folgenden beiden aufrufe irrelevant?
             set_current_page(keep_in_bounds(w.get_current_page(), 0, get_number_of_pages() - 1))
+            $scope.page_sequence.realign_greedy(w.get_current_page())
           else
             set_number_of_pages(1)
-            $scope.pages = [0]
+            $scope.page_sequence.reset_parameters(0, 1, 1)
+            set_current_page(0)
+            $scope.page_sequence.realign_greedy(0)
 
       keep_in_bounds = (val, min, max) ->
         val = Math.max(min, val)
