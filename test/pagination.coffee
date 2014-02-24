@@ -197,7 +197,54 @@ describe "angular-table", () ->
                   [ 'First', '«', '‹', '1', '2', '3', '›', '»', 'Last' ])
 
           describe "heavy interaction", () ->
-            it "does stuff", () ->
+            it "updates when the length of the list changes", () ->
+              @gui.alter_scope((scope_wrapper, vars) ->
+                scope_wrapper.set(vars.items_per_page, 3)
+                scope_wrapper.set(vars.max_pages, 2)
+                scope_wrapper.set("list", "[{name: 'z'}]")
+              )
+
+              expect(@gui.table.rows).toEqual [['z'], ['&nbsp;'], ['&nbsp;']]
+
+              @gui.alter_scope((scope_wrapper, vars) ->
+                scope_wrapper.get("list").push({name: 'a'})
+              )
+
+              expect(@gui.table.rows).toEqual [['a'], ['z'], ['&nbsp;']]
+              expect(@gui.pagination.representation).toEqual ['First', '‹', '1', '›', 'Last']
+              expect(@gui.pagination.pages).toEqual [1]
+
+              @gui.alter_scope((scope_wrapper, vars) ->
+                scope_wrapper.get("list").push({name: 'x'})
+                scope_wrapper.get("list").push({name: 'b'})
+              )
+
+              expect(@gui.table.rows).toEqual [['a'], ['b'], ['x']]
+              expect(@gui.pagination.representation).toEqual ['First', '‹', '1', '2', '›', 'Last']
+              expect(@gui.pagination.pages).toEqual [1, 2]
+
+              @gui.click_pagination(2)
+
+              expect(@gui.table.rows).toEqual [['z'], ['&nbsp;'], ['&nbsp;']]
+
+              @gui.alter_scope((scope_wrapper, vars) ->
+                scope_wrapper.get("list").push({name: 'c'})
+                scope_wrapper.get("list").push({name: 'y'})
+                scope_wrapper.get("list").push({name: 'u'})
+              )
+
+              expect(@gui.table.rows).toEqual [['u'], ['x'], ['y']]
+              expect(@gui.pagination.representation).toEqual(
+                  [ 'First', '«', '‹', '1', '2', '›', '»', 'Last' ])
+
+              @gui.click_pagination(step_ahead)
+
+              expect(@gui.table.rows).toEqual [['z'], ['&nbsp;'], ['&nbsp;']]
+              expect(@gui.pagination.representation).toEqual(
+                  [ 'First', '«', '‹', '2', '3', '›', '»', 'Last' ])
+
+
+            it "updates when ever a configuration parameter changes", () ->
               @gui.alter_scope((scope_wrapper, vars) ->
                 scope_wrapper.set(vars.items_per_page, 5)
                 scope_wrapper.set(vars.max_pages, 4)

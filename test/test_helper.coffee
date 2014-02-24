@@ -117,5 +117,4 @@ click = (el) ->
 
 # currently untested
 # - enabled/disabled buttons
-# - interactive table (removing/adding elements)
 # - fill last page
