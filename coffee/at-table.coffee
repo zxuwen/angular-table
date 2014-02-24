@@ -75,19 +75,6 @@ class AngularTableManager
     if tc.initial_current_page isnt undefined
       scope.$parent[tc.current_page] = tc.initial_current_page
 
-  register_pagination_scope: (id, pagination_scope) ->
-    # mapping = @mappings[id] ||= {}
-    # mapping.pagination_scope = pagination_scope
-
-    # if mapping.table_configuration
-      # pagination_scope.$watch(irk_current_page, () ->
-      #   mapping.table_scope.notify_change(pagination_scope[irk_current_page], pagination_scope[irk_number_of_pages])
-      # )
-
-      # pagination_scope.$watch(irk_number_of_pages, () ->
-      #   mapping.table_scope.notify_change(pagination_scope[irk_current_page], pagination_scope[irk_number_of_pages])
-      # )
-
 angular.module("angular-table").service "angularTableManager", [() ->
   new AngularTableManager()
 ]

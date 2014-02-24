@@ -34,9 +34,9 @@ class PageSequence
 
 angular.module("angular-table").directive "atPagination", ["angularTableManager", (angularTableManager) ->
   {
-    replace: true
     restrict: "E"
-
+    scope: true
+    replace: true
     template: "
       <div style='margin: 0px;'>
         <ul class='pagination'>
@@ -69,13 +69,6 @@ angular.module("angular-table").directive "atPagination", ["angularTableManager"
           </li>
         </ul>
       </div>"
-
-    controller: ["$scope", "$element", "$attrs",
-    ($scope, $element, $attrs) ->
-      angularTableManager.register_pagination_scope($attrs.atTableId, $scope)
-    ]
-
-    scope: true
 
     link: ($scope, $element, $attributes) ->
       tc = angularTableManager.get_table_configuration($attributes.atTableId)
