@@ -43,7 +43,13 @@ describe "angular-table", () ->
             @gui = new GUI(@element, @comp.scope, setup.variable_names)
 
             @gui.alter_scope (scope_wrapper, vars) ->
-              scope_wrapper.set("tableconfig", "{}")
+              config = {
+                my_items_per_page: 3,
+                my_max_pages: 2,
+                my_sort_context: 'global',
+                my_fill_last_page: true
+              }
+              scope_wrapper.set("tableconfig", {})
 
 
           it "allows to select pages", () ->
@@ -158,7 +164,7 @@ describe "angular-table", () ->
           it "allows to set a sort context", () ->
             @gui.alter_scope((scope_wrapper, vars) ->
               scope_wrapper.set(vars.items_per_page, 4)
-              scope_wrapper.set(vars.sort_context, "'global'")
+              scope_wrapper.set(vars.sort_context, "global")
             )
 
             expect(@gui.table.rows).toEqual([['a'], ['b'], ['c'], ['d']])
@@ -168,7 +174,7 @@ describe "angular-table", () ->
             expect(@gui.table.rows).toEqual([['m'], ['l'], ['k'], ['j']])
 
             @gui.alter_scope((scope_wrapper, vars) ->
-              scope_wrapper.set(vars.sort_context, "'page'")
+              scope_wrapper.set(vars.sort_context, "page")
             )
 
             expect(@gui.table.rows).toEqual([['j'], ['i'], ['h'], ['g']])
@@ -186,7 +192,7 @@ describe "angular-table", () ->
             @gui.alter_scope((scope_wrapper, vars) ->
               scope_wrapper.set(vars.items_per_page, 3)
               scope_wrapper.set(vars.fill_last_page, true)
-              scope_wrapper.set("list", "[]")
+              scope_wrapper.set("list", [])
             )
 
             expect(@gui.table.rows).toEqual [['&nbsp;'], ['&nbsp;'], ['&nbsp;']]
@@ -219,7 +225,7 @@ describe "angular-table", () ->
               @gui.alter_scope((scope_wrapper, vars) ->
                 scope_wrapper.set(vars.items_per_page, 3)
                 scope_wrapper.set(vars.max_pages, 2)
-                scope_wrapper.set("list", "[{name: 'z'}]")
+                scope_wrapper.set("list", [{name: 'z'}])
               )
 
               expect(@gui.table.rows).toEqual [['z'], ['&nbsp;'], ['&nbsp;']]

@@ -15,7 +15,7 @@ class ScopeWrapper
   constructor: (@scope) ->
 
   set: (expression, value) ->
-    @scope.$eval("#{expression}=#{value}")
+    @scope.$eval("#{expression}=#{JSON.stringify(value)}")
 
   get: (expression) ->
     @scope.$eval("#{expression}")
