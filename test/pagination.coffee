@@ -8,8 +8,7 @@ describe "angular-table", () ->
     first      = 'First'
     last       = 'Last'
 
-    setups = [
-      {
+    setups = [{
         template: "pagination/complete_config_hardcoded.html"
         variable_names: {
           items_per_page: "completeConfigHardcoded_itemsPerPage",
@@ -17,8 +16,7 @@ describe "angular-table", () ->
           sort_context:   "completeConfigHardcoded_sortContext",
           fill_last_page: "completeConfigHardcoded_fillLastPage"
         }
-      },
-      {
+      }, {
         template: "pagination/complete_config_parameterized.html"
         variable_names: {
           items_per_page: "config.my_items_per_page",
@@ -26,8 +24,7 @@ describe "angular-table", () ->
           sort_context:   "config.my_sort_context",
           fill_last_page: "config.my_fill_last_page"
         }
-      }
-    ]
+      }]
 
     for setup in setups
       do (setup) ->
@@ -44,6 +41,10 @@ describe "angular-table", () ->
             )
 
             @gui = new GUI(@element, @comp.scope, setup.variable_names)
+
+            @gui.alter_scope (scope_wrapper, vars) ->
+              scope_wrapper.set("tableconfig", "{}")
+
 
           it "allows to select pages", () ->
             expect(@gui.pagination.pages).toEqual([1, 2])
