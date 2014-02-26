@@ -1,6 +1,8 @@
 describe "angular-table", () ->
   describe "Pagination", () ->
 
+    config_name = "table_config"
+
     step_back  = '‹'
     step_ahead = '›'
     jump_back  = '«'
@@ -9,20 +11,12 @@ describe "angular-table", () ->
     last       = 'Last'
 
     setups = [{
-        template: "pagination/complete_config_hardcoded.html"
-        variable_names: {
-          items_per_page: "completeConfigHardcoded_itemsPerPage",
-          max_pages:      "completeConfigHardcoded_maxPages",
-          sort_context:   "completeConfigHardcoded_sortContext",
-          fill_last_page: "completeConfigHardcoded_fillLastPage"
-        }
-      }, {
         template: "pagination/complete_config_parameterized.html"
         variable_names: {
-          items_per_page: "config.my_items_per_page",
-          max_pages:      "config.my_max_pages",
-          sort_context:   "config.my_sort_context",
-          fill_last_page: "config.my_fill_last_page"
+          items_per_page: "#{config_name}.itemsPerPage",
+          max_pages:      "#{config_name}.maxPages",
+          sort_context:   "#{config_name}.sortContext",
+          fill_last_page: "#{config_name}.fillLastPage"
         }
       }]
 
@@ -38,19 +32,17 @@ describe "angular-table", () ->
                 {name: "a"}, {name: "b"}, {name: "c"}, {name: "d"}, {name: "e"}, {name: "f"},
                 {name: "m"}
               ]
+
+              scope[config_name] = {
+                currentPage: 0,
+                itemsPerPage: 3,
+                maxPages: 2,
+                sortContext: 'global',
+                fillLastPage: true
+              }
             )
 
             @gui = new GUI(@element, @comp.scope, setup.variable_names)
-
-            @gui.alter_scope (scope_wrapper, vars) ->
-              config = {
-                my_items_per_page: 3,
-                my_max_pages: 2,
-                my_sort_context: 'global',
-                my_fill_last_page: true
-              }
-              scope_wrapper.set("tableconfig", {})
-
 
           it "allows to select pages", () ->
             expect(@gui.pagination.pages).toEqual([1, 2])

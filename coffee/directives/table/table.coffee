@@ -1,6 +1,6 @@
 class Table
 
-  constructor: (@element, @table_configuration) ->
+  constructor: (@element, @table_configuration, @configuration_variable_names) ->
 
   constructHeader: () ->
     tr = angular.element(document.createElement("tr"))
@@ -18,9 +18,9 @@ class Table
 
   get_setup: () ->
     if @table_configuration.paginated
-      return new PaginatedSetup(@table_configuration)
+      return new PaginatedSetup(@configuration_variable_names)
     else
-      return new StandardSetup(@table_configuration)
+      return new StandardSetup(@configuration_variable_names)
     return
 
   compile: () ->

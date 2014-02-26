@@ -1,7 +1,6 @@
 class PaginatedSetup extends Setup
 
-  constructor: (table_configuration) ->
-    @table_configuration = table_configuration
+  constructor: (@configuration_variable_names) ->
     @repeatString = "item in sorted_and_paginated_list"
 
   compile: (element) ->
@@ -14,7 +13,7 @@ class PaginatedSetup extends Setup
 
     # TODO
     fillerTr = angular.element(document.createElement("tr"))
-    fillerTr.attr("ng-show", @table_configuration.fill_last_page)
+    fillerTr.attr("ng-show", @configuration_variable_names.fill_last_page)
     fillerTr.html(tdString)
     fillerTr.attr("ng-repeat", "item in filler_array")
 
@@ -23,9 +22,9 @@ class PaginatedSetup extends Setup
     return
 
   link: ($scope, $element, $attributes, $filter) ->
-    tc = @table_configuration
+    cvn = @configuration_variable_names
 
-    w = new ScopeConfigWrapper($scope, tc)
+    w = new ScopeConfigWrapper($scope, cvn)
 
     get_sorted_and_paginated_list = (list, current_page, items_per_page, sort_context, predicate, descending, $filter) ->
       if list
@@ -77,19 +76,19 @@ class PaginatedSetup extends Setup
         w.get_items_per_page()
       )
 
-    $scope.$watch(tc.current_page, () ->
+    $scope.$watch(cvn.current_page, () ->
       update_stuff()
     )
 
-    $scope.$watch(tc.items_per_page, () ->
+    $scope.$watch(cvn.items_per_page, () ->
       update_stuff()
     )
 
-    $scope.$watch(tc.sort_context, () ->
+    $scope.$watch(cvn.sort_context, () ->
       update_stuff()
     )
 
-    $scope.$watch("#{tc.list}.length", () ->
+    $scope.$watch("#{cvn.list}.length", () ->
       $scope[irk_number_of_pages] = Math.ceil(w.get_list().length / w.get_items_per_page())
       update_stuff()
     )

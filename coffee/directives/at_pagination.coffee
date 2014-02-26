@@ -1,50 +1,18 @@
-angular.module("angular-table").directive "atPagination", ["angularTableManager", (angularTableManager) ->
-  {
+angular.module("angular-table").directive "atPagination", [() -> {
     restrict: "E"
     scope: true
     replace: true
-    template: "
-      <div style='margin: 0px;'>
-        <ul class='pagination'>
-          <li ng-class='{disabled: get_current_page() <= 0}'>
-            <a href='' ng-click='step_page(-#{irk_number_of_pages})'>First</a>
-          </li>
-
-          <li ng-show='show_sectioning()' ng-class='{disabled: get_current_page() <= 0}'>
-            <a href='' ng-click='jump_back()'>&laquo;</a>
-          </li>
-
-          <li ng-class='{disabled: get_current_page() <= 0}'>
-            <a href='' ng-click='step_page(-1)'>&lsaquo;</a>
-          </li>
-
-          <li ng-class='{active: get_current_page() == page}' ng-repeat='page in page_sequence.data'>
-            <a href='' ng-click='go_to_page(page)'>{{page + 1}}</a>
-          </li>
-
-          <li ng-class='{disabled: get_current_page() >= #{irk_number_of_pages} - 1}'>
-            <a href='' ng-click='step_page(1)'>&rsaquo;</a>
-          </li>
-
-          <li ng-show='show_sectioning()' ng-class='{disabled: get_current_page() >= #{irk_number_of_pages} - 1}'>
-            <a href='' ng-click='jump_ahead()'>&raquo;</a>
-          </li>
-
-          <li ng-class='{disabled: get_current_page() >= #{irk_number_of_pages} - 1}'>
-            <a href='' ng-click='step_page(#{irk_number_of_pages})'>Last</a>
-          </li>
-        </ul>
-      </div>"
+    template: pagination_template
 
     link: ($scope, $element, $attributes) ->
-      tc = angularTableManager.get_table_configuration($attributes.atTableId)
+      cvn = new ConfigurationVariableNames($attributes.atConfig)
 
-      w = new ScopeConfigWrapper($scope, tc)
+      w = new ScopeConfigWrapper($scope, cvn)
 
       $scope.page_sequence = new PageSequence()
 
       set_current_page = (current_page) ->
-        $scope.$parent.$eval("#{tc.current_page}=#{current_page}")
+        $scope.$parent.$eval("#{cvn.current_page}=#{current_page}")
 
       get_number_of_pages = () ->
         $scope[irk_number_of_pages]
@@ -55,9 +23,7 @@ angular.module("angular-table").directive "atPagination", ["angularTableManager"
       update = (reset) ->
         if w.get_list()
           if w.get_list().length > 0
-            # old_number_of_pages = get_number_of_pages()
             new_number_of_pages = Math.ceil(w.get_list().length / w.get_items_per_page())
-            # if (old_number_of_pages != new_number_of_pages)
             set_number_of_pages(new_number_of_pages)
             if $scope.show_sectioning()
               pages_to_display = w.get_max_pages()
@@ -100,16 +66,16 @@ angular.module("angular-table").directive "atPagination", ["angularTableManager"
 
       update()
 
-      $scope.$watch tc.items_per_page, () ->
+      $scope.$watch cvn.items_per_page, () ->
         update()
 
-      $scope.$watch tc.max_pages, () ->
+      $scope.$watch cvn.max_pages, () ->
         update()
 
-      $scope.$watch tc.list, () ->
+      $scope.$watch cvn.list, () ->
         update()
 
-      $scope.$watch "#{tc.list}.length", () ->
+      $scope.$watch "#{cvn.list}.length", () ->
         update()
 
   }

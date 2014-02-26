@@ -2,18 +2,11 @@ angular.module("angular-table").directive "atTable", ["$filter", "angularTableMa
   {
     restrict: "AC"
     scope: true
-    controller: ["$scope", "$element", "$attrs",
-    ($scope, $element, $attrs) ->
-      id = $attrs["id"]
-      if id
-        angularTableManager.register_table_scope(id, $scope, $filter)
-    ]
 
     compile: (element, attributes, transclude) ->
       tc = new TableConfiguration(element, attributes)
-      angularTableManager.register_table(tc)
-
-      dt = new Table(element, tc)
+      cvn = new ConfigurationVariableNames(attributes.atConfig)
+      dt = new Table(element, tc, cvn)
       dt.compile()
       {
         post: ($scope, $element, $attributes) ->
