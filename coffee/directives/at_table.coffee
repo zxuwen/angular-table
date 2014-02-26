@@ -1,4 +1,4 @@
-angular.module("angular-table").directive "atTable", ["$filter", "angularTableManager", ($filter, angularTableManager) -> {
+angular.module("angular-table").directive "atTable", ["$filter", ($filter) -> {
   restrict: "AC"
   scope: true
 

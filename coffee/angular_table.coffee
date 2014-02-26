@@ -27,24 +27,7 @@ class ScopeConfigWrapper
   set_current_page: (current_page) ->
     @scope.$eval("#{@configuration_variable_names.current_page}=#{current_page}")
 
-class AngularTableManager
-  constructor: () ->
-    @mappings = {}
-
-  get_table_configuration: (id) ->
-    @mappings[id].table_configuration
-
-  register_table: (table_configuration) ->
-    mapping = @mappings[table_configuration.id] ||= {}
-    mapping.table_configuration = table_configuration
-    if mapping.pagination_scope
-      throw "pagination element before table element is going to be supported soon"
-
 angular.module "angular-table", []
-
-angular.module("angular-table").service "angularTableManager", [() ->
-  new AngularTableManager()
-]
 
 irk_number_of_pages = "number_of_pages"
 
