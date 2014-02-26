@@ -1,5 +1,4 @@
 class TableConfiguration
-
   constructor: (@table_element, @attributes) ->
     @id              = @attributes.id
     @config          = @attributes.atConfig

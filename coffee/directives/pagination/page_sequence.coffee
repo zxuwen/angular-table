@@ -1,5 +1,4 @@
 class PageSequence
-
   constructor: (@lower_bound = 0, @upper_bound = 1, start = 0, @length = 1) ->
     throw "sequence is too long" if @length > (@upper_bound - @lower_bound)
     @data = @generate(start)

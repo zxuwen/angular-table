@@ -1,5 +1,4 @@
 class Table
-
   constructor: (@element, @table_configuration, @configuration_variable_names) ->
 
   constructHeader: () ->

@@ -1,5 +1,4 @@
 class PaginatedSetup extends Setup
-
   constructor: (@configuration_variable_names) ->
     @repeatString = "item in sorted_and_paginated_list"
 

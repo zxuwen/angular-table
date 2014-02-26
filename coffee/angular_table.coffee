@@ -8,7 +8,6 @@ class ConfigurationVariableNames
     @list = "list"
 
 class ScopeConfigWrapper
-
   constructor: (@scope, @configuration_variable_names) ->
 
   get_list: () ->
@@ -26,8 +25,10 @@ class ScopeConfigWrapper
   get_sort_context: () ->
     @scope.$eval(@configuration_variable_names.sort_context) || 'global'
 
-class AngularTableManager
+  set_current_page: (current_page) ->
+    @scope.$eval("#{@configuration_variable_names.current_page}=#{current_page}")
 
+class AngularTableManager
   constructor: () ->
     @mappings = {}
 
