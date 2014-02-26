@@ -19,7 +19,7 @@ class Table
     if @table_configuration.paginated
       return new PaginatedSetup(@configuration_variable_names)
     else
-      return new StandardSetup(@configuration_variable_names)
+      return new StandardSetup(@configuration_variable_names, @table_configuration.list)
     return
 
   compile: () ->

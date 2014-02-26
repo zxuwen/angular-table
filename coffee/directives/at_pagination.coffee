@@ -6,7 +6,7 @@ angular.module("angular-table").directive "atPagination", [() -> {
 
   link: ($scope, $element, $attributes) ->
     cvn = new ConfigurationVariableNames($attributes.atConfig)
-    w = new ScopeConfigWrapper($scope, cvn)
+    w = new ScopeConfigWrapper($scope, cvn, $attributes.atList)
 
     keep_in_bounds = (val, min, max) ->
       val = Math.max(min, val)
@@ -66,10 +66,10 @@ angular.module("angular-table").directive "atPagination", [() -> {
     $scope.$watch cvn.max_pages, () ->
       update()
 
-    $scope.$watch cvn.list, () ->
+    $scope.$watch $attributes.atList, () ->
       update()
 
-    $scope.$watch "#{cvn.list}.length", () ->
+    $scope.$watch "#{$attributes.atList}.length", () ->
       update()
 
     update()

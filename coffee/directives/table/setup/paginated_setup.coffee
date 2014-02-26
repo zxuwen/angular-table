@@ -23,7 +23,7 @@ class PaginatedSetup extends Setup
   link: ($scope, $element, $attributes, $filter) ->
     cvn = @configuration_variable_names
 
-    w = new ScopeConfigWrapper($scope, cvn)
+    w = new ScopeConfigWrapper($scope, cvn, $attributes.atList)
 
     get_sorted_and_paginated_list = (list, current_page, items_per_page, sort_context, predicate, descending, $filter) ->
       if list
@@ -87,7 +87,7 @@ class PaginatedSetup extends Setup
       update_stuff()
     )
 
-    $scope.$watch("#{cvn.list}.length", () ->
+    $scope.$watch("#{$attributes.atList}.length", () ->
       $scope[irk_number_of_pages] = Math.ceil(w.get_list().length / w.get_items_per_page())
       update_stuff()
     )

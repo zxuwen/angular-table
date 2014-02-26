@@ -5,13 +5,12 @@ class ConfigurationVariableNames
     @fill_last_page = "#{@config_object_name}.fillLastPage"
     @max_pages = "#{@config_object_name}.maxPages"
     @current_page = "#{@config_object_name}.currentPage"
-    @list = "list"
 
 class ScopeConfigWrapper
-  constructor: (@scope, @configuration_variable_names) ->
+  constructor: (@scope, @configuration_variable_names, @list_name) ->
 
   get_list: () ->
-    @scope.$eval("list")
+    @scope.$eval(@list_name)
 
   get_items_per_page: () ->
     @scope.$eval(@configuration_variable_names.items_per_page) || 10

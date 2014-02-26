@@ -3,7 +3,7 @@ class TableConfiguration
     @id              = @attributes.id
     @config          = @attributes.atConfig
     @paginated       = @attributes.atPaginated?
-
+    @list            = @attributes.atList
     @create_column_configurations()
 
   capitaliseFirstLetter: (string) ->
