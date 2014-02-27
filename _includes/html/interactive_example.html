@@ -1,9 +1,4 @@
-<table id="interactiveExampleTable" class="table table-striped"
-  at-table
-  at-list="filteredList"
-  at-items-per-page="config.itemsPerPage"
-  at-max-pages="config.maxPages"
-  at-fill-last-page="config.fillLastPage">
+<table class="table table-striped" at-table at-paginated at-list="filteredList" at-config="config">
   <thead></thead>
   <tbody>
     <tr>
@@ -12,4 +7,4 @@
   </tbody>
 </table>
 
-<at-pagination at-table-id="interactiveExampleTable"></at-pagination>
+<at-pagination at-list="filteredList" at-config="config"></at-pagination>
