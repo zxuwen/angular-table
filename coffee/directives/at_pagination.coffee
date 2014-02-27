@@ -1,116 +1,76 @@
-angular.module("angular-table").directive "atPagination", ["angularTableManager", (angularTableManager) ->
-  {
-    restrict: "E"
-    scope: true
-    replace: true
-    template: "
-      <div style='margin: 0px;'>
-        <ul class='pagination'>
-          <li ng-class='{disabled: get_current_page() <= 0}'>
-            <a href='' ng-click='step_page(-#{irk_number_of_pages})'>First</a>
-          </li>
+angular.module("angular-table").directive "atPagination", [() -> {
+  restrict: "E"
+  scope: true
+  replace: true
+  template: pagination_template
 
-          <li ng-show='show_sectioning()' ng-class='{disabled: get_current_page() <= 0}'>
-            <a href='' ng-click='jump_back()'>&laquo;</a>
-          </li>
+  link: ($scope, $element, $attributes) ->
+    cvn = new ConfigurationVariableNames($attributes.atConfig)
+    w = new ScopeConfigWrapper($scope, cvn, $attributes.atList)
 
-          <li ng-class='{disabled: get_current_page() <= 0}'>
-            <a href='' ng-click='step_page(-1)'>&lsaquo;</a>
-          </li>
+    keep_in_bounds = (val, min, max) ->
+      val = Math.max(min, val)
+      Math.min(max, val)
 
-          <li ng-class='{active: get_current_page() == page}' ng-repeat='page in page_sequence.data'>
-            <a href='' ng-click='go_to_page(page)'>{{page + 1}}</a>
-          </li>
+    get_number_of_pages = () ->
+      $scope[irk_number_of_pages]
 
-          <li ng-class='{disabled: get_current_page() >= #{irk_number_of_pages} - 1}'>
-            <a href='' ng-click='step_page(1)'>&rsaquo;</a>
-          </li>
+    set_number_of_pages = (number_of_pages) ->
+      $scope[irk_number_of_pages] = number_of_pages
 
-          <li ng-show='show_sectioning()' ng-class='{disabled: get_current_page() >= #{irk_number_of_pages} - 1}'>
-            <a href='' ng-click='jump_ahead()'>&raquo;</a>
-          </li>
-
-          <li ng-class='{disabled: get_current_page() >= #{irk_number_of_pages} - 1}'>
-            <a href='' ng-click='step_page(#{irk_number_of_pages})'>Last</a>
-          </li>
-        </ul>
-      </div>"
-
-    link: ($scope, $element, $attributes) ->
-      tc = angularTableManager.get_table_configuration($attributes.atTableId)
-
-      w = new ScopeConfigWrapper($scope, tc)
-
-      $scope.page_sequence = new PageSequence()
-
-      set_current_page = (current_page) ->
-        $scope.$parent.$eval("#{tc.current_page}=#{current_page}")
-
-      get_number_of_pages = () ->
-        $scope[irk_number_of_pages]
-
-      set_number_of_pages = (number_of_pages) ->
-        $scope[irk_number_of_pages] = number_of_pages
-
-      update = (reset) ->
-        if w.get_list()
-          if w.get_list().length > 0
-            # old_number_of_pages = get_number_of_pages()
-            new_number_of_pages = Math.ceil(w.get_list().length / w.get_items_per_page())
-            # if (old_number_of_pages != new_number_of_pages)
-            set_number_of_pages(new_number_of_pages)
-            if $scope.show_sectioning()
-              pages_to_display = w.get_max_pages()
-            else
-              pages_to_display = new_number_of_pages
-
-            $scope.page_sequence.reset_parameters(0, new_number_of_pages, pages_to_display)
-            # TODO warum ist die reihenfolge der folgenden beiden aufrufe irrelevant?
-            set_current_page(keep_in_bounds(w.get_current_page(), 0, get_number_of_pages() - 1))
-            $scope.page_sequence.realign_greedy(w.get_current_page())
+    update = (reset) ->
+      if w.get_list()
+        if w.get_list().length > 0
+          new_number_of_pages = Math.ceil(w.get_list().length / w.get_items_per_page())
+          set_number_of_pages(new_number_of_pages)
+          if $scope.show_sectioning()
+            pages_to_display = w.get_max_pages()
           else
-            set_number_of_pages(1)
-            $scope.page_sequence.reset_parameters(0, 1, 1)
-            set_current_page(0)
-            $scope.page_sequence.realign_greedy(0)
+            pages_to_display = new_number_of_pages
 
-      keep_in_bounds = (val, min, max) ->
-        val = Math.max(min, val)
-        Math.min(max, val)
+          $scope.page_sequence.reset_parameters(0, new_number_of_pages, pages_to_display)
+          # TODO warum ist die reihenfolge der folgenden beiden aufrufe irrelevant?
+          w.set_current_page(keep_in_bounds(w.get_current_page(), 0, get_number_of_pages() - 1))
+          $scope.page_sequence.realign_greedy(w.get_current_page())
+        else
+          set_number_of_pages(1)
+          $scope.page_sequence.reset_parameters(0, 1, 1)
+          w.set_current_page(0)
+          $scope.page_sequence.realign_greedy(0)
 
-      $scope.show_sectioning = () ->
-        w.get_max_pages() && get_number_of_pages() > w.get_max_pages()
+    $scope.show_sectioning = () ->
+      w.get_max_pages() && get_number_of_pages() > w.get_max_pages()
 
-      $scope.get_current_page = () ->
-        w.get_current_page()
+    $scope.get_current_page = () ->
+      w.get_current_page()
 
-      $scope.step_page = (step) ->
-        step = parseInt(step)
-        set_current_page(keep_in_bounds(w.get_current_page() + step, 0, get_number_of_pages() - 1))
-        $scope.page_sequence.realign_greedy(w.get_current_page())
+    $scope.step_page = (step) ->
+      step = parseInt(step)
+      w.set_current_page(keep_in_bounds(w.get_current_page() + step, 0, get_number_of_pages() - 1))
+      $scope.page_sequence.realign_greedy(w.get_current_page())
 
-      $scope.go_to_page = (page) ->
-        set_current_page(page)
+    $scope.go_to_page = (page) ->
+      w.set_current_page(page)
 
-      $scope.jump_back = () ->
-        $scope.step_page(-w.get_max_pages())
+    $scope.jump_back = () ->
+      $scope.step_page(-w.get_max_pages())
 
-      $scope.jump_ahead = () ->
-        $scope.step_page(w.get_max_pages())
+    $scope.jump_ahead = () ->
+      $scope.step_page(w.get_max_pages())
 
+    $scope.page_sequence = new PageSequence()
+
+    $scope.$watch cvn.items_per_page, () ->
       update()
 
-      $scope.$watch tc.items_per_page, () ->
-        update()
+    $scope.$watch cvn.max_pages, () ->
+      update()
 
-      $scope.$watch tc.max_pages, () ->
-        update()
+    $scope.$watch $attributes.atList, () ->
+      update()
 
-      $scope.$watch tc.list, () ->
-        update()
+    $scope.$watch "#{$attributes.atList}.length", () ->
+      update()
 
-      $scope.$watch "#{tc.list}.length", () ->
-        update()
-
-  }
-]
+    update()
+}]

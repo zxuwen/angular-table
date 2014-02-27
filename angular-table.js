@@ -3,9 +3,64 @@
 // license:  MIT 
 // homepage: http://github.com/samu/angular-table 
 (function() {
-  var AngularTableManager, ColumnConfiguration, PageSequence, PaginatedSetup, ScopeConfigWrapper, Setup, StandardSetup, Table, TableConfiguration, erk_attribute, erk_current_page, erk_fill_last_page, erk_initial_sorting, erk_items_per_page, erk_list, erk_max_pages, erk_sort_context, erk_sortable, irk_number_of_pages,
+  var ColumnConfiguration, ConfigurationVariableNames, PageSequence, PaginatedSetup, ScopeConfigWrapper, Setup, StandardSetup, Table, TableConfiguration, irk_number_of_pages, pagination_template,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  ConfigurationVariableNames = (function() {
+    function ConfigurationVariableNames(config_object_name) {
+      this.config_object_name = config_object_name;
+      this.items_per_page = "" + this.config_object_name + ".itemsPerPage";
+      this.sort_context = "" + this.config_object_name + ".sortContext";
+      this.fill_last_page = "" + this.config_object_name + ".fillLastPage";
+      this.max_pages = "" + this.config_object_name + ".maxPages";
+      this.current_page = "" + this.config_object_name + ".currentPage";
+    }
+
+    return ConfigurationVariableNames;
+
+  })();
+
+  ScopeConfigWrapper = (function() {
+    function ScopeConfigWrapper(scope, configuration_variable_names, list_name) {
+      this.scope = scope;
+      this.configuration_variable_names = configuration_variable_names;
+      this.list_name = list_name;
+    }
+
+    ScopeConfigWrapper.prototype.get_list = function() {
+      return this.scope.$eval(this.list_name);
+    };
+
+    ScopeConfigWrapper.prototype.get_items_per_page = function() {
+      return this.scope.$eval(this.configuration_variable_names.items_per_page) || 10;
+    };
+
+    ScopeConfigWrapper.prototype.get_current_page = function() {
+      return this.scope.$eval(this.configuration_variable_names.current_page) || 0;
+    };
+
+    ScopeConfigWrapper.prototype.get_max_pages = function() {
+      return this.scope.$eval(this.configuration_variable_names.max_pages) || void 0;
+    };
+
+    ScopeConfigWrapper.prototype.get_sort_context = function() {
+      return this.scope.$eval(this.configuration_variable_names.sort_context) || 'global';
+    };
+
+    ScopeConfigWrapper.prototype.set_current_page = function(current_page) {
+      return this.scope.$eval("" + this.configuration_variable_names.current_page + "=" + current_page);
+    };
+
+    return ScopeConfigWrapper;
+
+  })();
+
+  angular.module("angular-table", []);
+
+  irk_number_of_pages = "number_of_pages";
+
+  pagination_template = "<div style='margin: 0px;'> <ul class='pagination'> <li ng-class='{disabled: get_current_page() <= 0}'> <a href='' ng-click='step_page(-" + irk_number_of_pages + ")'>First</a> </li> <li ng-show='show_sectioning()' ng-class='{disabled: get_current_page() <= 0}'> <a href='' ng-click='jump_back()'>&laquo;</a> </li> <li ng-class='{disabled: get_current_page() <= 0}'> <a href='' ng-click='step_page(-1)'>&lsaquo;</a> </li> <li ng-class='{active: get_current_page() == page}' ng-repeat='page in page_sequence.data'> <a href='' ng-click='go_to_page(page)'>{{page + 1}}</a> </li> <li ng-class='{disabled: get_current_page() >= " + irk_number_of_pages + " - 1}'> <a href='' ng-click='step_page(1)'>&rsaquo;</a> </li> <li ng-show='show_sectioning()' ng-class='{disabled: get_current_page() >= " + irk_number_of_pages + " - 1}'> <a href='' ng-click='jump_ahead()'>&raquo;</a> </li> <li ng-class='{disabled: get_current_page() >= " + irk_number_of_pages + " - 1}'> <a href='' ng-click='step_page(" + irk_number_of_pages + ")'>Last</a> </li> </ul> </div>";
 
   ColumnConfiguration = (function() {
     function ColumnConfiguration(body_markup, header_markup) {
@@ -22,8 +77,7 @@
 
     ColumnConfiguration.prototype.create_element = function() {
       var th;
-      th = angular.element(document.createElement("th"));
-      return th.attr("style", "cursor: pointer;");
+      return th = angular.element(document.createElement("th"));
     };
 
     ColumnConfiguration.prototype.render_title = function(element) {
@@ -76,85 +130,11 @@
       this.table_element = table_element;
       this.attributes = attributes;
       this.id = this.attributes.id;
-      this.list = this.attributes[erk_list];
-      if (this.attributes[erk_items_per_page]) {
-        this.register_items_per_page(this.attributes[erk_items_per_page]);
-      }
-      this.register_sort_context(this.attributes[erk_sort_context]);
-      this.register_fill_last_page(this.attributes[erk_fill_last_page]);
-      this.register_max_pages(this.attributes[erk_max_pages]);
-      this.register_current_page(this.attributes[erk_current_page]);
-      this.paginated = this.items_per_page !== void 0;
+      this.config = this.attributes.atConfig;
+      this.paginated = this.attributes.atPaginated != null;
+      this.list = this.attributes.atList;
       this.create_column_configurations();
     }
-
-    TableConfiguration.prototype.register_items_per_page = function(items_per_page) {
-      if (isNaN(items_per_page)) {
-        return this.items_per_page = items_per_page;
-      } else {
-        this.items_per_page = "" + this.id + "_itemsPerPage";
-        return this.initial_items_per_page = parseInt(items_per_page);
-      }
-    };
-
-    TableConfiguration.prototype.register_sort_context = function(sort_context) {
-      if (sort_context !== void 0) {
-        if (sort_context === "global") {
-          this.sort_context = "" + this.id + "_sortContext";
-          return this.initial_sort_context = "global";
-        } else if (sort_context === "page") {
-          this.sort_context = "" + this.id + "_sortContext";
-          return this.initial_sort_context = "page";
-        } else {
-          return this.sort_context = sort_context;
-        }
-      } else {
-        this.sort_context = "" + this.id + "_sortContext";
-        return this.initial_sort_context = "global";
-      }
-    };
-
-    TableConfiguration.prototype.register_fill_last_page = function(fill_last_page) {
-      if (fill_last_page !== void 0) {
-        if (fill_last_page === "true") {
-          this.fill_last_page = "" + this.id + "_fillLastPage";
-          return this.initial_fill_last_page = true;
-        } else if (fill_last_page === "false") {
-          this.fill_last_page = "" + this.id + "_fillLastPage";
-          return this.initial_fill_last_page = false;
-        } else if (fill_last_page === "") {
-          this.fill_last_page = "" + this.id + "_fillLastPage";
-          return this.initial_fill_last_page = true;
-        } else {
-          return this.fill_last_page = fill_last_page;
-        }
-      }
-    };
-
-    TableConfiguration.prototype.register_max_pages = function(max_pages) {
-      if (max_pages !== void 0) {
-        if (isNaN(max_pages)) {
-          return this.max_pages = max_pages;
-        } else {
-          this.max_pages = "" + this.id + "_maxPages";
-          return this.initial_max_pages = parseInt(max_pages);
-        }
-      }
-    };
-
-    TableConfiguration.prototype.register_current_page = function(current_page) {
-      if (current_page !== void 0) {
-        if (isNaN(current_page)) {
-          return this.current_page = current_page;
-        } else {
-          this.current_page = "" + this.id + "_currentPage";
-          return this.initial_current_page = parseInt(current_page);
-        }
-      } else {
-        this.current_page = "" + this.id + "_currentPage";
-        return this.initial_current_page = 0;
-      }
-    };
 
     TableConfiguration.prototype.capitaliseFirstLetter = function(string) {
       if (string) {
@@ -269,8 +249,9 @@
   StandardSetup = (function(_super) {
     __extends(StandardSetup, _super);
 
-    function StandardSetup(table_configuration) {
-      this.repeatString = "item in " + table_configuration.list + " | orderBy:predicate:descending";
+    function StandardSetup(configuration_variable_names, list) {
+      this.list = list;
+      this.repeatString = "item in " + this.list + " | orderBy:predicate:descending";
     }
 
     StandardSetup.prototype.compile = function(element, attributes, transclude) {
@@ -286,8 +267,8 @@
   PaginatedSetup = (function(_super) {
     __extends(PaginatedSetup, _super);
 
-    function PaginatedSetup(table_configuration) {
-      this.table_configuration = table_configuration;
+    function PaginatedSetup(configuration_variable_names) {
+      this.configuration_variable_names = configuration_variable_names;
       this.repeatString = "item in sorted_and_paginated_list";
     }
 
@@ -301,16 +282,16 @@
         tdString += "<td>&nbsp;</td>";
       }
       fillerTr = angular.element(document.createElement("tr"));
-      fillerTr.attr("ng-show", this.table_configuration.fill_last_page);
+      fillerTr.attr("ng-show", this.configuration_variable_names.fill_last_page);
       fillerTr.html(tdString);
       fillerTr.attr("ng-repeat", "item in filler_array");
       tbody.append(fillerTr);
     };
 
     PaginatedSetup.prototype.link = function($scope, $element, $attributes, $filter) {
-      var get_filler_array, get_sorted_and_paginated_list, tc, update_stuff, w;
-      tc = this.table_configuration;
-      w = new ScopeConfigWrapper($scope, tc);
+      var cvn, get_filler_array, get_sorted_and_paginated_list, update, w;
+      cvn = this.configuration_variable_names;
+      w = new ScopeConfigWrapper($scope, cvn, $attributes.atList);
       get_sorted_and_paginated_list = function(list, current_page, items_per_page, sort_context, predicate, descending, $filter) {
         var from_page, val;
         if (list) {
@@ -353,30 +334,30 @@
           }
         }
       };
-      update_stuff = function() {
+      update = function() {
         var nop;
         $scope.sorted_and_paginated_list = get_sorted_and_paginated_list(w.get_list(), w.get_current_page(), w.get_items_per_page(), w.get_sort_context(), $scope.predicate, $scope.descending, $filter);
         nop = Math.ceil(w.get_list().length / w.get_items_per_page());
         return $scope.filler_array = get_filler_array(w.get_list(), w.get_current_page(), nop, w.get_items_per_page());
       };
-      $scope.$watch(tc.current_page, function() {
-        return update_stuff();
+      $scope.$watch(cvn.current_page, function() {
+        return update();
       });
-      $scope.$watch(tc.items_per_page, function() {
-        return update_stuff();
+      $scope.$watch(cvn.items_per_page, function() {
+        return update();
       });
-      $scope.$watch(tc.sort_context, function() {
-        return update_stuff();
+      $scope.$watch(cvn.sort_context, function() {
+        return update();
       });
-      $scope.$watch("" + tc.list + ".length", function() {
-        $scope[irk_number_of_pages] = Math.ceil($scope[tc.list].length / w.get_items_per_page());
-        return update_stuff();
+      $scope.$watch("" + $attributes.atList + ".length", function() {
+        $scope[irk_number_of_pages] = Math.ceil(w.get_list().length / w.get_items_per_page());
+        return update();
       });
       $scope.$watch("predicate", function() {
-        return update_stuff();
+        return update();
       });
       return $scope.$watch("descending", function() {
-        return update_stuff();
+        return update();
       });
     };
 
@@ -385,9 +366,10 @@
   })(Setup);
 
   Table = (function() {
-    function Table(element, table_configuration) {
+    function Table(element, table_configuration, configuration_variable_names) {
       this.element = element;
       this.table_configuration = table_configuration;
+      this.configuration_variable_names = configuration_variable_names;
     }
 
     Table.prototype.constructHeader = function() {
@@ -414,9 +396,9 @@
 
     Table.prototype.get_setup = function() {
       if (this.table_configuration.paginated) {
-        return new PaginatedSetup(this.table_configuration);
+        return new PaginatedSetup(this.configuration_variable_names);
       } else {
-        return new StandardSetup(this.table_configuration);
+        return new StandardSetup(this.configuration_variable_names, this.table_configuration.list);
       }
     };
 
@@ -466,140 +448,20 @@
 
   })();
 
-  angular.module("angular-table", []);
-
-  irk_number_of_pages = "number_of_pages";
-
-  erk_list = "atList";
-
-  erk_items_per_page = "atItemsPerPage";
-
-  erk_fill_last_page = "atFillLastPage";
-
-  erk_sort_context = "atSortContext";
-
-  erk_max_pages = "atMaxPages";
-
-  erk_current_page = "atCurrentPage";
-
-  erk_attribute = "at-attribute";
-
-  erk_sortable = "at-sortable";
-
-  erk_initial_sorting = "at-initial-sorting";
-
-  ScopeConfigWrapper = (function() {
-    function ScopeConfigWrapper(table_scope, table_configuration) {
-      this.scope = table_scope;
-      this.config = table_configuration;
-    }
-
-    ScopeConfigWrapper.prototype.get_list = function() {
-      return this.scope.$eval(this.config.list);
-    };
-
-    ScopeConfigWrapper.prototype.get_items_per_page = function() {
-      return this.scope.$eval(this.config.items_per_page);
-    };
-
-    ScopeConfigWrapper.prototype.get_current_page = function() {
-      return this.scope.$eval(this.config.current_page);
-    };
-
-    ScopeConfigWrapper.prototype.get_max_pages = function() {
-      return this.scope.$eval(this.config.max_pages);
-    };
-
-    ScopeConfigWrapper.prototype.get_sort_context = function() {
-      return this.scope.$eval(this.config.sort_context);
-    };
-
-    return ScopeConfigWrapper;
-
-  })();
-
-  AngularTableManager = (function() {
-    function AngularTableManager() {
-      this.mappings = {};
-    }
-
-    AngularTableManager.prototype.get_table_configuration = function(id) {
-      return this.mappings[id].table_configuration;
-    };
-
-    AngularTableManager.prototype.register_table = function(table_configuration) {
-      var mapping, _base, _name;
-      mapping = (_base = this.mappings)[_name = table_configuration.id] || (_base[_name] = {});
-      mapping.table_configuration = table_configuration;
-      if (mapping.pagination_scope) {
-        throw "WHOOPS";
-      }
-    };
-
-    AngularTableManager.prototype.register_table_scope = function(id, scope, filter) {
-      var tc;
-      this.mappings[id].table_scope = scope;
-      tc = this.mappings[id].table_configuration;
-      if (tc.initial_items_per_page) {
-        scope.$parent[tc.items_per_page] = tc.initial_items_per_page;
-      }
-      if (tc.initial_sort_context) {
-        scope.$parent[tc.sort_context] = tc.initial_sort_context;
-      }
-      if (tc.initial_fill_last_page) {
-        scope.$parent[tc.fill_last_page] = tc.initial_fill_last_page;
-      }
-      if (tc.initial_max_pages) {
-        scope.$parent[tc.max_pages] = tc.initial_max_pages;
-      }
-      if (tc.initial_current_page !== void 0) {
-        return scope.$parent[tc.current_page] = tc.initial_current_page;
-      }
-    };
-
-    AngularTableManager.prototype.register_pagination_scope = function(id, pagination_scope) {};
-
-    return AngularTableManager;
-
-  })();
-
-  angular.module("angular-table").service("angularTableManager", [
-    function() {
-      return new AngularTableManager();
-    }
-  ]);
-
-  angular.module("angular-table").directive("atTable", [
-    "$filter", "angularTableManager", function($filter, angularTableManager) {
-      return {
-        restrict: "AC",
-        scope: true,
-        controller: [
-          "$scope", "$element", "$attrs", function($scope, $element, $attrs) {
-            var id;
-            id = $attrs["id"];
-            if (id) {
-              return angularTableManager.register_table_scope(id, $scope, $filter);
-            }
-          }
-        ],
-        compile: function(element, attributes, transclude) {
-          var dt, tc;
-          tc = new TableConfiguration(element, attributes);
-          angularTableManager.register_table(tc);
-          dt = new Table(element, tc);
-          dt.compile();
-          return {
-            post: function($scope, $element, $attributes) {
-              return dt.post($scope, $element, $attributes, $filter);
-            }
-          };
-        }
-      };
-    }
-  ]);
-
   PageSequence = (function() {
+    function PageSequence(lower_bound, upper_bound, start, length) {
+      this.lower_bound = lower_bound != null ? lower_bound : 0;
+      this.upper_bound = upper_bound != null ? upper_bound : 1;
+      if (start == null) {
+        start = 0;
+      }
+      this.length = length != null ? length : 1;
+      if (this.length > (this.upper_bound - this.lower_bound)) {
+        throw "sequence is too long";
+      }
+      this.data = this.generate(start);
+    }
+
     PageSequence.prototype.generate = function(start) {
       var x, _i, _ref, _results;
       if (start > (this.upper_bound - this.length)) {
@@ -613,19 +475,6 @@
       }
       return _results;
     };
-
-    function PageSequence(lower_bound, upper_bound, start, length) {
-      this.lower_bound = lower_bound != null ? lower_bound : 0;
-      this.upper_bound = upper_bound != null ? upper_bound : 1;
-      if (start == null) {
-        start = 0;
-      }
-      this.length = length != null ? length : 1;
-      if (this.length > (this.upper_bound - this.lower_bound)) {
-        throw "sequence is too long";
-      }
-      this.data = this.generate(start);
-    }
 
     PageSequence.prototype.reset_parameters = function(lower_bound, upper_bound, length) {
       this.lower_bound = lower_bound;
@@ -660,25 +509,41 @@
 
   })();
 
-  angular.module("angular-table").directive("atPagination", [
-    "angularTableManager", function(angularTableManager) {
+  angular.module("angular-table").directive("atTable", [
+    "$filter", function($filter) {
       return {
-        replace: true,
-        restrict: "E",
-        template: "<div style='margin: 0px;'> <ul class='pagination'> <li ng-class='{disabled: get_current_page() <= 0}'> <a href='' ng-click='step_page(-" + irk_number_of_pages + ")'>First</a> </li> <li ng-show='show_sectioning()' ng-class='{disabled: get_current_page() <= 0}'> <a href='' ng-click='jump_back()'>&laquo;</a> </li> <li ng-class='{disabled: get_current_page() <= 0}'> <a href='' ng-click='step_page(-1)'>&lsaquo;</a> </li> <li ng-class='{active: get_current_page() == page}' ng-repeat='page in page_sequence.data'> <a href='' ng-click='go_to_page(page)'>{{page + 1}}</a> </li> <li ng-class='{disabled: get_current_page() >= " + irk_number_of_pages + " - 1}'> <a href='' ng-click='step_page(1)'>&rsaquo;</a> </li> <li ng-show='show_sectioning()' ng-class='{disabled: get_current_page() >= " + irk_number_of_pages + " - 1}'> <a href='' ng-click='jump_ahead()'>&raquo;</a> </li> <li ng-class='{disabled: get_current_page() >= " + irk_number_of_pages + " - 1}'> <a href='' ng-click='step_page(" + irk_number_of_pages + ")'>Last</a> </li> </ul> </div>",
-        controller: [
-          "$scope", "$element", "$attrs", function($scope, $element, $attrs) {
-            return angularTableManager.register_pagination_scope($attrs.atTableId, $scope);
-          }
-        ],
+        restrict: "AC",
         scope: true,
+        compile: function(element, attributes, transclude) {
+          var cvn, table, tc;
+          tc = new TableConfiguration(element, attributes);
+          cvn = new ConfigurationVariableNames(attributes.atConfig);
+          table = new Table(element, tc, cvn);
+          table.compile();
+          return {
+            post: function($scope, $element, $attributes) {
+              return table.post($scope, $element, $attributes, $filter);
+            }
+          };
+        }
+      };
+    }
+  ]);
+
+  angular.module("angular-table").directive("atPagination", [
+    function() {
+      return {
+        restrict: "E",
+        scope: true,
+        replace: true,
+        template: pagination_template,
         link: function($scope, $element, $attributes) {
-          var get_number_of_pages, keep_in_bounds, set_current_page, set_number_of_pages, tc, update, w;
-          tc = angularTableManager.get_table_configuration($attributes.atTableId);
-          w = new ScopeConfigWrapper($scope, tc);
-          $scope.page_sequence = new PageSequence();
-          set_current_page = function(current_page) {
-            return $scope.$parent.$eval("" + tc.current_page + "=" + current_page);
+          var cvn, get_number_of_pages, keep_in_bounds, set_number_of_pages, update, w;
+          cvn = new ConfigurationVariableNames($attributes.atConfig);
+          w = new ScopeConfigWrapper($scope, cvn, $attributes.atList);
+          keep_in_bounds = function(val, min, max) {
+            val = Math.max(min, val);
+            return Math.min(max, val);
           };
           get_number_of_pages = function() {
             return $scope[irk_number_of_pages];
@@ -688,9 +553,9 @@
           };
           update = function(reset) {
             var new_number_of_pages, pages_to_display;
-            if ($scope[tc.list]) {
-              if ($scope[tc.list].length > 0) {
-                new_number_of_pages = Math.ceil($scope[tc.list].length / w.get_items_per_page());
+            if (w.get_list()) {
+              if (w.get_list().length > 0) {
+                new_number_of_pages = Math.ceil(w.get_list().length / w.get_items_per_page());
                 set_number_of_pages(new_number_of_pages);
                 if ($scope.show_sectioning()) {
                   pages_to_display = w.get_max_pages();
@@ -698,19 +563,15 @@
                   pages_to_display = new_number_of_pages;
                 }
                 $scope.page_sequence.reset_parameters(0, new_number_of_pages, pages_to_display);
-                set_current_page(keep_in_bounds(w.get_current_page(), 0, get_number_of_pages() - 1));
+                w.set_current_page(keep_in_bounds(w.get_current_page(), 0, get_number_of_pages() - 1));
                 return $scope.page_sequence.realign_greedy(w.get_current_page());
               } else {
                 set_number_of_pages(1);
                 $scope.page_sequence.reset_parameters(0, 1, 1);
-                set_current_page(0);
+                w.set_current_page(0);
                 return $scope.page_sequence.realign_greedy(0);
               }
             }
-          };
-          keep_in_bounds = function(val, min, max) {
-            val = Math.max(min, val);
-            return Math.min(max, val);
           };
           $scope.show_sectioning = function() {
             return w.get_max_pages() && get_number_of_pages() > w.get_max_pages();
@@ -720,11 +581,11 @@
           };
           $scope.step_page = function(step) {
             step = parseInt(step);
-            set_current_page(keep_in_bounds(w.get_current_page() + step, 0, get_number_of_pages() - 1));
+            w.set_current_page(keep_in_bounds(w.get_current_page() + step, 0, get_number_of_pages() - 1));
             return $scope.page_sequence.realign_greedy(w.get_current_page());
           };
           $scope.go_to_page = function(page) {
-            return set_current_page(page);
+            return w.set_current_page(page);
           };
           $scope.jump_back = function() {
             return $scope.step_page(-w.get_max_pages());
@@ -732,19 +593,20 @@
           $scope.jump_ahead = function() {
             return $scope.step_page(w.get_max_pages());
           };
-          update();
-          $scope.$watch(tc.items_per_page, function() {
+          $scope.page_sequence = new PageSequence();
+          $scope.$watch(cvn.items_per_page, function() {
             return update();
           });
-          $scope.$watch(tc.max_pages, function() {
+          $scope.$watch(cvn.max_pages, function() {
             return update();
           });
-          $scope.$watch(tc.list, function() {
+          $scope.$watch($attributes.atList, function() {
             return update();
           });
-          return $scope.$watch("" + tc.list + ".length", function() {
+          $scope.$watch("" + $attributes.atList + ".length", function() {
             return update();
           });
+          return update();
         }
       };
     }

@@ -1,70 +1,10 @@
 class TableConfiguration
-
   constructor: (@table_element, @attributes) ->
     @id              = @attributes.id
-    @list            = @attributes["atList"]
-    @register_items_per_page(@attributes["atItemsPerPage"]) if @attributes["atItemsPerPage"]
-    @register_sort_context(@attributes["atSortContext"])
-    @register_fill_last_page(@attributes["atFillLastPage"])
-    @register_max_pages(@attributes["atMaxPages"])
-    @register_current_page(@attributes["atCurrentPage"])
-    @paginated       = @items_per_page != undefined
+    @config          = @attributes.atConfig
+    @paginated       = @attributes.atPaginated?
+    @list            = @attributes.atList
     @create_column_configurations()
-
-  # TODO: refactor the following 4 methods into nicer, if-less logic
-  register_items_per_page: (items_per_page) ->
-    if isNaN(items_per_page)
-      @items_per_page = items_per_page
-    else
-      @items_per_page = "#{@id}_itemsPerPage"
-      @initial_items_per_page = parseInt(items_per_page)
-
-  register_sort_context: (sort_context) ->
-    if sort_context != undefined
-      if sort_context == "global"
-        @sort_context = "#{@id}_sortContext"
-        @initial_sort_context = "global"
-      else if sort_context == "page"
-        @sort_context = "#{@id}_sortContext"
-        @initial_sort_context = "page"
-      else
-        @sort_context = sort_context
-    else
-      @sort_context = "#{@id}_sortContext"
-      @initial_sort_context = "global"
-
-  register_fill_last_page: (fill_last_page) ->
-    if fill_last_page != undefined
-      if fill_last_page == "true"
-        @fill_last_page = "#{@id}_fillLastPage"
-        @initial_fill_last_page = true
-      else if fill_last_page == "false"
-        @fill_last_page = "#{@id}_fillLastPage"
-        @initial_fill_last_page = false
-      else if fill_last_page == ""
-        @fill_last_page = "#{@id}_fillLastPage"
-        @initial_fill_last_page = true
-      else
-        @fill_last_page = fill_last_page
-
-  register_max_pages: (max_pages) ->
-    if max_pages isnt undefined
-      if isNaN(max_pages)
-        @max_pages = max_pages
-      else
-        @max_pages = "#{@id}_maxPages"
-        @initial_max_pages = parseInt(max_pages)
-
-  register_current_page: (current_page) ->
-    if current_page isnt undefined
-      if isNaN(current_page)
-        @current_page = current_page
-      else
-        @current_page = "#{@id}_currentPage"
-        @initial_current_page = parseInt(current_page)
-    else
-      @current_page = "#{@id}_currentPage"
-      @initial_current_page = 0
 
   capitaliseFirstLetter: (string) ->
     if string then string.charAt(0).toUpperCase() + string.slice(1) else ""

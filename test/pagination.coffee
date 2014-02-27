@@ -1,6 +1,9 @@
 describe "angular-table", () ->
   describe "Pagination", () ->
 
+    config_name = "table_config"
+    list_name = "myList"
+
     step_back  = '‹'
     step_ahead = '›'
     jump_back  = '«'
@@ -9,20 +12,12 @@ describe "angular-table", () ->
     last       = 'Last'
 
     setups = [{
-        template: "pagination/complete_config_hardcoded.html"
-        variable_names: {
-          items_per_page: "completeConfigHardcoded_itemsPerPage",
-          max_pages:      "completeConfigHardcoded_maxPages",
-          sort_context:   "completeConfigHardcoded_sortContext",
-          fill_last_page: "completeConfigHardcoded_fillLastPage"
-        }
-      }, {
         template: "pagination/complete_config_parameterized.html"
         variable_names: {
-          items_per_page: "config.my_items_per_page",
-          max_pages:      "config.my_max_pages",
-          sort_context:   "config.my_sort_context",
-          fill_last_page: "config.my_fill_last_page"
+          items_per_page: "#{config_name}.itemsPerPage",
+          max_pages:      "#{config_name}.maxPages",
+          sort_context:   "#{config_name}.sortContext",
+          fill_last_page: "#{config_name}.fillLastPage"
         }
       }]
 
@@ -33,24 +28,22 @@ describe "angular-table", () ->
             @comp = new TemplateCompiler(setup.template)
 
             @element = @comp.prepare_element((scope) ->
-              scope.list = [
+              scope[list_name] = [
                 {name: "i"}, {name: "g"}, {name: "h"}, {name: "j"}, {name: "k"}, {name: "l"}
                 {name: "a"}, {name: "b"}, {name: "c"}, {name: "d"}, {name: "e"}, {name: "f"},
                 {name: "m"}
               ]
+
+              scope[config_name] = {
+                currentPage: 0,
+                itemsPerPage: 3,
+                maxPages: 2,
+                sortContext: 'global',
+                fillLastPage: true
+              }
             )
 
             @gui = new GUI(@element, @comp.scope, setup.variable_names)
-
-            @gui.alter_scope (scope_wrapper, vars) ->
-              config = {
-                my_items_per_page: 3,
-                my_max_pages: 2,
-                my_sort_context: 'global',
-                my_fill_last_page: true
-              }
-              scope_wrapper.set("tableconfig", {})
-
 
           it "allows to select pages", () ->
             expect(@gui.pagination.pages).toEqual([1, 2])
@@ -192,7 +185,7 @@ describe "angular-table", () ->
             @gui.alter_scope((scope_wrapper, vars) ->
               scope_wrapper.set(vars.items_per_page, 3)
               scope_wrapper.set(vars.fill_last_page, true)
-              scope_wrapper.set("list", [])
+              scope_wrapper.set(list_name, [])
             )
 
             expect(@gui.table.rows).toEqual [['&nbsp;'], ['&nbsp;'], ['&nbsp;']]
@@ -225,13 +218,13 @@ describe "angular-table", () ->
               @gui.alter_scope((scope_wrapper, vars) ->
                 scope_wrapper.set(vars.items_per_page, 3)
                 scope_wrapper.set(vars.max_pages, 2)
-                scope_wrapper.set("list", [{name: 'z'}])
+                scope_wrapper.set(list_name, [{name: 'z'}])
               )
 
               expect(@gui.table.rows).toEqual [['z'], ['&nbsp;'], ['&nbsp;']]
 
               @gui.alter_scope((scope_wrapper, vars) ->
-                scope_wrapper.get("list").push({name: 'a'})
+                scope_wrapper.get(list_name).push({name: 'a'})
               )
 
               expect(@gui.table.rows).toEqual [['a'], ['z'], ['&nbsp;']]
@@ -239,8 +232,8 @@ describe "angular-table", () ->
               expect(@gui.pagination.pages).toEqual [1]
 
               @gui.alter_scope((scope_wrapper, vars) ->
-                scope_wrapper.get("list").push({name: 'x'})
-                scope_wrapper.get("list").push({name: 'b'})
+                scope_wrapper.get(list_name).push({name: 'x'})
+                scope_wrapper.get(list_name).push({name: 'b'})
               )
 
               expect(@gui.table.rows).toEqual [['a'], ['b'], ['x']]
@@ -252,9 +245,9 @@ describe "angular-table", () ->
               expect(@gui.table.rows).toEqual [['z'], ['&nbsp;'], ['&nbsp;']]
 
               @gui.alter_scope((scope_wrapper, vars) ->
-                scope_wrapper.get("list").push({name: 'c'})
-                scope_wrapper.get("list").push({name: 'y'})
-                scope_wrapper.get("list").push({name: 'u'})
+                scope_wrapper.get(list_name).push({name: 'c'})
+                scope_wrapper.get(list_name).push({name: 'y'})
+                scope_wrapper.get(list_name).push({name: 'u'})
               )
 
               expect(@gui.table.rows).toEqual [['u'], ['x'], ['y']]
