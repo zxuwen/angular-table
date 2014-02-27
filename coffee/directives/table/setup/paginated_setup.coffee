@@ -54,7 +54,7 @@ class PaginatedSetup extends Setup
         else
           []
 
-    update_stuff = () ->
+    update = () ->
 
       $scope.sorted_and_paginated_list = get_sorted_and_paginated_list(
         w.get_list(),
@@ -76,27 +76,26 @@ class PaginatedSetup extends Setup
       )
 
     $scope.$watch(cvn.current_page, () ->
-      update_stuff()
+      update()
     )
 
     $scope.$watch(cvn.items_per_page, () ->
-      update_stuff()
+      update()
     )
 
     $scope.$watch(cvn.sort_context, () ->
-      update_stuff()
+      update()
     )
 
     $scope.$watch("#{$attributes.atList}.length", () ->
       $scope[irk_number_of_pages] = Math.ceil(w.get_list().length / w.get_items_per_page())
-      update_stuff()
+      update()
     )
 
     $scope.$watch("predicate", () ->
-      update_stuff()
+      update()
     )
 
     $scope.$watch("descending", () ->
-      update_stuff()
+      update()
     )
-
