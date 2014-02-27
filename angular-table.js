@@ -289,7 +289,7 @@
     };
 
     PaginatedSetup.prototype.link = function($scope, $element, $attributes, $filter) {
-      var cvn, get_filler_array, get_sorted_and_paginated_list, update_stuff, w;
+      var cvn, get_filler_array, get_sorted_and_paginated_list, update, w;
       cvn = this.configuration_variable_names;
       w = new ScopeConfigWrapper($scope, cvn, $attributes.atList);
       get_sorted_and_paginated_list = function(list, current_page, items_per_page, sort_context, predicate, descending, $filter) {
@@ -334,30 +334,30 @@
           }
         }
       };
-      update_stuff = function() {
+      update = function() {
         var nop;
         $scope.sorted_and_paginated_list = get_sorted_and_paginated_list(w.get_list(), w.get_current_page(), w.get_items_per_page(), w.get_sort_context(), $scope.predicate, $scope.descending, $filter);
         nop = Math.ceil(w.get_list().length / w.get_items_per_page());
         return $scope.filler_array = get_filler_array(w.get_list(), w.get_current_page(), nop, w.get_items_per_page());
       };
       $scope.$watch(cvn.current_page, function() {
-        return update_stuff();
+        return update();
       });
       $scope.$watch(cvn.items_per_page, function() {
-        return update_stuff();
+        return update();
       });
       $scope.$watch(cvn.sort_context, function() {
-        return update_stuff();
+        return update();
       });
       $scope.$watch("" + $attributes.atList + ".length", function() {
         $scope[irk_number_of_pages] = Math.ceil(w.get_list().length / w.get_items_per_page());
-        return update_stuff();
+        return update();
       });
       $scope.$watch("predicate", function() {
-        return update_stuff();
+        return update();
       });
       return $scope.$watch("descending", function() {
-        return update_stuff();
+        return update();
       });
     };
 
