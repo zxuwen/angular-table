@@ -1,4 +1,4 @@
-angular.module("angular-table").directive "atPagination", [() -> {
+angular.module("angular-table").directive "atPagination", [() ->
   restrict: "E"
   scope: true
   replace: true
@@ -73,4 +73,4 @@ angular.module("angular-table").directive "atPagination", [() -> {
       update()
 
     update()
-}]
+]

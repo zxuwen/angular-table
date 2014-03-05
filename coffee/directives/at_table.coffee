@@ -1,4 +1,4 @@
-angular.module("angular-table").directive "atTable", ["$filter", ($filter) -> {
+angular.module("angular-table").directive "atTable", ["$filter", ($filter) ->
   restrict: "AC"
   scope: true
 
@@ -10,5 +10,4 @@ angular.module("angular-table").directive "atTable", ["$filter", ($filter) -> {
 
     post: ($scope, $element, $attributes) ->
       table.post($scope, $element, $attributes, $filter)
-
-}]
+]
