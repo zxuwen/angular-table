@@ -8,13 +8,13 @@
 
     <title>angular-table : html tables with sorting and pagination</title>
 
-    <script type="text/javascript" src="js/angular.js"></script>
-    <script type="text/javascript" src="js/angular-table.min.js"></script>
-    <script type="text/javascript" src="js/angular-tabs.min.js"></script>
-    <script type="text/javascript" src="js/examplesModule.js"></script>
+    <script type="text/javascript" src="/js/angular.js"></script>
+    <script type="text/javascript" src="/js/angular-table.min.js"></script>
+    <script type="text/javascript" src="/js/angular-tabs.min.js"></script>
+    <script type="text/javascript" src="/js/examplesModule.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="css/syntax.css">
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/syntax.css">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
 
     <style>
       .main-container {
@@ -44,13 +44,6 @@
 
     </style>
 
-    <script type="text/javascript">
-      {% include js/basicExampleCtrl.js %}
-      {% include js/interactiveExampleCtrl.js %}
-      {% include js/customizingTheHeaderCtrl.js %}
-      {% include js/renderingCellsCtrl.js %}
-      {% include js/filteredTableCtrl.js %}
-    </script>
 
   </head>
     <body>
@@ -60,4 +53,13 @@
         {{ content }}
       </div>
     </body>
+
+    <script type="text/javascript">
+      {% include js/basicExampleCtrl.js %}
+      {% include js/interactiveExampleCtrl.js %}
+      {% include js/customizingTheHeaderCtrl.js %}
+      {% include js/renderingCellsCtrl.js %}
+      {% include js/filteredTableCtrl.js %}
+      {% include js/walkthroughCtrl.js %}
+    </script>
 </html>

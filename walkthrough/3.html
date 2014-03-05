@@ -1,0 +1,16 @@
+---
+layout: default
+---
+
+<div ng-controller="walkthroughCtrl">
+  <table at-table at-list="people" class="table table-striped">
+    <thead></thead>
+    <tbody>
+      <tr>
+        <td at-implicit at-attribute="name"></td>
+        <td at-implicit at-attribute="age"></td>
+        <td at-implicit at-attribute="birthdate" at-sortable at-initial-sorting="desc"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
