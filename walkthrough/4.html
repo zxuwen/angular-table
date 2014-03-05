@@ -9,7 +9,9 @@ layout: default
       <tr>
         <td at-implicit at-attribute="name" at-sortable></td>
         <td at-implicit at-attribute="age" at-sortable></td>
-        <td at-implicit at-attribute="birthdate" at-sortable at-initial-sorting="desc"></td>
+        <td at-attribute="birthdate" at-sortable at-initial-sorting="desc">
+          {{item.birthdate.substring(0, 10)}}
+        </td>
       </tr>
     </tbody>
   </table>
