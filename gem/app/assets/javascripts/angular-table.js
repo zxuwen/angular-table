@@ -432,7 +432,7 @@
       if (!$scope.getSortIcon) {
         $scope.getSortIcon = function(predicate, current_predicate) {
           if (predicate !== $scope.predicate) {
-            return "icon-minus";
+            return "glyphicon glyphicon-minus";
           }
           if ($scope.descending) {
             return "glyphicon glyphicon-chevron-down";
