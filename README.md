@@ -39,6 +39,7 @@ html table and eventually make it paginated so we don't have to scroll like a ma
   </tbody>
 </table>
 ```
+[result](http://samu.github.io/angular-table/walkthrough/1.html)
 
 This renders a simple html table with an automatically generated header, showing every entry in
 our list. Four attributes have been used that need further explanation:
@@ -55,6 +56,7 @@ bootstrap in our sources:
 ```html
 <table class="table table-striped" ...>...</table>
 ```
+[result](http://samu.github.io/angular-table/walkthrough/2.html)
 
 Now that looks better! Next, lets make the birthdate column sortable. We want to see the
 youngest people first, therefore sort descending:
@@ -62,6 +64,7 @@ youngest people first, therefore sort descending:
 ```html
 <td at-implicit at-attribute="birthdate" at-sortable at-initial-sorting="desc"></td>
 ```
+[result](http://samu.github.io/angular-table/walkthrough/3.html)
 
 And thats it, our table is sortable by birthdate instantly! We can make the other columns
 sortable aswell, by using the `at-sortable` attribute only.
@@ -81,6 +84,8 @@ done within seconds: We need to define two additional keywords in our table ...
 ```
 
 ... and we end up with a sortable, paginated table!
+
+[result](http://samu.github.io/angular-table/walkthrough/4.html)
 
 ## Hacking on angular-table
 ### Coffee Script
