@@ -6,7 +6,7 @@ Angular directive which allows to declare sortable tables and to add
 pagination with very little effort.
 
 ## Features
-  * Makes columns sortable
+  * Adds sorting to any column
   * Adds pagination
   * Implicitly renders cell contents by name convention and allows custom cell content if needed
   * Implicitly renders header titles by name convention and allows custom header content if needed
@@ -66,7 +66,7 @@ youngest people first, therefore sort descending:
 And thats it, our table is sortable by birthdate instantly! We can make the other columns
 sortable aswell, by using the `at-sortable` attribute only.
 
-Our list of people is kind of long though, and we hate scrolling, so breaking up the table into
+Our list of people pretty long though, and we hate scrolling, so breaking up the table into
 smaller chunks and making it possible to go through it with a pagination would be cool. A task
 done within seconds: We need to define two additional keywords in our table ...
 
@@ -80,7 +80,7 @@ done within seconds: We need to define two additional keywords in our table ...
 <at-pagination at-config="config" at-list="people"></at-pagination>
 ```
 
-and end up with a sortable, paginated table!
+... and we end up with a sortable, paginated table!
 
 ## Hacking on angular-table
 ### Coffee Script
