@@ -66,7 +66,7 @@ youngest people first, therefore sort descending:
 And thats it, our table is sortable by birthdate instantly! We can make the other columns
 sortable aswell, by using the `at-sortable` attribute only.
 
-Our list of people pretty long though, and we hate scrolling, so breaking up the table into
+Our list of people is pretty long though, and we hate scrolling, so breaking up the table into
 smaller chunks and making it possible to go through it with a pagination would be cool. A task
 done within seconds: We need to define two additional keywords in our table ...
 
@@ -85,11 +85,12 @@ done within seconds: We need to define two additional keywords in our table ...
 ## Hacking on angular-table
 ### Coffee Script
 This directive is written in Coffee Script. If you want to contribute, please make sure to
-do the changes in the coffee sources only! If you are familiar with Javascript but not with
-Coffee Script, I highly recommend you to [take look at it and try it out](http://coffeescript.org).
-It has a powerful and beautiful syntax and is easy to learn, You'll need no more than ~2 hours to learn all the basic concepts.
+work on the coffee sources only. If you are familiar with Javascript and aren't with
+Coffee Script, i highly recommend to [take look at it and try it out](http://coffeescript.org).
+It has a powerful and beautiful syntax and is easy to learn. You'll probably need no more than
+~2 hours to learn about all the basic concepts.
 
 ### TDD
 The code for this directive is well covered with tests, which can be run with PhantomJS and
 Karma. run `npm install` to install the required packages. Then, run `karma start` to run
-the tests.
+the tests. Make sure all the tests pass before you send a pull request.
