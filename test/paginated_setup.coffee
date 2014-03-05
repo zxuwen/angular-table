@@ -1,5 +1,5 @@
 describe "angular-table", () ->
-  describe "Pagination", () ->
+  describe "paginated setup", () ->
 
     config_name = "table_config"
     list_name = "myList"
@@ -12,7 +12,7 @@ describe "angular-table", () ->
     last       = 'Last'
 
     setups = [{
-        template: "pagination/complete_config_parameterized.html"
+        template: "paginated_setup.html"
         variable_names: {
           items_per_page: "#{config_name}.itemsPerPage",
           max_pages:      "#{config_name}.maxPages",
@@ -43,7 +43,9 @@ describe "angular-table", () ->
               }
             )
 
-            @gui = new GUI(@element, @comp.scope, setup.variable_names)
+            table = new TableGUI(@element)
+            pagination = new PaginationGUI(@element)
+            @gui = new GUI(table, pagination, @comp.scope, setup.variable_names)
 
           it "allows to select pages", () ->
             expect(@gui.pagination.pages).toEqual([1, 2])

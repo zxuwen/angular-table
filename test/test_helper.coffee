@@ -64,7 +64,6 @@ class TableGUI
     click(@element.find("th")[i])
     @reload()
 
-
 class PaginationGUI
   constructor: (@element) ->
     @reload()
@@ -92,13 +91,11 @@ class PaginationGUI
     @reload()
 
 class GUI
-  constructor: (@element, @scope, @variable_names) ->
-    @pagination = new PaginationGUI(@element)
-    @table = new TableGUI(@element)
+  constructor: (@table, @pagination, @scope, @variable_names) ->
 
   reload: () ->
-    @table.reload()
-    @pagination.reload()
+    @table.reload() if @table?
+    @pagination.reload() if @pagination?
 
   alter_scope: (f) ->
     f(new ScopeWrapper(@scope), @variable_names)
@@ -106,8 +103,14 @@ class GUI
     @reload()
 
   click_pagination: (button) ->
+    throw "no pagination element available" unless @pagination?
     @pagination.click(button)
     @table.reload()
+
+  click_table_header: (index) ->
+    @table.click_header(index)
+
+
 
 click = (el) ->
   ev = document.createEvent("MouseEvent")
