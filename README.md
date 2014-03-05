@@ -9,7 +9,7 @@ pagination with very little effort.
   * Makes columns sortable
   * Adds pagination
   * Implicitly renders cell contents by name convention and allows custom cell content if needed
-  * Implicitly renders header titles by name convection and allows custom header content if needed
+  * Implicitly renders header titles by name convention and allows custom header content if needed
 
 ## Dependencies
 This directive depends on angular only. No jQuery or Bootstrap required! It has been
@@ -40,8 +40,8 @@ html table and eventually make it paginated so we don't have to scroll like a ma
 </table>
 ```
 
-This renders a simple basic html table, showing every entry in our list. Four attributes have
-been used that need further explanation:
+This renders a simple html table with an automatically generated header, showing every entry in
+our list. Four attributes have been used that need further explanation:
 
   * `at-table` indicate that we want to use the `angular-table` directive to extend
   our table
@@ -54,6 +54,7 @@ bootstrap in our sources:
 
 ```html
 <table class="table table-striped" ...>...</table>
+```
 
 Now that looks better! Next, lets make the birthdate column sortable. We want to see the
 youngest people first, therefore sort descending:
@@ -63,19 +64,32 @@ youngest people first, therefore sort descending:
 ```
 
 And thats it, our table is sortable by birthdate instantly! We can make the other columns
-sortable aswell, by using the `at-sortable` attribute only. Our list of people is kind of
-long though, and we hate scrolling, so breaking up the table into smaller chunks and making
-it possible to go through it with a pagination would be cool. A task done within seconds.
-We need to define two additional keywords in our table ...
+sortable aswell, by using the `at-sortable` attribute only.
+
+Our list of people is kind of long though, and we hate scrolling, so breaking up the table into
+smaller chunks and making it possible to go through it with a pagination would be cool. A task
+done within seconds: We need to define two additional keywords in our table ...
 
 ```html
 <table ... at-config="config" at-paginated>...</table>
 ```
 
-... and add an additional element to our view.
+... and add an additional element to our view ...
 
 ```html
 <at-pagination at-config="config" at-list="people"></at-pagination>
 ```
 
+and end up with a sortable, paginated table!
 
+## Hacking on angular-table
+### Coffee Script
+This directive is written in Coffee Script. If you want to contribute, please make sure to
+do the changes in the coffee sources only! If you are familiar with Javascript but not with
+Coffee Script, I highly recommend you to [take look at it and try it out](http://coffeescript.org).
+It has a powerful and beautiful syntax and is easy to learn, You'll need no more than ~2 hours to learn all the basic concepts.
+
+### TDD
+The code for this directive is well covered with tests, which can be run with PhantomJS and
+Karma. run `npm install` to install the required packages. Then, run `karma start` to run
+the tests.
