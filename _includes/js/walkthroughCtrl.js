@@ -556,4 +556,6 @@ angular.module("angular-table-example").controller("walkthroughCtrl", ["$scope",
         "birthdate": "2003-03-07T23:27:52 -01:00"
     }
   ];
+
+  $scope.config = {};
 }]);
