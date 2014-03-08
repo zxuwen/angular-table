@@ -8,7 +8,12 @@
   },
   "devDependencies": {
     "karma": "~0.10",
-    "karma-ng-html2js-preprocessor" : "0.1.0"
+    "karma-ng-html2js-preprocessor" : "0.1.0",
+    "grunt-contrib-uglify": "~v0.3.3",
+    "grunt-contrib-coffee": "~0.10.1",
+    "grunt-banner": "~0.2.1",
+    "grunt-cli": "~0.1.8",
+    "grunt": "~0.4.1"
   },
   "scripts": {
     "test": "karma start --single-run --no-auto-watch"
