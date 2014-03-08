@@ -1,5 +1,4 @@
 *sublime*
 _site
-*.gem
 *.log
 node_modules
