@@ -21,6 +21,8 @@ module.exports = function(config) {
       'coffee/angular_table.coffee',
 
       'coffee/configuration/column_configuration.coffee',
+      'coffee/configuration/configuration_variable_names.coffee',
+      'coffee/configuration/scope_config_wrapper.coffee',
       'coffee/configuration/table_configuration.coffee',
 
       'coffee/directives/table/setup/setup.coffee',
