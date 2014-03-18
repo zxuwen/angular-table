@@ -12,7 +12,7 @@
     "sorting",
     "paginated",
     "pagination"
-   ],
+  ],
   "license": "MIT",
   "ignore": [
     "Gruntfile.coffee",
@@ -25,5 +25,5 @@
   ],
   "dependencies": {
     "angular": "~1.2.9"
-  },
+  }
 }
