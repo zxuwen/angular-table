@@ -14,6 +14,8 @@ module.exports = (grunt) ->
     version: version
 
     coffee:
+      options:
+        join: true
       compile:
         files: {"dist/angular-table.js" : [
           'coffee/angular_table.coffee',

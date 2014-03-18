@@ -3,16 +3,13 @@
 // license:  MIT 
 // homepage: http://github.com/samu/angular-table 
 (function() {
-  var irk_number_of_pages;
+  var ColumnConfiguration, ConfigurationVariableNames, PageSequence, PaginatedSetup, ScopeConfigWrapper, Setup, StandardSetup, Table, TableConfiguration, irk_number_of_pages, pagination_template,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   angular.module("angular-table", []);
 
   irk_number_of_pages = "number_of_pages";
-
-}).call(this);
-
-(function() {
-  var ColumnConfiguration;
 
   ColumnConfiguration = (function() {
     function ColumnConfiguration(body_markup, header_markup) {
@@ -77,11 +74,6 @@
 
   })();
 
-}).call(this);
-
-(function() {
-  var ConfigurationVariableNames;
-
   ConfigurationVariableNames = (function() {
     function ConfigurationVariableNames(config_object_name) {
       this.config_object_name = config_object_name;
@@ -95,11 +87,6 @@
     return ConfigurationVariableNames;
 
   })();
-
-}).call(this);
-
-(function() {
-  var ScopeConfigWrapper;
 
   ScopeConfigWrapper = (function() {
     function ScopeConfigWrapper(scope, configuration_variable_names, list_name) {
@@ -135,11 +122,6 @@
     return ScopeConfigWrapper;
 
   })();
-
-}).call(this);
-
-(function() {
-  var TableConfiguration;
 
   TableConfiguration = (function() {
     function TableConfiguration(table_element, attributes) {
@@ -247,11 +229,6 @@
 
   })();
 
-}).call(this);
-
-(function() {
-  var Setup;
-
   Setup = (function() {
     function Setup() {}
 
@@ -266,13 +243,6 @@
     return Setup;
 
   })();
-
-}).call(this);
-
-(function() {
-  var StandardSetup,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   StandardSetup = (function(_super) {
     __extends(StandardSetup, _super);
@@ -291,13 +261,6 @@
     return StandardSetup;
 
   })(Setup);
-
-}).call(this);
-
-(function() {
-  var PaginatedSetup,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   PaginatedSetup = (function(_super) {
     __extends(PaginatedSetup, _super);
@@ -400,11 +363,6 @@
 
   })(Setup);
 
-}).call(this);
-
-(function() {
-  var Table;
-
   Table = (function() {
     function Table(element, table_configuration, configuration_variable_names) {
       this.element = element;
@@ -488,11 +446,6 @@
 
   })();
 
-}).call(this);
-
-(function() {
-  var PageSequence;
-
   PageSequence = (function() {
     function PageSequence(lower_bound, upper_bound, start, length) {
       this.lower_bound = lower_bound != null ? lower_bound : 0;
@@ -554,16 +507,8 @@
 
   })();
 
-}).call(this);
-
-(function() {
-  var pagination_template;
-
   pagination_template = "<div style='margin: 0px;'> <ul class='pagination'> <li ng-class='{disabled: get_current_page() <= 0}'> <a href='' ng-click='step_page(-" + irk_number_of_pages + ")'>First</a> </li> <li ng-show='show_sectioning()' ng-class='{disabled: get_current_page() <= 0}'> <a href='' ng-click='jump_back()'>&laquo;</a> </li> <li ng-class='{disabled: get_current_page() <= 0}'> <a href='' ng-click='step_page(-1)'>&lsaquo;</a> </li> <li ng-class='{active: get_current_page() == page}' ng-repeat='page in page_sequence.data'> <a href='' ng-click='go_to_page(page)'>{{page + 1}}</a> </li> <li ng-class='{disabled: get_current_page() >= " + irk_number_of_pages + " - 1}'> <a href='' ng-click='step_page(1)'>&rsaquo;</a> </li> <li ng-show='show_sectioning()' ng-class='{disabled: get_current_page() >= " + irk_number_of_pages + " - 1}'> <a href='' ng-click='jump_ahead()'>&raquo;</a> </li> <li ng-class='{disabled: get_current_page() >= " + irk_number_of_pages + " - 1}'> <a href='' ng-click='step_page(" + irk_number_of_pages + ")'>Last</a> </li> </ul> </div>";
 
-}).call(this);
-
-(function() {
   angular.module("angular-table").directive("atTable", [
     "$filter", function($filter) {
       return {
@@ -585,9 +530,6 @@
     }
   ]);
 
-}).call(this);
-
-(function() {
   angular.module("angular-table").directive("atPagination", [
     function() {
       return {
@@ -670,9 +612,6 @@
     }
   ]);
 
-}).call(this);
-
-(function() {
   angular.module("angular-table").directive("atImplicit", [
     function() {
       return {
