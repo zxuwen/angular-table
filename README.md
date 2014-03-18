@@ -15,6 +15,9 @@ pagination with very little effort.
 This directive depends on angular only. No jQuery or Bootstrap required! It has been
 tested on angular 1.2, but it should also work with 1.1 releases.
 
+## Install via bower
+`bower install at-table`
+
 ## How
 Lets assume we have an array containing objects representing people. A person object has the
 following format:
