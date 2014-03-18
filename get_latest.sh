@@ -1,3 +1,3 @@
-git checkout master -- angular-table.min.js
-git reset HEAD angular-table.min.js
-mv angular-table.min.js js
+git checkout master -- dist/angular-table.min.js
+git reset HEAD dist/angular-table.min.js
+mv dist/angular-table.min.js js
