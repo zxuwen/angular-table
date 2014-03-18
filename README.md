@@ -103,5 +103,5 @@ It has a powerful and beautiful syntax and is easy to learn. You'll probably nee
 
 ### TDD
 The code for this directive is well covered with tests, which can be run with PhantomJS and
-Karma. run `npm install` to install the required packages. Then, run `karma start` to run
+Karma. Run `npm install` to install the required packages. Then, run `karma start` to run
 the tests. Make sure all the tests pass before you send a pull request.
