@@ -27,6 +27,7 @@ module.exports = (grunt) ->
           'coffee/directives/table/table.coffee',
 
           'coffee/directives/pagination/page_sequence.coffee',
+          'coffee/directives/pagination/pagination_template.coffee',
 
           'coffee/directives/at_table.coffee',
           'coffee/directives/at_pagination.coffee',
