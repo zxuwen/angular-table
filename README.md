@@ -5,6 +5,8 @@
 Angular directive which allows to declare sortable tables and to add
 pagination with very little effort.
 
+Available via bower: `bower install at-table`
+
 ## Features
   * Adds sorting to any column
   * Adds pagination
@@ -14,9 +16,6 @@ pagination with very little effort.
 ## Dependencies
 This directive depends on angular only. No jQuery or Bootstrap required! It has been
 tested on angular 1.2, but it should also work with 1.1 releases.
-
-## Install via bower
-`bower install at-table`
 
 ## How
 Lets assume we have an array containing objects representing people. A person object has the
