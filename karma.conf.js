@@ -14,9 +14,9 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'http://code.angularjs.org/1.2.11/angular.min.js',
-      'http://code.angularjs.org/1.2.11/angular-mocks.js',
-      'http://underscorejs.org/underscore-min.js',
+      'bower_components/angular/angular.min.js',
+      'bower_components/angular-mocks/angular-mocks.js',
+      'bower_components/underscore/underscore.js',
 
       'coffee/angular_table.coffee',
 
