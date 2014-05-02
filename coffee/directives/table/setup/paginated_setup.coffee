@@ -87,6 +87,14 @@ class PaginatedSetup extends Setup
       update()
     )
 
+    $scope.$watch(cvn.sort_context, () ->
+      update()
+    )
+
+    $scope.$watch($attributes.atList, () ->
+      update()
+    )
+
     $scope.$watch("#{$attributes.atList}.length", () ->
       $scope[irk_number_of_pages] = Math.ceil(w.get_list().length / w.get_items_per_page())
       update()
