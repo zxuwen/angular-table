@@ -87,10 +87,6 @@ class PaginatedSetup extends Setup
       update()
     )
 
-    $scope.$watch(cvn.sort_context, () ->
-      update()
-    )
-
     $scope.$watch($attributes.atList, () ->
       update()
     )
