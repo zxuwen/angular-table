@@ -1,6 +1,6 @@
 {
   "name": "angular-table",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Samuel Mueller",
   "repository": {
     "type": "git",
@@ -8,14 +8,16 @@
   },
   "devDependencies": {
     "karma": "~0.10",
-    "karma-ng-html2js-preprocessor" : "0.1.0",
+    "karma-ng-html2js-preprocessor": "0.1.0",
     "grunt-contrib-uglify": "~v0.3.3",
     "grunt-contrib-coffee": "~0.10.1",
     "grunt-banner": "~0.2.1",
     "grunt-cli": "~0.1.8",
-    "grunt": "~0.4.1"
+    "grunt": "~0.4.1",
+    "bower": "~1.3.3"
   },
   "scripts": {
+    "postinstall": "bower install",
     "test": "karma start --single-run --no-auto-watch"
   }
 }

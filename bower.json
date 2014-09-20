@@ -1,6 +1,6 @@
 {
   "name": "at-table",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "homepage": "https://github.com/samu/angular-table",
   "authors": [
     "Samuel Mueller"
@@ -25,5 +25,10 @@
   ],
   "dependencies": {
     "angular": "~1.2.9"
+  },
+  "devDependencies": {
+    "angular": "1.2.11",
+    "angular-mocks": "1.2.11",
+    "underscore": "~1.6.0"
   }
 }
