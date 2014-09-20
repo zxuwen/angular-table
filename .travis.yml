@@ -1,7 +1,6 @@
 branches:
   only:
     - master
-    - fix_travis
 
 language: node_js
 node_js:
