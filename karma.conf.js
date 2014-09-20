@@ -48,6 +48,13 @@ module.exports = function(config) {
 
     ],
 
+    plugins: [
+      'karma-coffee-preprocessor',
+      'karma-jasmine',
+      'karma-phantomjs-launcher',
+      'karma-ng-html2js-preprocessor'
+    ],
+
     preprocessors: {
       'coffee/**/**/*.coffee': ['coffee'],
       'test/*.coffee': ['coffee'],
