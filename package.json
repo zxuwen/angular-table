@@ -21,6 +21,6 @@
   },
   "scripts": {
     "postinstall": "bower install",
-    "test": "./node_modules/.bin/karma start --single-run --browsers PhantomJS"
+    "test": "karma start --browsers Firefox --single-run"
   }
 }
