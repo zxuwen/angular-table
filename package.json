@@ -21,6 +21,6 @@
   },
   "scripts": {
     "postinstall": "bower install",
-    "test": "karma start --single-run --no-auto-watch"
+    "test": "./node_modules/.bin/karma start --single-run --browsers PhantomJS"
   }
 }
