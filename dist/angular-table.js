@@ -347,7 +347,7 @@
       $scope.$watch(cvn.sort_context, function() {
         return update();
       });
-      $scope.$watch($attributes.atList, function() {
+      $scope.$watchCollection($attributes.atList, function() {
         return update();
       });
       $scope.$watch("" + $attributes.atList + ".length", function() {
