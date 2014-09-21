@@ -1,6 +1,6 @@
 class PaginatedSetup extends Setup
   constructor: (@configurationVariableNames) ->
-    @repeatString = "item in sorted_and_paginated_list"
+    @repeatString = "item in sortedAndPaginatedList"
 
   compile: (element) ->
     tbody = @setupTr(element, @repeatString)
@@ -14,7 +14,7 @@ class PaginatedSetup extends Setup
     fillerTr = angular.element(document.createElement("tr"))
     fillerTr.attr("ng-show", @configurationVariableNames.fillLastPage)
     fillerTr.html(tdString)
-    fillerTr.attr("ng-repeat", "item in filler_array")
+    fillerTr.attr("ng-repeat", "item in fillerArray")
 
     tbody.append(fillerTr)
 
@@ -25,16 +25,16 @@ class PaginatedSetup extends Setup
 
     w = new ScopeConfigWrapper($scope, cvn, $attributes.atList)
 
-    get_sorted_and_paginated_list = (list, currentPage, itemsPerPage, sortContext, predicate, descending, $filter) ->
+    getSortedAndPaginatedList = (list, currentPage, itemsPerPage, sortContext, predicate, descending, $filter) ->
       if list
         val = list
-        from_page  = itemsPerPage * currentPage - list.length
+        fromPage  = itemsPerPage * currentPage - list.length
         if sortContext == "global"
           val = $filter("orderBy")(val, predicate, descending)
-          val = $filter("limitTo")(val, from_page)
+          val = $filter("limitTo")(val, fromPage)
           val = $filter("limitTo")(val, itemsPerPage)
         else
-          val = $filter("limitTo")(val, from_page)
+          val = $filter("limitTo")(val, fromPage)
           val = $filter("limitTo")(val, itemsPerPage)
           val = $filter("orderBy")(val, predicate, descending)
 
@@ -42,11 +42,11 @@ class PaginatedSetup extends Setup
       else
         return []
 
-    get_filler_array = (list, currentPage, number_of_pages, itemsPerPage) ->
+    getFillerArray = (list, currentPage, numberOfPages, itemsPerPage) ->
       itemsPerPage = parseInt(itemsPerPage)
       if list.length <= 0
         x for x in [0..itemsPerPage - 1]
-      else if currentPage == number_of_pages - 1
+      else if currentPage == numberOfPages - 1
         itemCountOnLastPage = list.length % itemsPerPage
         if itemCountOnLastPage != 0
           fillerLength = itemsPerPage - itemCountOnLastPage - 1
@@ -56,7 +56,7 @@ class PaginatedSetup extends Setup
 
     update = () ->
 
-      $scope.sorted_and_paginated_list = get_sorted_and_paginated_list(
+      $scope.sortedAndPaginatedList = getSortedAndPaginatedList(
         w.getList(),
         w.getCurrentPage(),
         w.getItemsPerPage(),
@@ -68,7 +68,7 @@ class PaginatedSetup extends Setup
 
       nop = Math.ceil(w.getList().length / w.getItemsPerPage())
 
-      $scope.filler_array = get_filler_array(
+      $scope.fillerArray = getFillerArray(
         w.getList(),
         w.getCurrentPage(),
         nop,
@@ -92,7 +92,7 @@ class PaginatedSetup extends Setup
     )
 
     $scope.$watch("#{$attributes.atList}.length", () ->
-      $scope[irkNumberOfPages] = Math.ceil(w.getList().length / w.getItemsPerPage())
+      $scope.numberOfPages = Math.ceil(w.getList().length / w.getItemsPerPage())
       update()
     )
 

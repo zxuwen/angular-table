@@ -6,8 +6,8 @@ describe "angular-table", () ->
 
     step_back  = '‹'
     step_ahead = '›'
-    jump_back  = '«'
-    jump_ahead = '»'
+    jumpBack  = '«'
+    jumpAhead = '»'
     first      = 'First'
     last       = 'Last'
 
@@ -118,13 +118,13 @@ describe "angular-table", () ->
             expect(@gui.pagination.current_page).toEqual(1)
             expect(@gui.pagination.pages).toEqual([1, 2])
 
-            @gui.click_pagination(jump_ahead)
+            @gui.click_pagination(jumpAhead)
 
             expect(@gui.table.rows).toEqual([['g'], ['h'], ['i']])
             expect(@gui.pagination.current_page).toEqual(3)
             expect(@gui.pagination.pages).toEqual([2, 3])
 
-            @gui.click_pagination(jump_ahead)
+            @gui.click_pagination(jumpAhead)
 
             # we reached the end of the pagination by now
 
@@ -132,7 +132,7 @@ describe "angular-table", () ->
             expect(@gui.pagination.current_page).toEqual(5)
             expect(@gui.pagination.pages).toEqual([4, 5])
 
-            @gui.click_pagination(jump_ahead)
+            @gui.click_pagination(jumpAhead)
 
             expect(@gui.table.rows).toEqual([['m'], ['&nbsp;'], ['&nbsp;']])
             expect(@gui.pagination.current_page).toEqual(5)
@@ -144,13 +144,13 @@ describe "angular-table", () ->
             expect(@gui.pagination.current_page).toEqual(4)
             expect(@gui.pagination.pages).toEqual([4, 5])
 
-            @gui.click_pagination(jump_back)
+            @gui.click_pagination(jumpBack)
 
             expect(@gui.table.rows).toEqual([['d'], ['e'], ['f']])
             expect(@gui.pagination.current_page).toEqual(2)
             expect(@gui.pagination.pages).toEqual([2, 3])
 
-            @gui.click_pagination(jump_back)
+            @gui.click_pagination(jumpBack)
 
             expect(@gui.table.rows).toEqual([['a'], ['b'], ['c']])
             expect(@gui.pagination.current_page).toEqual(1)
@@ -337,7 +337,7 @@ describe "angular-table", () ->
               expect(@gui.pagination.current_page).toEqual(5)
               expect(@gui.pagination.pages).toEqual([3, 4, 5])
 
-              @gui.click_pagination(jump_back)
+              @gui.click_pagination(jumpBack)
 
               expect(@gui.pagination.current_page).toEqual 2
               expect(@gui.table.rows).toEqual([['d'], ['e'], ['f']])
@@ -364,15 +364,15 @@ describe "angular-table", () ->
                 scope_wrapper.set(vars.max_pages, 2)
               )
 
-              @gui.click_pagination(jump_ahead)
+              @gui.click_pagination(jumpAhead)
 
               expect(@gui.pagination.current_page).toEqual 4
 
-              @gui.click_pagination(jump_ahead)
+              @gui.click_pagination(jumpAhead)
 
               expect(@gui.pagination.current_page).toEqual 6
 
-              @gui.click_pagination(jump_ahead)
+              @gui.click_pagination(jumpAhead)
 
               expect(@gui.pagination.current_page).toEqual 7
 

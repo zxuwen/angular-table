@@ -8,57 +8,57 @@ angular.module("angular-table").directive "atPagination", [() ->
     cvn = new configurationVariableNames($attributes.atConfig)
     w = new ScopeConfigWrapper($scope, cvn, $attributes.atList)
 
-    keep_in_bounds = (val, min, max) ->
+    keepInBounds = (val, min, max) ->
       val = Math.max(min, val)
       Math.min(max, val)
 
-    get_number_of_pages = () ->
-      $scope[irkNumberOfPages]
+    getNumberOfPages = () ->
+      $scope.numberOfPages
 
-    set_number_of_pages = (number_of_pages) ->
-      $scope[irkNumberOfPages] = number_of_pages
+    setNumberOfPages = (numberOfPages) ->
+      $scope.numberOfPages = numberOfPages
 
     update = (reset) ->
       if w.getList()
         if w.getList().length > 0
-          new_number_of_pages = Math.ceil(w.getList().length / w.getItemsPerPage())
-          set_number_of_pages(new_number_of_pages)
+          newNumberOfPages = Math.ceil(w.getList().length / w.getItemsPerPage())
+          setNumberOfPages(newNumberOfPages)
           if $scope.showSectioning()
-            pages_to_display = w.getMaxPages()
+            pagesToDisplay = w.getMaxPages()
           else
-            pages_to_display = new_number_of_pages
+            pagesToDisplay = newNumberOfPages
 
-          $scope.page_sequence.resetParameters(0, new_number_of_pages, pages_to_display)
+          $scope.pageSequence.resetParameters(0, newNumberOfPages, pagesToDisplay)
           # TODO warum ist die reihenfolge der folgenden beiden aufrufe irrelevant?
-          w.setCurrentPage(keep_in_bounds(w.getCurrentPage(), 0, get_number_of_pages() - 1))
-          $scope.page_sequence.realignGreedy(w.getCurrentPage())
+          w.setCurrentPage(keepInBounds(w.getCurrentPage(), 0, getNumberOfPages() - 1))
+          $scope.pageSequence.realignGreedy(w.getCurrentPage())
         else
-          set_number_of_pages(1)
-          $scope.page_sequence.resetParameters(0, 1, 1)
+          setNumberOfPages(1)
+          $scope.pageSequence.resetParameters(0, 1, 1)
           w.setCurrentPage(0)
-          $scope.page_sequence.realignGreedy(0)
+          $scope.pageSequence.realignGreedy(0)
 
     $scope.showSectioning = () ->
-      w.getMaxPages() && get_number_of_pages() > w.getMaxPages()
+      w.getMaxPages() && getNumberOfPages() > w.getMaxPages()
 
     $scope.getCurrentPage = () ->
       w.getCurrentPage()
 
-    $scope.step_page = (step) ->
+    $scope.stepPage = (step) ->
       step = parseInt(step)
-      w.setCurrentPage(keep_in_bounds(w.getCurrentPage() + step, 0, get_number_of_pages() - 1))
-      $scope.page_sequence.realignGreedy(w.getCurrentPage())
+      w.setCurrentPage(keepInBounds(w.getCurrentPage() + step, 0, getNumberOfPages() - 1))
+      $scope.pageSequence.realignGreedy(w.getCurrentPage())
 
-    $scope.go_to_page = (page) ->
+    $scope.goToPage = (page) ->
       w.setCurrentPage(page)
 
-    $scope.jump_back = () ->
-      $scope.step_page(-w.getMaxPages())
+    $scope.jumpBack = () ->
+      $scope.stepPage(-w.getMaxPages())
 
-    $scope.jump_ahead = () ->
-      $scope.step_page(w.getMaxPages())
+    $scope.jumpAhead = () ->
+      $scope.stepPage(w.getMaxPages())
 
-    $scope.page_sequence = new PageSequence()
+    $scope.pageSequence = new PageSequence()
 
     $scope.$watch cvn.itemsPerPage, () ->
       update()

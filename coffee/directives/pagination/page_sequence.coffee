@@ -18,15 +18,15 @@ class PageSequence
     @data = @generate(@data[0])
 
   relocate: (distance) ->
-    new_start = @data[0] + distance
-    @data = @generate(new_start, new_start + @length)
+    newStart = @data[0] + distance
+    @data = @generate(newStart, newStart + @length)
 
   realignGreedy: (page) ->
     if page < @data[0]
-      new_start = page
-      @data = @generate(new_start)
+      newStart = page
+      @data = @generate(newStart)
     else if page > @data[@length - 1]
-      new_start = page - (@length - 1)
-      @data = @generate(new_start)
+      newStart = page - (@length - 1)
+      @data = @generate(newStart)
 
   realignGenerous: (page) ->
