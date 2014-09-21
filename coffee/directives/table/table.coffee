@@ -1,9 +1,9 @@
 class Table
-  constructor: (@element, @table_configuration, @configuration_variable_names) ->
+  constructor: (@element, @table_configuration, @configurationVariableNames) ->
 
   constructHeader: () ->
     tr = angular.element(document.createElement("tr"))
-    for i in @table_configuration.column_configurations
+    for i in @table_configuration.columnConfigurations
       tr.append(i.renderHtml())
     return tr
 
@@ -17,9 +17,9 @@ class Table
 
   get_setup: () ->
     if @table_configuration.paginated
-      return new PaginatedSetup(@configuration_variable_names)
+      return new PaginatedSetup(@configurationVariableNames)
     else
-      return new StandardSetup(@configuration_variable_names, @table_configuration.list)
+      return new StandardSetup(@configurationVariableNames, @table_configuration.list)
     return
 
   compile: () ->
@@ -28,7 +28,7 @@ class Table
     @setup.compile(@element)
 
   setup_initial_sorting: ($scope) ->
-    for bd in @table_configuration.column_configurations
+    for bd in @table_configuration.columnConfigurations
       if bd.initialSorting
         throw "initial-sorting specified without attribute." if not bd.attribute
         $scope.predicate = bd.attribute

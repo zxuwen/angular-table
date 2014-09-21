@@ -1,4 +1,4 @@
-class configuration_variable_names
+class configurationVariableNames
   constructor: (@configObjectName) ->
     @itemsPerPage = "#{@configObjectName}.itemsPerPage"
     @sortContext = "#{@configObjectName}.sortContext"

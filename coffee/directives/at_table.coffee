@@ -4,7 +4,7 @@ angular.module("angular-table").directive "atTable", ["$filter", ($filter) ->
 
   compile: (element, attributes, transclude) ->
     tc = new TableConfiguration(element, attributes)
-    cvn = new configuration_variable_names(attributes.atConfig)
+    cvn = new configurationVariableNames(attributes.atConfig)
     table = new Table(element, tc, cvn)
     table.compile()
 

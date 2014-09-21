@@ -1,20 +1,20 @@
 class ScopeConfigWrapper
-  constructor: (@scope, @configuration_variable_names, @list_name) ->
+  constructor: (@scope, @configurationVariableNames, @listName) ->
 
   getList: () ->
-    @scope.$eval(@list_name)
+    @scope.$eval(@listName)
 
   getItemsPerPage: () ->
-    @scope.$eval(@configuration_variable_names.itemsPerPage) || 10
+    @scope.$eval(@configurationVariableNames.itemsPerPage) || 10
 
   getCurrentPage: () ->
-    @scope.$eval(@configuration_variable_names.currentPage) || 0
+    @scope.$eval(@configurationVariableNames.currentPage) || 0
 
   getMaxPages: () ->
-    @scope.$eval(@configuration_variable_names.maxPages) || undefined
+    @scope.$eval(@configurationVariableNames.maxPages) || undefined
 
   getSortContext: () ->
-    @scope.$eval(@configuration_variable_names.sortContext) || 'global'
+    @scope.$eval(@configurationVariableNames.sortContext) || 'global'
 
   setCurrentPage: (currentPage) ->
-    @scope.$eval("#{@configuration_variable_names.currentPage}=#{currentPage}")
+    @scope.$eval("#{@configurationVariableNames.currentPage}=#{currentPage}")

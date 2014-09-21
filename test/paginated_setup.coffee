@@ -2,7 +2,7 @@ describe "angular-table", () ->
   describe "paginated setup", () ->
 
     config_name = "table_config"
-    list_name = "myList"
+    listName = "myList"
 
     step_back  = '‹'
     step_ahead = '›'
@@ -28,7 +28,7 @@ describe "angular-table", () ->
             @comp = new TemplateCompiler(setup.template)
 
             @element = @comp.prepare_element((scope) ->
-              scope[list_name] = [
+              scope[listName] = [
                 {name: "i"}, {name: "g"}, {name: "h"}, {name: "j"}, {name: "k"}, {name: "l"}
                 {name: "a"}, {name: "b"}, {name: "c"}, {name: "d"}, {name: "e"}, {name: "f"},
                 {name: "m"}
@@ -187,7 +187,7 @@ describe "angular-table", () ->
             @gui.alter_scope((scope_wrapper, vars) ->
               scope_wrapper.set(vars.items_per_page, 3)
               scope_wrapper.set(vars.fill_last_page, true)
-              scope_wrapper.set(list_name, [])
+              scope_wrapper.set(listName, [])
             )
 
             expect(@gui.table.rows).toEqual [['&nbsp;'], ['&nbsp;'], ['&nbsp;']]
@@ -197,7 +197,7 @@ describe "angular-table", () ->
           it "reloads the table if the entries change but the length doesn't", () ->
             expect(@gui.table.rows).toEqual([['a'], ['b'], ['c']])
             @gui.alter_scope((scope_wrapper, vars) ->
-              list = scope_wrapper.get(list_name)
+              list = scope_wrapper.get(listName)
               list.splice(6, 1) # delete the 6th element in the list which is "a"
               list.push({name: "A"})
             )
@@ -229,13 +229,13 @@ describe "angular-table", () ->
               @gui.alter_scope((scope_wrapper, vars) ->
                 scope_wrapper.set(vars.items_per_page, 3)
                 scope_wrapper.set(vars.max_pages, 2)
-                scope_wrapper.set(list_name, [{name: 'z'}])
+                scope_wrapper.set(listName, [{name: 'z'}])
               )
 
               expect(@gui.table.rows).toEqual [['z'], ['&nbsp;'], ['&nbsp;']]
 
               @gui.alter_scope((scope_wrapper, vars) ->
-                scope_wrapper.get(list_name).push({name: 'a'})
+                scope_wrapper.get(listName).push({name: 'a'})
               )
 
               expect(@gui.table.rows).toEqual [['a'], ['z'], ['&nbsp;']]
@@ -243,8 +243,8 @@ describe "angular-table", () ->
               expect(@gui.pagination.pages).toEqual [1]
 
               @gui.alter_scope((scope_wrapper, vars) ->
-                scope_wrapper.get(list_name).push({name: 'x'})
-                scope_wrapper.get(list_name).push({name: 'b'})
+                scope_wrapper.get(listName).push({name: 'x'})
+                scope_wrapper.get(listName).push({name: 'b'})
               )
 
               expect(@gui.table.rows).toEqual [['a'], ['b'], ['x']]
@@ -256,9 +256,9 @@ describe "angular-table", () ->
               expect(@gui.table.rows).toEqual [['z'], ['&nbsp;'], ['&nbsp;']]
 
               @gui.alter_scope((scope_wrapper, vars) ->
-                scope_wrapper.get(list_name).push({name: 'c'})
-                scope_wrapper.get(list_name).push({name: 'y'})
-                scope_wrapper.get(list_name).push({name: 'u'})
+                scope_wrapper.get(listName).push({name: 'c'})
+                scope_wrapper.get(listName).push({name: 'y'})
+                scope_wrapper.get(listName).push({name: 'u'})
               )
 
               expect(@gui.table.rows).toEqual [['u'], ['x'], ['y']]

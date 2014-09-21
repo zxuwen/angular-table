@@ -1,5 +1,5 @@
 class PaginatedSetup extends Setup
-  constructor: (@configuration_variable_names) ->
+  constructor: (@configurationVariableNames) ->
     @repeatString = "item in sorted_and_paginated_list"
 
   compile: (element) ->
@@ -12,7 +12,7 @@ class PaginatedSetup extends Setup
 
     # TODO
     fillerTr = angular.element(document.createElement("tr"))
-    fillerTr.attr("ng-show", @configuration_variable_names.fillLastPage)
+    fillerTr.attr("ng-show", @configurationVariableNames.fillLastPage)
     fillerTr.html(tdString)
     fillerTr.attr("ng-repeat", "item in filler_array")
 
@@ -21,7 +21,7 @@ class PaginatedSetup extends Setup
     return
 
   link: ($scope, $element, $attributes, $filter) ->
-    cvn = @configuration_variable_names
+    cvn = @configurationVariableNames
 
     w = new ScopeConfigWrapper($scope, cvn, $attributes.atList)
 

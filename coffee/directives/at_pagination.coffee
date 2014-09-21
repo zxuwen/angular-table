@@ -5,7 +5,7 @@ angular.module("angular-table").directive "atPagination", [() ->
   template: paginationTemplate
 
   link: ($scope, $element, $attributes) ->
-    cvn = new configuration_variable_names($attributes.atConfig)
+    cvn = new configurationVariableNames($attributes.atConfig)
     w = new ScopeConfigWrapper($scope, cvn, $attributes.atList)
 
     keep_in_bounds = (val, min, max) ->
