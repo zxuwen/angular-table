@@ -194,6 +194,15 @@ describe "angular-table", () ->
             expect(@gui.pagination.pages).toEqual [1]
             expect(@gui.pagination.current_page).toEqual 1
 
+          it "reloads the table if the entries change but the length doesn't", () ->
+            expect(@gui.table.rows).toEqual([['a'], ['b'], ['c']])
+            @gui.alter_scope((scope_wrapper, vars) ->
+              list = scope_wrapper.get(list_name)
+              list.splice(6, 1) # delete the 6th element in the list which is "a"
+              list.push({name: "A"})
+            )
+            expect(@gui.table.rows).toEqual([['A'], ['b'], ['c']])
+
           describe "the maximum pages setting", () ->
             for val in [undefined, null]
               it "shows all pages if max_pages is undefined or null", () ->

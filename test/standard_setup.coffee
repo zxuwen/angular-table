@@ -4,7 +4,8 @@ describe "angular-table", () ->
     expected_rows = [
       ["0", "Helsinki",  "Finland"],
       ["1", "Zurich",    "Switzerland"],
-      ["2", "Amsterdam", "Netherlands"]
+      ["2", "Amsterdam", "Netherlands"],
+      ["3", "Berlin",    "Germany"]
     ]
 
     beforeEach(() ->
@@ -38,3 +39,11 @@ describe "angular-table", () ->
     it "leaves columns unsortable if at-sortable is not declared", () ->
       @gui.table.sort(2)
       expect(@gui.table.rows).toEqual [expected_rows[1], expected_rows[0], expected_rows[2]]
+
+    it "reloads the table if the entries change but the length doesn't", () ->
+      @gui.alter_scope((scope_wrapper, vars) ->
+        cities = scope_wrapper.get("cities")
+        cities.pop()
+        cities.push({id: 3, name: "Berlin", country: "Germany"})
+      )
+      expect(@gui.table.rows).toEqual [expected_rows[1], expected_rows[0], expected_rows[3]]

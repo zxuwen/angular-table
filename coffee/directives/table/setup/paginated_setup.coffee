@@ -87,7 +87,7 @@ class PaginatedSetup extends Setup
       update()
     )
 
-    $scope.$watch($attributes.atList, () ->
+    $scope.$watchCollection($attributes.atList, () ->
       update()
     )
 
