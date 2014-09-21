@@ -1,6 +1,6 @@
 describe "angular-table", () ->
   describe "PageSequence", () ->
-    it "is constructed from upper_bound, lower_bound, start and length paramters", () ->
+    it "is constructed from upperBound, lowerBound, start and length paramters", () ->
       sequence = new PageSequence(0, 10, 0, 5)
       expect(sequence.data).toEqual [0, 1, 2, 3, 4]
 
