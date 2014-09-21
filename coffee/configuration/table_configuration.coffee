@@ -31,7 +31,7 @@ class TableConfiguration
     for th in tr.find("th")
       th = angular.element(th)
       customHeaderMarkups[th.attr("at-attribute")] = {
-        custom_content: th.html(), attributes: th[0].attributes
+        customContent: th.html(), attributes: th[0].attributes
       }
 
     return customHeaderMarkups

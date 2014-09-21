@@ -4,7 +4,7 @@ class Table
   constructHeader: () ->
     tr = angular.element(document.createElement("tr"))
     for i in @table_configuration.column_configurations
-      tr.append(i.render_html())
+      tr.append(i.renderHtml())
     return tr
 
   setup_header: () ->
