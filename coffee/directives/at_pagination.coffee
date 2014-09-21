@@ -28,15 +28,15 @@ angular.module("angular-table").directive "atPagination", [() ->
           else
             pages_to_display = new_number_of_pages
 
-          $scope.page_sequence.reset_parameters(0, new_number_of_pages, pages_to_display)
+          $scope.page_sequence.resetParameters(0, new_number_of_pages, pages_to_display)
           # TODO warum ist die reihenfolge der folgenden beiden aufrufe irrelevant?
           w.set_current_page(keep_in_bounds(w.get_current_page(), 0, get_number_of_pages() - 1))
-          $scope.page_sequence.realign_greedy(w.get_current_page())
+          $scope.page_sequence.realignGreedy(w.get_current_page())
         else
           set_number_of_pages(1)
-          $scope.page_sequence.reset_parameters(0, 1, 1)
+          $scope.page_sequence.resetParameters(0, 1, 1)
           w.set_current_page(0)
-          $scope.page_sequence.realign_greedy(0)
+          $scope.page_sequence.realignGreedy(0)
 
     $scope.show_sectioning = () ->
       w.get_max_pages() && get_number_of_pages() > w.get_max_pages()
@@ -47,7 +47,7 @@ angular.module("angular-table").directive "atPagination", [() ->
     $scope.step_page = (step) ->
       step = parseInt(step)
       w.set_current_page(keep_in_bounds(w.get_current_page() + step, 0, get_number_of_pages() - 1))
-      $scope.page_sequence.realign_greedy(w.get_current_page())
+      $scope.page_sequence.realignGreedy(w.get_current_page())
 
     $scope.go_to_page = (page) ->
       w.set_current_page(page)
