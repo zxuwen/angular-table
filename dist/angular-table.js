@@ -347,9 +347,6 @@
       $scope.$watch(cvn.sort_context, function() {
         return update();
       });
-      $scope.$watch(cvn.sort_context, function() {
-        return update();
-      });
       $scope.$watch($attributes.atList, function() {
         return update();
       });
