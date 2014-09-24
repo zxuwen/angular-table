@@ -1,5 +1,5 @@
 // author:   Samuel Mueller 
-// version: 1.0.0 
+// version: 1.0.3 
 // license:  MIT 
 // homepage: http://github.com/samu/angular-table 
 (function() {
