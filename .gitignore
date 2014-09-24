@@ -3,3 +3,4 @@ _site
 *.gem
 *.log
 node_modules
+bower_components
