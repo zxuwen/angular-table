@@ -101,7 +101,7 @@ Coffee Script, i highly recommend to [take look at it and try it out](http://cof
 It has a powerful and beautiful syntax and is easy to learn. You'll probably need no more than
 ~2 hours to learn about all the basic concepts.
 
-### TDD
+### Running the tests
 The code for this directive is well covered with tests, which can be run with PhantomJS and
 Karma. Run `npm install` to install the required packages. Then, run `karma start` to run
 the tests. Make sure all the tests pass before you send a pull request.
