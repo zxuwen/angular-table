@@ -1,40 +1,41 @@
 class ColumnConfiguration
-  constructor: (body_markup, header_markup) ->
-    @attribute      = body_markup.attribute
-    @title          = body_markup.title
-    @sortable       = body_markup.sortable
-    @width          = body_markup.width
-    @initialSorting = body_markup.initialSorting
+  constructor: (bodyMarkup, headerMarkup) ->
+    @attribute      = bodyMarkup.attribute
+    @title          = bodyMarkup.title
+    @sortable       = bodyMarkup.sortable
+    @width          = bodyMarkup.width
+    @initialSorting = bodyMarkup.initialSorting
 
-    if header_markup
-      @custom_content    = header_markup.custom_content
-      @attributes = header_markup.attributes
+    # TODO untested
+    if headerMarkup
+      @customContent = headerMarkup.customContent
+      @attributes = headerMarkup.attributes
 
-  create_element: () ->
+  createElement: () ->
     th = angular.element(document.createElement("th"))
 
-  render_title: (element) ->
-    element.html(@custom_content || @title)
+  renderTitle: (element) ->
+    element.html(@customContent || @title)
 
-  render_attributes: (element) ->
-    if @custom_content
+  renderAttributes: (element) ->
+    if @customContent
       for attribute in @attributes
         element.attr(attribute.name, attribute.value)
 
-  render_sorting: (element) ->
+  renderSorting: (element) ->
     if @sortable
       element.attr("ng-click", "predicate = '#{@attribute}'; descending = !descending;")
       icon = angular.element("<i style='margin-left: 10px;'></i>")
       icon.attr("ng-class", "getSortIcon('#{@attribute}', predicate)")
       element.append(icon)
 
-  render_width: (element) ->
+  renderWidth: (element) ->
     element.attr("width", @width)
 
-  render_html: () ->
-    th = @create_element()
-    @render_title(th)
-    @render_attributes(th)
-    @render_sorting(th)
-    @render_width(th)
+  renderHtml: () ->
+    th = @createElement()
+    @renderTitle(th)
+    @renderAttributes(th)
+    @renderSorting(th)
+    @renderWidth(th)
     return th

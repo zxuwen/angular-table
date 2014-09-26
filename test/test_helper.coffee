@@ -1,12 +1,12 @@
 getChildrenFor = (element, selector) ->
   element[0].querySelectorAll(selector)
 
-extract_visible_elements = (elements) ->
+extractVisibleElements = (elements) ->
   _.reject(elements, (element) ->
     angular.element(element).hasClass("ng-hide")
   )
 
-extract_html_to_array = (elements) ->
+extractHtmlToArray = (elements) ->
   _.map(elements, (element) ->
     angular.element(element).html()
   )
@@ -21,18 +21,18 @@ class ScopeWrapper
     @scope.$eval("#{expression}")
 
 class TemplateCompiler
-  constructor: (template_name) ->
-    @template_name = template_name
+  constructor: (templateName) ->
+    @templateName = templateName
     module("angular-table")
-    module("test/templates/#{@template_name}")
+    module("test/templates/#{@templateName}")
 
-  load_template: (template_name, template_cache) ->
-    angular.element(template_cache.get(template_name))
+  loadTemplate: (templateName, template_cache) ->
+    angular.element(template_cache.get(templateName))
 
-  compile_template: ($compile, $rootScope, $templateCache, callback) ->
+  compileTemplate: ($compile, $rootScope, $templateCache, callback) ->
     element = null
 
-    element = @load_template("test/templates/#{@template_name}", $templateCache)
+    element = @loadTemplate("test/templates/#{@templateName}", $templateCache)
     callback($rootScope)
     element = $compile(element)($rootScope)
     $rootScope.$digest()
@@ -41,11 +41,11 @@ class TemplateCompiler
 
     return element
 
-  prepare_element: (callback) ->
+  prepareElement: (callback) ->
     element = null
     thiz = @
     inject ($compile, $rootScope, $templateCache) ->
-      element = thiz.compile_template($compile, $rootScope, $templateCache, callback)
+      element = thiz.compileTemplate($compile, $rootScope, $templateCache, callback)
     return element
 
 class TableGUI
@@ -70,7 +70,7 @@ class PaginationGUI
 
   reload: () ->
     lis = @element.find("li")
-    lis = extract_visible_elements(lis)
+    lis = extractVisibleElements(lis)
     as = (angular.element(li).find("a") for li in lis)
 
     @buttons = {}
@@ -83,39 +83,34 @@ class PaginationGUI
       n = parseInt(p)
       @pages.push(n) if !isNaN(n)
 
-    @current_page = _.find(lis, (li) -> angular.element(li).hasClass("active"))
-    @current_page = parseInt(angular.element(@current_page).find("a").html())
+    @currentPage = _.find(lis, (li) -> angular.element(li).hasClass("active"))
+    @currentPage = parseInt(angular.element(@currentPage).find("a").html())
 
   click: (button) ->
     click(@buttons[button])
     @reload()
 
 class GUI
-  constructor: (@table, @pagination, @scope, @variable_names) ->
+  constructor: (@table, @pagination, @scope, @variableNames) ->
 
   reload: () ->
     @table.reload() if @table?
     @pagination.reload() if @pagination?
 
-  alter_scope: (f) ->
-    f(new ScopeWrapper(@scope), @variable_names)
+  alterScope: (f) ->
+    f(new ScopeWrapper(@scope), @variableNames)
     @scope.$digest()
     @reload()
 
-  click_pagination: (button) ->
+  clickPagination: (button) ->
     throw "no pagination element available" unless @pagination?
     @pagination.click(button)
     @table.reload()
 
-  click_table_header: (index) ->
-    @table.click_header(index)
-
-
-
 click = (el) ->
   ev = document.createEvent("MouseEvent")
-  ev.initMouseEvent "click", true, true, window, null, 0, 0, 0, 0, false, false, false, false, 0, null
-  el.dispatchEvent ev
+  ev.initMouseEvent("click", true, true, window, null, 0, 0, 0, 0, false, false, false, false, 0, null)
+  el.dispatchEvent(ev)
   return
 
 # currently untested

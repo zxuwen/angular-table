@@ -1,5 +1,5 @@
 class StandardSetup extends Setup
-  constructor: (configuration_variable_names, @list) ->
+  constructor: (configurationVariableNames, @list) ->
     @repeatString = "item in #{@list} | orderBy:predicate:descending"
 
   compile: (element, attributes, transclude) ->

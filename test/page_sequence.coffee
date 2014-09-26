@@ -1,6 +1,6 @@
 describe "angular-table", () ->
   describe "PageSequence", () ->
-    it "is constructed from upper_bound, lower_bound, start and length paramters", () ->
+    it "is constructed from upperBound, lowerBound, start and length paramters", () ->
       sequence = new PageSequence(0, 10, 0, 5)
       expect(sequence.data).toEqual [0, 1, 2, 3, 4]
 
@@ -17,7 +17,7 @@ describe "angular-table", () ->
       sequence = new PageSequence(0, 10, 4, 3)
       expect(sequence.data).toEqual [4, 5, 6]
 
-      sequence.reset_parameters(0, 6, 3)
+      sequence.resetParameters(0, 6, 3)
       expect(sequence.data).toEqual [3, 4, 5]
 
     it "relocates by a given distance and wont underrun or exceed a given boundary", () ->
@@ -38,28 +38,28 @@ describe "angular-table", () ->
         sequence = new PageSequence(0, 7, 2, 3)
         expect(sequence.data).toEqual [2, 3, 4]
 
-        sequence.realign_greedy(2)
+        sequence.realignGreedy(2)
         expect(sequence.data).toEqual [2, 3, 4]
 
-        sequence.realign_greedy(4)
+        sequence.realignGreedy(4)
         expect(sequence.data).toEqual [2, 3, 4]
 
       it "realigns greedy", () ->
         sequence = new PageSequence(0, 7, 2, 3)
         expect(sequence.data).toEqual [2, 3, 4]
 
-        sequence.realign_greedy(6)
+        sequence.realignGreedy(6)
         expect(sequence.data).toEqual [4, 5, 6]
 
-        # expect(() -> sequence.realign_greedy(7)).toThrow()
+        # expect(() -> sequence.realignGreedy(7)).toThrow()
 
-        sequence.realign_greedy(4)
+        sequence.realignGreedy(4)
         expect(sequence.data).toEqual [4, 5, 6]
 
-        sequence.realign_greedy(1)
+        sequence.realignGreedy(1)
         expect(sequence.data).toEqual [1, 2, 3]
 
-        sequence.realign_greedy(0)
+        sequence.realignGreedy(0)
         expect(sequence.data).toEqual [0, 1, 2]
 
-        # expect(() -> sequence.realign_greedy(-1)).toThrow()
+        # expect(() -> sequence.realignGreedy(-1)).toThrow()

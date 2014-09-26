@@ -1,10 +1,10 @@
 class TableConfiguration
-  constructor: (@table_element, @attributes) ->
+  constructor: (@tableElement, @attributes) ->
     @id              = @attributes.id
     @config          = @attributes.atConfig
     @paginated       = @attributes.atPaginated?
     @list            = @attributes.atList
-    @create_column_configurations()
+    @createColumnConfigurations()
 
   capitaliseFirstLetter: (string) ->
     if string then string.charAt(0).toUpperCase() + string.slice(1) else ""
@@ -24,19 +24,19 @@ class TableConfiguration
       throw "Invalid value for initial-sorting: #{initialSorting}. Allowed values are 'asc' or 'desc'."
     return undefined
 
-  collect_header_markup: (table) ->
+  collectHeaderMarkup: (table) ->
     customHeaderMarkups = {}
 
     tr = table.find("tr")
     for th in tr.find("th")
       th = angular.element(th)
       customHeaderMarkups[th.attr("at-attribute")] = {
-        custom_content: th.html(), attributes: th[0].attributes
+        customContent: th.html(), attributes: th[0].attributes
       }
 
     return customHeaderMarkups
 
-  collect_body_markup: (table) ->
+  collectBodyMarkup: (table) ->
     bodyDefinition = []
 
     for td in table.find("td")
@@ -55,13 +55,13 @@ class TableConfiguration
 
     return bodyDefinition
 
-  create_column_configurations: () ->
-    header_markup = @collect_header_markup(@table_element)
-    body_markup = @collect_body_markup(@table_element)
+  createColumnConfigurations: () ->
+    headerMarkup = @collectHeaderMarkup(@tableElement)
+    bodyMarkup = @collectBodyMarkup(@tableElement)
 
-    @column_configurations = []
+    @columnConfigurations = []
 
-    for i in body_markup
-      @column_configurations.push new ColumnConfiguration(i, header_markup[i.attribute])
+    for i in bodyMarkup
+      @columnConfigurations.push new ColumnConfiguration(i, headerMarkup[i.attribute])
 
-    return @column_configurations
+    return

@@ -1,13 +1,13 @@
 class Table
-  constructor: (@element, @table_configuration, @configuration_variable_names) ->
+  constructor: (@element, @tableConfiguration, @configurationVariableNames) ->
 
   constructHeader: () ->
     tr = angular.element(document.createElement("tr"))
-    for i in @table_configuration.column_configurations
-      tr.append(i.render_html())
+    for i in @tableConfiguration.columnConfigurations
+      tr.append(i.renderHtml())
     return tr
 
-  setup_header: () ->
+  setupHeader: () ->
     thead = @element.find("thead")
     if thead
       header = @constructHeader()
@@ -15,30 +15,30 @@ class Table
       tr.remove()
       thead.append(header)
 
-  get_setup: () ->
-    if @table_configuration.paginated
-      return new PaginatedSetup(@configuration_variable_names)
+  getSetup: () ->
+    if @tableConfiguration.paginated
+      return new PaginatedSetup(@configurationVariableNames)
     else
-      return new StandardSetup(@configuration_variable_names, @table_configuration.list)
+      return new StandardSetup(@configurationVariableNames, @tableConfiguration.list)
     return
 
   compile: () ->
-    @setup_header()
-    @setup = @get_setup()
+    @setupHeader()
+    @setup = @getSetup()
     @setup.compile(@element)
 
-  setup_initial_sorting: ($scope) ->
-    for bd in @table_configuration.column_configurations
+  setupInitialSorting: ($scope) ->
+    for bd in @tableConfiguration.columnConfigurations
       if bd.initialSorting
         throw "initial-sorting specified without attribute." if not bd.attribute
         $scope.predicate = bd.attribute
         $scope.descending = bd.initialSorting == "desc"
 
   post: ($scope, $element, $attributes, $filter) ->
-    @setup_initial_sorting($scope)
+    @setupInitialSorting($scope)
 
     if not $scope.getSortIcon
-      $scope.getSortIcon = (predicate, current_predicate) ->
+      $scope.getSortIcon = (predicate, currentPredicate) ->
         return "glyphicon glyphicon-minus" if predicate != $scope.predicate
         if $scope.descending then "glyphicon glyphicon-chevron-down" else "glyphicon glyphicon-chevron-up"
 

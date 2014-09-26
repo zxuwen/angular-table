@@ -1,23 +1,24 @@
 class ScopeConfigWrapper
-  constructor: (@scope, @configuration_variable_names, @list_name) ->
+  constructor: (@scope, @configurationVariableNames, @listName) ->
 
-  get_list: () ->
-    @scope.$eval(@list_name)
+  getList: () ->
+    @scope.$eval(@listName)
 
-  get_items_per_page: () ->
-    @scope.$eval(@configuration_variable_names.items_per_page) || 10
+  getItemsPerPage: () ->
+    @scope.$eval(@configurationVariableNames.itemsPerPage) || 10
 
-  get_current_page: () ->
-    @scope.$eval(@configuration_variable_names.current_page) || 0
+  getCurrentPage: () ->
+    @scope.$eval(@configurationVariableNames.currentPage) || 0
 
-  get_max_pages: () ->
-    @scope.$eval(@configuration_variable_names.max_pages) || undefined
+  getMaxPages: () ->
+    @scope.$eval(@configurationVariableNames.maxPages) || undefined
 
-  get_sort_context: () ->
-    @scope.$eval(@configuration_variable_names.sort_context) || 'global'
+  getSortContext: () ->
+    @scope.$eval(@configurationVariableNames.sortContext) || 'global'
 
-  set_current_page: (current_page) ->
-    @scope.$eval("#{@configuration_variable_names.current_page}=#{current_page}")
-
+  setCurrentPage: (currentPage) ->
+    @scope.$eval("#{@configurationVariableNames.currentPage}=#{currentPage}")
+  
   get_order_by: () ->
-    @scope.$eval(@configuration_variable_names.order_by) || 'orderBy'
+    @scope.$eval(@configurationVariableNames.order_by) || 'orderBy'
+
