@@ -25,18 +25,18 @@ class PaginatedSetup extends Setup
 
     w = new ScopeConfigWrapper($scope, cvn, $attributes.atList)
 
-    getSortedAndPaginatedList = (list, currentPage, itemsPerPage, order_by, sortContext, predicate, descending, $filter) ->
+    getSortedAndPaginatedList = (list, currentPage, itemsPerPage, orderBy, sortContext, predicate, descending, $filter) ->
       if list
         val = list
         fromPage  = itemsPerPage * currentPage - list.length
         if sortContext == "global"
-          val = $filter(order_by)(val, predicate, descending)
+          val = $filter(orderBy)(val, predicate, descending)
           val = $filter("limitTo")(val, fromPage)
           val = $filter("limitTo")(val, itemsPerPage)
         else
           val = $filter("limitTo")(val, fromPage)
           val = $filter("limitTo")(val, itemsPerPage)
-          val = $filter(order_by)(val, predicate, descending)
+          val = $filter(orderBy)(val, predicate, descending)
 
         return val
       else
@@ -59,7 +59,7 @@ class PaginatedSetup extends Setup
         w.getList(),
         w.getCurrentPage(),
         w.getItemsPerPage(),
-        w.get_order_by(),
+        w.getOrderBy(),
         w.getSortContext(),
         $scope.predicate,
         $scope.descending,

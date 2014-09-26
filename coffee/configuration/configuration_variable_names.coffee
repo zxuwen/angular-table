@@ -5,5 +5,5 @@ class configurationVariableNames
     @fillLastPage = "#{@configObjectName}.fillLastPage"
     @maxPages = "#{@configObjectName}.maxPages"
     @currentPage = "#{@configObjectName}.currentPage"
-    @order_by = "#{@configObjectName}.orderBy"
+    @orderBy = "#{@configObjectName}.orderBy"
 
