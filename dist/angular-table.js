@@ -1,5 +1,5 @@
 // author:   Samuel Mueller 
-// version: 1.0.3 
+// version: 1.0.4 
 // license:  MIT 
 // homepage: http://github.com/samu/angular-table 
 (function() {
@@ -80,6 +80,7 @@
       this.fillLastPage = "" + this.configObjectName + ".fillLastPage";
       this.maxPages = "" + this.configObjectName + ".maxPages";
       this.currentPage = "" + this.configObjectName + ".currentPage";
+      this.orderBy = "" + this.configObjectName + ".orderBy";
     }
 
     return configurationVariableNames;
@@ -115,6 +116,10 @@
 
     ScopeConfigWrapper.prototype.setCurrentPage = function(currentPage) {
       return this.scope.$eval("" + this.configurationVariableNames.currentPage + "=" + currentPage);
+    };
+
+    ScopeConfigWrapper.prototype.getOrderBy = function() {
+      return this.scope.$eval(this.configurationVariableNames.orderBy) || 'orderBy';
     };
 
     return ScopeConfigWrapper;
@@ -287,19 +292,19 @@
       var cvn, getFillerArray, getSortedAndPaginatedList, update, w;
       cvn = this.configurationVariableNames;
       w = new ScopeConfigWrapper($scope, cvn, $attributes.atList);
-      getSortedAndPaginatedList = function(list, currentPage, itemsPerPage, sortContext, predicate, descending, $filter) {
+      getSortedAndPaginatedList = function(list, currentPage, itemsPerPage, orderBy, sortContext, predicate, descending, $filter) {
         var fromPage, val;
         if (list) {
           val = list;
           fromPage = itemsPerPage * currentPage - list.length;
           if (sortContext === "global") {
-            val = $filter("orderBy")(val, predicate, descending);
+            val = $filter(orderBy)(val, predicate, descending);
             val = $filter("limitTo")(val, fromPage);
             val = $filter("limitTo")(val, itemsPerPage);
           } else {
             val = $filter("limitTo")(val, fromPage);
             val = $filter("limitTo")(val, itemsPerPage);
-            val = $filter("orderBy")(val, predicate, descending);
+            val = $filter(orderBy)(val, predicate, descending);
           }
           return val;
         } else {
@@ -331,7 +336,7 @@
       };
       update = function() {
         var nop;
-        $scope.sortedAndPaginatedList = getSortedAndPaginatedList(w.getList(), w.getCurrentPage(), w.getItemsPerPage(), w.getSortContext(), $scope.predicate, $scope.descending, $filter);
+        $scope.sortedAndPaginatedList = getSortedAndPaginatedList(w.getList(), w.getCurrentPage(), w.getItemsPerPage(), w.getOrderBy(), w.getSortContext(), $scope.predicate, $scope.descending, $filter);
         nop = Math.ceil(w.getList().length / w.getItemsPerPage());
         return $scope.fillerArray = getFillerArray(w.getList(), w.getCurrentPage(), nop, w.getItemsPerPage());
       };
