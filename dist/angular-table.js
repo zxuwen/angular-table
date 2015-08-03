@@ -279,7 +279,7 @@
       tdString = "";
       for (_i = 0, _len = tds.length; _i < _len; _i++) {
         td = tds[_i];
-        tdString += "<td>&nbsp;</td>";
+        tdString += "<td><span>&nbsp;</span></td>";
       }
       fillerTr = angular.element(document.createElement("tr"));
       fillerTr.attr("ng-show", this.configurationVariableNames.fillLastPage);
@@ -512,7 +512,7 @@
 
   })();
 
-  paginationTemplate = "<div style='margin: 0px;'> <ul class='pagination'> <li ng-class='{disabled: getCurrentPage() <= 0}'> <a href='' ng-click='stepPage(-numberOfPages)'>First</a> </li> <li ng-show='showSectioning()' ng-class='{disabled: getCurrentPage() <= 0}'> <a href='' ng-click='jumpBack()'>&laquo;</a> </li> <li ng-class='{disabled: getCurrentPage() <= 0}'> <a href='' ng-click='stepPage(-1)'>&lsaquo;</a> </li> <li ng-class='{active: getCurrentPage() == page}' ng-repeat='page in pageSequence.data'> <a href='' ng-click='goToPage(page)'>{{page + 1}}</a> </li> <li ng-class='{disabled: getCurrentPage() >= numberOfPages - 1}'> <a href='' ng-click='stepPage(1)'>&rsaquo;</a> </li> <li ng-show='showSectioning()' ng-class='{disabled: getCurrentPage() >= numberOfPages - 1}'> <a href='' ng-click='jumpAhead()'>&raquo;</a> </li> <li ng-class='{disabled: getCurrentPage() >= numberOfPages - 1}'> <a href='' ng-click='stepPage(numberOfPages)'>Last</a> </li> </ul> </div>";
+  paginationTemplate = "<div style='margin: 0px;'> <ul class='pagination'> <li ng-class='{disabled: getCurrentPage() <= 0}'> <a href='' ng-click='stepPage(-numberOfPages)'>First</a> </li> <li ng-show='showSectioning()' ng-class='{disabled: getCurrentPage() <= 0}'> <a href='' ng-click='jumpBack()'>&laquo;</a> </li> <li ng-class='{disabled: getCurrentPage() <= 0}'> <a href='' ng-click='stepPage(-1)'>&lsaquo;</a> </li> <li ng-class='{active: getCurrentPage() == page}' ng-repeat='page in pageSequence.data'> <a href='' ng-click='goToPage(page)' ng-bind='page + 1'></a> </li> <li ng-class='{disabled: getCurrentPage() >= numberOfPages - 1}'> <a href='' ng-click='stepPage(1)'>&rsaquo;</a> </li> <li ng-show='showSectioning()' ng-class='{disabled: getCurrentPage() >= numberOfPages - 1}'> <a href='' ng-click='jumpAhead()'>&raquo;</a> </li> <li ng-class='{disabled: getCurrentPage() >= numberOfPages - 1}'> <a href='' ng-click='stepPage(numberOfPages)'>Last</a> </li> </ul> </div>";
 
   angular.module("angular-table").directive("atTable", [
     "$filter", function($filter) {
@@ -627,7 +627,7 @@
           if (!attribute) {
             throw "at-implicit specified without at-attribute: " + (element.html());
           }
-          return element.append("{{item." + attribute + "}}");
+          return element.append("<span ng-bind='item." + attribute + "'></span>");
         }
       };
     }
