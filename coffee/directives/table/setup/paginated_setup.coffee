@@ -8,7 +8,7 @@ class PaginatedSetup extends Setup
     tds = element.find("td")
     tdString = ""
     for td in tds
-      tdString += "<td>&nbsp;</td>"
+      tdString += "<td><span>&nbsp;</span></td>"
 
     # TODO
     fillerTr = angular.element(document.createElement("tr"))
