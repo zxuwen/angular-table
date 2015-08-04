@@ -93,13 +93,17 @@ done within seconds: We need to define two additional keywords in our table ...
 
 [result](http://samu.github.io/angular-table/walkthrough/4.html)
 
-## Hacking on angular-table
-### Coffee Script
+## Contributing
+### Pull Requests
 This directive is written in Coffee Script. If you want to contribute, please make sure to
-work on the coffee sources only. If you are familiar with Javascript and aren't with
-Coffee Script, i highly recommend to [take look at it and try it out](http://coffeescript.org).
-It has a powerful and beautiful syntax and is easy to learn. You'll probably need no more than
-~2 hours to learn about all the basic concepts.
+work on the coffee sources only. When you're done with your changes, two steps are required:
+
+1. Update the version in the Gruntfile
+2. Compile:
+```
+grunt coffee
+grunt usebanner
+```
 
 ### Running the tests
 The code for this directive is well covered with tests, which can be run with PhantomJS and
