@@ -55,7 +55,7 @@ class TableGUI
   reload: () ->
     @rows = _.map(@element.find("tr"), (row) ->
       _.map(angular.element(row).find("td"), (cell) ->
-        angular.element(cell).html()
+        angular.element(cell).find("span").html()
       )
     )
     @rows.shift() if @rows[0].length == 0
