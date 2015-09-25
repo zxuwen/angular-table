@@ -19,12 +19,12 @@ class ScopeConfigWrapper
   setCurrentPage: (currentPage) ->
     @scope.$eval("#{@configurationVariableNames.currentPage}=#{currentPage}")
 
-  getPaginatorLabel: () ->
-    paginatorLabelDefault =
+  getpaginatorLabels: () ->
+    paginatorLabelsDefault =
       stepBack: '‹'
       stepAhead: '›'
       jumpBack: '«'
       jumpAhead: '»'
       first: 'First'
       last: 'Last'
-    @scope.$eval(@configurationVariableNames.paginatorLabel) || paginatorLabelDefault
+    @scope.$eval(@configurationVariableNames.paginatorLabels) || paginatorLabelsDefault

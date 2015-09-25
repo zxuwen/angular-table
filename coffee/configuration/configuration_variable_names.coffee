@@ -5,3 +5,4 @@ class configurationVariableNames
     @fillLastPage = "#{@configObjectName}.fillLastPage"
     @maxPages = "#{@configObjectName}.maxPages"
     @currentPage = "#{@configObjectName}.currentPage"
+    @paginatorLabels = "#{@configObjectName}.paginatorLabels"
