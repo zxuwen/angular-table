@@ -44,8 +44,8 @@ angular.module("angular-table").directive "atPagination", [() ->
     $scope.getCurrentPage = () ->
       w.getCurrentPage()
 
-    $scope.getpaginatorLabels = () ->
-        w.getpaginatorLabels()
+    $scope.getPaginatorLabels = () ->
+        w.getPaginatorLabels()
 
     $scope.stepPage = (step) ->
       step = parseInt(step)
