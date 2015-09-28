@@ -1,5 +1,5 @@
 // author:   Samuel Mueller 
-// version: 1.0.0 
+// version: 1.0.5 
 // license:  MIT 
 // homepage: http://github.com/samu/angular-table 
 (function() {
@@ -80,6 +80,7 @@
       this.fillLastPage = "" + this.configObjectName + ".fillLastPage";
       this.maxPages = "" + this.configObjectName + ".maxPages";
       this.currentPage = "" + this.configObjectName + ".currentPage";
+      this.orderBy = "" + this.configObjectName + ".orderBy";
     }
 
     return configurationVariableNames;
@@ -115,6 +116,10 @@
 
     ScopeConfigWrapper.prototype.setCurrentPage = function(currentPage) {
       return this.scope.$eval("" + this.configurationVariableNames.currentPage + "=" + currentPage);
+    };
+
+    ScopeConfigWrapper.prototype.getOrderBy = function() {
+      return this.scope.$eval(this.configurationVariableNames.orderBy) || 'orderBy';
     };
 
     return ScopeConfigWrapper;
@@ -274,7 +279,7 @@
       tdString = "";
       for (_i = 0, _len = tds.length; _i < _len; _i++) {
         td = tds[_i];
-        tdString += "<td>&nbsp;</td>";
+        tdString += "<td><span>&nbsp;</span></td>";
       }
       fillerTr = angular.element(document.createElement("tr"));
       fillerTr.attr("ng-show", this.configurationVariableNames.fillLastPage);
@@ -287,19 +292,19 @@
       var cvn, getFillerArray, getSortedAndPaginatedList, update, w;
       cvn = this.configurationVariableNames;
       w = new ScopeConfigWrapper($scope, cvn, $attributes.atList);
-      getSortedAndPaginatedList = function(list, currentPage, itemsPerPage, sortContext, predicate, descending, $filter) {
+      getSortedAndPaginatedList = function(list, currentPage, itemsPerPage, orderBy, sortContext, predicate, descending, $filter) {
         var fromPage, val;
         if (list) {
           val = list;
           fromPage = itemsPerPage * currentPage - list.length;
           if (sortContext === "global") {
-            val = $filter("orderBy")(val, predicate, descending);
+            val = $filter(orderBy)(val, predicate, descending);
             val = $filter("limitTo")(val, fromPage);
             val = $filter("limitTo")(val, itemsPerPage);
           } else {
             val = $filter("limitTo")(val, fromPage);
             val = $filter("limitTo")(val, itemsPerPage);
-            val = $filter("orderBy")(val, predicate, descending);
+            val = $filter(orderBy)(val, predicate, descending);
           }
           return val;
         } else {
@@ -331,7 +336,7 @@
       };
       update = function() {
         var nop;
-        $scope.sortedAndPaginatedList = getSortedAndPaginatedList(w.getList(), w.getCurrentPage(), w.getItemsPerPage(), w.getSortContext(), $scope.predicate, $scope.descending, $filter);
+        $scope.sortedAndPaginatedList = getSortedAndPaginatedList(w.getList(), w.getCurrentPage(), w.getItemsPerPage(), w.getOrderBy(), w.getSortContext(), $scope.predicate, $scope.descending, $filter);
         nop = Math.ceil(w.getList().length / w.getItemsPerPage());
         return $scope.fillerArray = getFillerArray(w.getList(), w.getCurrentPage(), nop, w.getItemsPerPage());
       };
@@ -507,7 +512,7 @@
 
   })();
 
-  paginationTemplate = "<div style='margin: 0px;'> <ul class='pagination'> <li ng-class='{disabled: getCurrentPage() <= 0}'> <a href='' ng-click='stepPage(-numberOfPages)'>First</a> </li> <li ng-show='showSectioning()' ng-class='{disabled: getCurrentPage() <= 0}'> <a href='' ng-click='jumpBack()'>&laquo;</a> </li> <li ng-class='{disabled: getCurrentPage() <= 0}'> <a href='' ng-click='stepPage(-1)'>&lsaquo;</a> </li> <li ng-class='{active: getCurrentPage() == page}' ng-repeat='page in pageSequence.data'> <a href='' ng-click='goToPage(page)'>{{page + 1}}</a> </li> <li ng-class='{disabled: getCurrentPage() >= numberOfPages - 1}'> <a href='' ng-click='stepPage(1)'>&rsaquo;</a> </li> <li ng-show='showSectioning()' ng-class='{disabled: getCurrentPage() >= numberOfPages - 1}'> <a href='' ng-click='jumpAhead()'>&raquo;</a> </li> <li ng-class='{disabled: getCurrentPage() >= numberOfPages - 1}'> <a href='' ng-click='stepPage(numberOfPages)'>Last</a> </li> </ul> </div>";
+  paginationTemplate = "<div style='margin: 0px;'> <ul class='pagination'> <li ng-class='{disabled: getCurrentPage() <= 0}'> <a href='' ng-click='stepPage(-numberOfPages)'>First</a> </li> <li ng-show='showSectioning()' ng-class='{disabled: getCurrentPage() <= 0}'> <a href='' ng-click='jumpBack()'>&laquo;</a> </li> <li ng-class='{disabled: getCurrentPage() <= 0}'> <a href='' ng-click='stepPage(-1)'>&lsaquo;</a> </li> <li ng-class='{active: getCurrentPage() == page}' ng-repeat='page in pageSequence.data'> <a href='' ng-click='goToPage(page)' ng-bind='page + 1'></a> </li> <li ng-class='{disabled: getCurrentPage() >= numberOfPages - 1}'> <a href='' ng-click='stepPage(1)'>&rsaquo;</a> </li> <li ng-show='showSectioning()' ng-class='{disabled: getCurrentPage() >= numberOfPages - 1}'> <a href='' ng-click='jumpAhead()'>&raquo;</a> </li> <li ng-class='{disabled: getCurrentPage() >= numberOfPages - 1}'> <a href='' ng-click='stepPage(numberOfPages)'>Last</a> </li> </ul> </div>";
 
   angular.module("angular-table").directive("atTable", [
     "$filter", function($filter) {
@@ -622,7 +627,7 @@
           if (!attribute) {
             throw "at-implicit specified without at-attribute: " + (element.html());
           }
-          return element.append("{{item." + attribute + "}}");
+          return element.append("<span ng-bind='item." + attribute + "'></span>");
         }
       };
     }

@@ -8,7 +8,7 @@ class PaginatedSetup extends Setup
     tds = element.find("td")
     tdString = ""
     for td in tds
-      tdString += "<td>&nbsp;</td>"
+      tdString += "<td><span>&nbsp;</span></td>"
 
     # TODO
     fillerTr = angular.element(document.createElement("tr"))
@@ -25,18 +25,18 @@ class PaginatedSetup extends Setup
 
     w = new ScopeConfigWrapper($scope, cvn, $attributes.atList)
 
-    getSortedAndPaginatedList = (list, currentPage, itemsPerPage, sortContext, predicate, descending, $filter) ->
+    getSortedAndPaginatedList = (list, currentPage, itemsPerPage, orderBy, sortContext, predicate, descending, $filter) ->
       if list
         val = list
         fromPage  = itemsPerPage * currentPage - list.length
         if sortContext == "global"
-          val = $filter("orderBy")(val, predicate, descending)
+          val = $filter(orderBy)(val, predicate, descending)
           val = $filter("limitTo")(val, fromPage)
           val = $filter("limitTo")(val, itemsPerPage)
         else
           val = $filter("limitTo")(val, fromPage)
           val = $filter("limitTo")(val, itemsPerPage)
-          val = $filter("orderBy")(val, predicate, descending)
+          val = $filter(orderBy)(val, predicate, descending)
 
         return val
       else
@@ -55,11 +55,11 @@ class PaginatedSetup extends Setup
           []
 
     update = () ->
-
       $scope.sortedAndPaginatedList = getSortedAndPaginatedList(
         w.getList(),
         w.getCurrentPage(),
         w.getItemsPerPage(),
+        w.getOrderBy(),
         w.getSortContext(),
         $scope.predicate,
         $scope.descending,

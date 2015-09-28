@@ -14,7 +14,7 @@ paginationTemplate = "
     </li>
 
     <li ng-class='{active: getCurrentPage() == page}' ng-repeat='page in pageSequence.data'>
-      <a href='' ng-click='goToPage(page)'>{{page + 1}}</a>
+      <a href='' ng-click='goToPage(page)' ng-bind='page + 1'></a>
     </li>
 
     <li ng-class='{disabled: getCurrentPage() >= numberOfPages - 1}'>
