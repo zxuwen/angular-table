@@ -81,6 +81,7 @@
       this.maxPages = "" + this.configObjectName + ".maxPages";
       this.currentPage = "" + this.configObjectName + ".currentPage";
       this.orderBy = "" + this.configObjectName + ".orderBy";
+      this.paginatorLabels = "" + this.configObjectName + ".paginatorLabels";
     }
 
     return configurationVariableNames;
@@ -120,6 +121,19 @@
 
     ScopeConfigWrapper.prototype.getOrderBy = function() {
       return this.scope.$eval(this.configurationVariableNames.orderBy) || 'orderBy';
+    };
+
+    ScopeConfigWrapper.prototype.getPaginatorLabels = function() {
+      var paginatorLabelsDefault;
+      paginatorLabelsDefault = {
+        stepBack: '‹',
+        stepAhead: '›',
+        jumpBack: '«',
+        jumpAhead: '»',
+        first: 'First',
+        last: 'Last'
+      };
+      return this.scope.$eval(this.configurationVariableNames.paginatorLabels) || paginatorLabelsDefault;
     };
 
     return ScopeConfigWrapper;
@@ -512,7 +526,7 @@
 
   })();
 
-  paginationTemplate = "<div style='margin: 0px;'> <ul class='pagination'> <li ng-class='{disabled: getCurrentPage() <= 0}'> <a href='' ng-click='stepPage(-numberOfPages)'>First</a> </li> <li ng-show='showSectioning()' ng-class='{disabled: getCurrentPage() <= 0}'> <a href='' ng-click='jumpBack()'>&laquo;</a> </li> <li ng-class='{disabled: getCurrentPage() <= 0}'> <a href='' ng-click='stepPage(-1)'>&lsaquo;</a> </li> <li ng-class='{active: getCurrentPage() == page}' ng-repeat='page in pageSequence.data'> <a href='' ng-click='goToPage(page)' ng-bind='page + 1'></a> </li> <li ng-class='{disabled: getCurrentPage() >= numberOfPages - 1}'> <a href='' ng-click='stepPage(1)'>&rsaquo;</a> </li> <li ng-show='showSectioning()' ng-class='{disabled: getCurrentPage() >= numberOfPages - 1}'> <a href='' ng-click='jumpAhead()'>&raquo;</a> </li> <li ng-class='{disabled: getCurrentPage() >= numberOfPages - 1}'> <a href='' ng-click='stepPage(numberOfPages)'>Last</a> </li> </ul> </div>";
+  paginationTemplate = "<div style='margin: 0px;'> <ul class='pagination'> <li ng-class='{disabled: getCurrentPage() <= 0}'> <a href='' ng-click='stepPage(-numberOfPages)'>{{getPaginatorLabels().first}}</a> </li> <li ng-show='showSectioning()' ng-class='{disabled: getCurrentPage() <= 0}'> <a href='' ng-click='jumpBack()'>{{getPaginatorLabels().jumpBack}}</a> </li> <li ng-class='{disabled: getCurrentPage() <= 0}'> <a href='' ng-click='stepPage(-1)'>{{getPaginatorLabels().stepBack}}</a> </li> <li ng-class='{active: getCurrentPage() == page}' ng-repeat='page in pageSequence.data'> <a href='' ng-click='goToPage(page)' ng-bind='page + 1'></a> </li> <li ng-class='{disabled: getCurrentPage() >= numberOfPages - 1}'> <a href='' ng-click='stepPage(1)'>{{getPaginatorLabels().stepAhead}}</a> </li> <li ng-show='showSectioning()' ng-class='{disabled: getCurrentPage() >= numberOfPages - 1}'> <a href='' ng-click='jumpAhead()'>{{getPaginatorLabels().jumpAhead}}</a> </li> <li ng-class='{disabled: getCurrentPage() >= numberOfPages - 1}'> <a href='' ng-click='stepPage(numberOfPages)'>{{getPaginatorLabels().last}}</a> </li> </ul> </div>";
 
   angular.module("angular-table").directive("atTable", [
     "$filter", function($filter) {
@@ -583,6 +597,9 @@
           };
           $scope.getCurrentPage = function() {
             return w.getCurrentPage();
+          };
+          $scope.getPaginatorLabels = function() {
+            return w.getPaginatorLabels();
           };
           $scope.stepPage = function(step) {
             step = parseInt(step);
