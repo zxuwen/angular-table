@@ -44,6 +44,9 @@ angular.module("angular-table").directive "atPagination", [() ->
     $scope.getCurrentPage = () ->
       w.getCurrentPage()
 
+    $scope.getPaginatorLabels = () ->
+        w.getPaginatorLabels()
+
     $scope.stepPage = (step) ->
       step = parseInt(step)
       w.setCurrentPage(keepInBounds(w.getCurrentPage() + step, 0, getNumberOfPages() - 1))
