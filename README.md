@@ -42,7 +42,7 @@ html table and eventually make it paginated so we don't have to scroll like a ma
   </tbody>
 </table>
 ```
-[Result](http://samu.github.io/angular-table/walkthrough/1.html).
+[Result](http://samu.github.io/angular-table/walkthrough/1.html)
 
 This renders a simple html table with an automatically generated header, showing every entry in
 our list. Four attributes have been used that need further explanation:
@@ -59,7 +59,7 @@ bootstrap in our sources:
 ```html
 <table class="table table-striped" ...>...</table>
 ```
-[Result](http://samu.github.io/angular-table/walkthrough/2.html).
+[Result](http://samu.github.io/angular-table/walkthrough/2.html)
 
 Now that looks better! Next, let's make the birthdate column sortable. We want to see the
 youngest people first, therefore sort descending. We're also going to customize the content
@@ -70,7 +70,7 @@ of the birthdate cell since the raw date format looks ugly:
   {{item.birthdate.substring(0, 10)}}
 </td>
 ```
-[Result](http://samu.github.io/angular-table/walkthrough/3.html).
+[Result](http://samu.github.io/angular-table/walkthrough/3.html)
 
 And thats it, our table is sortable by birthdate instantly! We can make the other columns
 sortable aswell, by using the `at-sortable` attribute only. Also, note how we removed the
@@ -92,7 +92,7 @@ done within seconds: We need to define two additional keywords in our table ...
 
 ... and we end up with a sortable, paginated table!
 
-[Result](http://samu.github.io/angular-table/walkthrough/4.html).
+[Result](http://samu.github.io/angular-table/walkthrough/4.html)
 
 ## Contributing
 ### Pull Requests
