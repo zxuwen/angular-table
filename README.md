@@ -1,7 +1,5 @@
 # angular-table [![Build Status](https://travis-ci.org/samu/angular-table.png?branch=master)](https://travis-ci.org/samu/angular-table)
 
-[DEMO](http://samu.github.io/angular-table/examples/examples.html)
-
 Angular directive which allows to declare sortable tables and to add
 pagination with very little effort.
 
@@ -17,8 +15,11 @@ Available via bower: `bower install at-table`
 This directive depends on angular only. No jQuery or Bootstrap required! It has been
 tested on angular 1.2, but it should also work with 1.1 releases.
 
-## How
-Lets assume we have an array containing objects representing people. A person object has the
+## Usage Examples
+See the live demo with usage examples [here](http://samu.github.io/angular-table/examples/examples.html).
+
+## Walkthrough
+Let's assume we have an array containing objects representing people. A person object has the
 following format:
 
 ```javascript
@@ -27,7 +28,7 @@ following format:
 
 The list contains about 100 entries and we would like to represent that data in a nice, sortable
 html table and eventually make it paginated so we don't have to scroll like a madman. With
-`angular-table` in our toolbelt, this task becomes easy. Lets write some markup:
+`angular-table` in our toolbelt, this task becomes easy. Let's write some markup:
 
 ```html
   <table at-table at-list="people">
@@ -41,7 +42,7 @@ html table and eventually make it paginated so we don't have to scroll like a ma
   </tbody>
 </table>
 ```
-[result](http://samu.github.io/angular-table/walkthrough/1.html)
+[Result](http://samu.github.io/angular-table/walkthrough/1.html)
 
 This renders a simple html table with an automatically generated header, showing every entry in
 our list. Four attributes have been used that need further explanation:
@@ -52,15 +53,15 @@ our list. Four attributes have been used that need further explanation:
   * `at-attribute` the attribute in each object the respective columns are dedicated to
   * `at-implicit` implicitly render the content of each object's attribute defined in `at-attribute`
 
-Our table looks kind of unspectacular by now, so lets use some css, assuming we have twitter
+Our table looks kind of unspectacular by now, so let's use some css, assuming we have twitter
 bootstrap in our sources:
 
 ```html
 <table class="table table-striped" ...>...</table>
 ```
-[result](http://samu.github.io/angular-table/walkthrough/2.html)
+[Result](http://samu.github.io/angular-table/walkthrough/2.html)
 
-Now that looks better! Next, lets make the birthdate column sortable. We want to see the
+Now that looks better! Next, let's make the birthdate column sortable. We want to see the
 youngest people first, therefore sort descending. We're also going to customize the content
 of the birthdate cell since the raw date format looks ugly:
 
@@ -69,7 +70,7 @@ of the birthdate cell since the raw date format looks ugly:
   {{item.birthdate.substring(0, 10)}}
 </td>
 ```
-[result](http://samu.github.io/angular-table/walkthrough/3.html)
+[Result](http://samu.github.io/angular-table/walkthrough/3.html)
 
 And thats it, our table is sortable by birthdate instantly! We can make the other columns
 sortable aswell, by using the `at-sortable` attribute only. Also, note how we removed the
@@ -91,7 +92,7 @@ done within seconds: We need to define two additional keywords in our table ...
 
 ... and we end up with a sortable, paginated table!
 
-[result](http://samu.github.io/angular-table/walkthrough/4.html)
+[Result](http://samu.github.io/angular-table/walkthrough/4.html)
 
 ## Contributing
 ### Pull Requests
