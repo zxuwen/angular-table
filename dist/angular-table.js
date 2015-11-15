@@ -49,7 +49,7 @@
       if (this.sortable) {
         element.attr("ng-click", "predicate = '" + this.attribute + "'; descending = !descending;");
         icon = angular.element("<i style='margin-left: 10px;'></i>");
-        icon.attr("ng-class", "getSortIcon('" + this.attribute + "', predicate)");
+        icon.attr("ng-class", "getSortIcon('" + this.attribute + "', predicate, descending)");
         return element.append(icon);
       }
     };
@@ -447,11 +447,11 @@
     Table.prototype.post = function($scope, $element, $attributes, $filter) {
       this.setupInitialSorting($scope);
       if (!$scope.getSortIcon) {
-        $scope.getSortIcon = function(predicate, currentPredicate) {
+        $scope.getSortIcon = function(predicate, currentPredicate, descending) {
           if (predicate !== $scope.predicate) {
             return "glyphicon glyphicon-minus";
           }
-          if ($scope.descending) {
+          if (descending) {
             return "glyphicon glyphicon-chevron-down";
           } else {
             return "glyphicon glyphicon-chevron-up";
