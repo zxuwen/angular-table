@@ -1,7 +1,7 @@
-version = "1.0.7"
+version = "1.0.8"
 
 banner = "
-// author:   Samuel Mueller \n
+// author:   Zhang Xuwen (Forked from Samuel Mueller) \n
 // version: #{version} \n
 // license:  MIT \n
 // homepage: http://github.com/samu/angular-table \n
