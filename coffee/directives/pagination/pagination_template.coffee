@@ -4,7 +4,7 @@ paginationTemplate = "
     <i class='fa fa-angle-left'></i>
     &nbsp;{{getPaginatorLabels().stepBack}}
   </a>
-  <span>Page{{getCurrentPage()}}/{{numberOfPages}}</span>
+  <span>{{getPaginatorLabels().page}}{{getCurrentPage() + 1}}/{{numberOfPages}}</span>
   <a href='' ng-click='stepPage(1)' ng-class='{hidden: getCurrentPage() >= numberOfPages - 1}'>
     {{getPaginatorLabels().stepAhead}}&nbsp;
     <i class='fa fa-angle-right'></i>

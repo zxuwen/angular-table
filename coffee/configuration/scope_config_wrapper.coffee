@@ -24,8 +24,9 @@ class ScopeConfigWrapper
 
   getPaginatorLabels: () ->
     paginatorLabelsDefault =
-      stepBack: '‹'
-      stepAhead: '›'
+      page: 'Page'
+      stepBack: 'Previous'
+      stepAhead: 'Next'
       jumpBack: '«'
       jumpAhead: '»'
       first: 'First'

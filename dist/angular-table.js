@@ -1,5 +1,5 @@
 // author:   Zhang Xuwen (Forked from Samuel Mueller) 
-// version: 1.0.8 
+// version: 1.0.10 
 // license:  MIT 
 // homepage: http://github.com/samu/angular-table 
 (function() {
@@ -126,8 +126,9 @@
     ScopeConfigWrapper.prototype.getPaginatorLabels = function() {
       var paginatorLabelsDefault;
       paginatorLabelsDefault = {
-        stepBack: '‹',
-        stepAhead: '›',
+        page: 'Page',
+        stepBack: 'Previous',
+        stepAhead: 'Next',
         jumpBack: '«',
         jumpAhead: '»',
         first: 'First',
@@ -526,7 +527,7 @@
 
   })();
 
-  paginationTemplate = "<span> <a href='' ng-click='stepPage(-1)' ng-class='{hidden: getCurrentPage() <= 0}'> <i class='fa fa-angle-left'></i> &nbsp;{{getPaginatorLabels().stepBack}} </a> <span>Page{{getCurrentPage()}}/{{numberOfPages}}</span> <a href='' ng-click='stepPage(1)' ng-class='{hidden: getCurrentPage() >= numberOfPages - 1}'> {{getPaginatorLabels().stepAhead}}&nbsp; <i class='fa fa-angle-right'></i> </a> </span>";
+  paginationTemplate = "<span> <a href='' ng-click='stepPage(-1)' ng-class='{hidden: getCurrentPage() <= 0}'> <i class='fa fa-angle-left'></i> &nbsp;{{getPaginatorLabels().stepBack}} </a> <span>{{getPaginatorLabels().page}}{{getCurrentPage() + 1}}/{{numberOfPages}}</span> <a href='' ng-click='stepPage(1)' ng-class='{hidden: getCurrentPage() >= numberOfPages - 1}'> {{getPaginatorLabels().stepAhead}}&nbsp; <i class='fa fa-angle-right'></i> </a> </span>";
 
   angular.module("angular-table").directive("atTable", [
     "$filter", function($filter) {
