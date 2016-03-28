@@ -1,5 +1,5 @@
 // author:   Zhang Xuwen (Forked from Samuel Mueller) 
-// version: 1.0.10 
+// version: 1.0.11 
 // license:  MIT 
 // homepage: http://github.com/samu/angular-table 
 (function() {
@@ -527,7 +527,7 @@
 
   })();
 
-  paginationTemplate = "<span> <a href='' ng-click='stepPage(-1)' ng-class='{hidden: getCurrentPage() <= 0}'> <i class='fa fa-angle-left'></i> &nbsp;{{getPaginatorLabels().stepBack}} </a> <span>{{getPaginatorLabels().page}}{{getCurrentPage() + 1}}/{{numberOfPages}}</span> <a href='' ng-click='stepPage(1)' ng-class='{hidden: getCurrentPage() >= numberOfPages - 1}'> {{getPaginatorLabels().stepAhead}}&nbsp; <i class='fa fa-angle-right'></i> </a> </span>";
+  paginationTemplate = "<div> <a href='' ng-click='stepPage(-1)' ng-class='{hidden: getCurrentPage() <= 0}'> <i class='fa fa-angle-left'></i> &nbsp;{{getPaginatorLabels().stepBack}} </a> <span>{{getPaginatorLabels().page}}{{getCurrentPage() + 1}}/{{numberOfPages}}</span> <a href='' ng-click='stepPage(1)' ng-class='{hidden: getCurrentPage() >= numberOfPages - 1}'> {{getPaginatorLabels().stepAhead}}&nbsp; <i class='fa fa-angle-right'></i> </a> </div>";
 
   angular.module("angular-table").directive("atTable", [
     "$filter", function($filter) {

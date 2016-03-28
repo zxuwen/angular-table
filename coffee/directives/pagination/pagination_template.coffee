@@ -1,5 +1,5 @@
 paginationTemplate = "
-<span>
+<div>
   <a href='' ng-click='stepPage(-1)' ng-class='{hidden: getCurrentPage() <= 0}'>
     <i class='fa fa-angle-left'></i>
     &nbsp;{{getPaginatorLabels().stepBack}}
@@ -9,7 +9,7 @@ paginationTemplate = "
     {{getPaginatorLabels().stepAhead}}&nbsp;
     <i class='fa fa-angle-right'></i>
   </a>
-</span>"
+</div>"
 
 ## Previous template
 # "<div style='margin: 0px;'>
